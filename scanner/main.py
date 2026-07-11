@@ -1,9 +1,11 @@
 from providers.aws import AWSProvider
 from providers.gcp import GCPProvider
+from providers.orc import OrcProvider
 
 SUPPORTED_PROVIDERS = {
     "aws": AWSProvider,
     "gcp": GCPProvider,
+    "oci": OrcProvider,
 }
 
 
