@@ -1,8 +1,14 @@
+from providers.base import BaseProvider
+
+
 # GCP API / SDK integration
-class GCPProvider:
+class GCPProvider(BaseProvider):
     name = "GCP"
 
-    def required_credentials(self):
+    def __init__(self):
+        self.credentials = None
+
+    def required_credentials(self) -> list[dict]:
         """Return the credentials required by this provider."""
         return [
             {
@@ -17,21 +23,21 @@ class GCPProvider:
             },
         ]
 
-    def connect(self, credentials):
+    def connect(self, credentials: dict) -> None:
         """Authenticate with GCP."""
         self.credentials = credentials
         print("Connecting to GCP...")
 
-    def validate_credentials(self):
+    def validate_credentials(self) -> bool:
         """Verify the provided credentials."""
         print("Validating GCP credentials...")
         return True
 
-    def disconnect(self):
+    def disconnect(self) -> None:
         """Close the connection."""
         print("Disconnecting from GCP...")
 
-    def list_supported_resources(self):
+    def list_supported_resources(self) -> list[str]:
         """Return supported GCP resource types."""
         return [
             "Compute Engine",
@@ -40,12 +46,12 @@ class GCPProvider:
             "Firewall Rules",
         ]
 
-    def discover_resources(self):
+    def discover_resources(self) -> list[dict]:
         """Discover supported resources."""
         print("Discovering resources...")
         return []
 
-    def get_configuration(self, resource):
+    def get_configuration(self, resource: dict) -> dict:
         """Retrieve the configuration for a resource."""
         print(f"Collecting configuration for {resource}...")
         return {}
