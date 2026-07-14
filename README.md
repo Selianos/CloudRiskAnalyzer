@@ -6,6 +6,34 @@ A modular cloud security analyzer that discovers cloud resources, collects their
 
 * AWS
 * GCP
+* OCI (Oracle Cloud Infrastructure)
+
+---
+
+## Getting Started
+
+### 1. Setup Virtual Environment
+Create a virtual environment and install the required dependencies:
+```powershell
+# Create venv
+python -m venv .venv
+
+# Install requirements - Windows PowerShell
+.\.venv\Scripts\pip.exe install -r scanner/requirements.txt
+```
+```powershell
+# Install requirements - Linux / macOS
+source .venv/bin/activate
+pip install -r scanner/requirements.txt
+```
+
+### 2. Run the Scanner
+Execute the scanner CLI:
+```powershell
+python scanner/main.py
+# If you get an error on command above, Then try:
+.\.venv\Scripts\python.exe scanner/main.py
+```
 
 ---
 
