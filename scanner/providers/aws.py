@@ -11,6 +11,8 @@ class AWSProvider(BaseProvider):
         self.access_key = None
         self.secret_key = None
         self.region = None
+        self.account_id = None
+        self._credential_report = None
 
     def required_credentials(self) -> list[dict]:
         """Return the credentials required by this provider."""
@@ -33,7 +35,7 @@ class AWSProvider(BaseProvider):
         ]
 
     def connect(self, credentials: dict) -> None:
-        """Authenticate with AWS using the provided credentials."""
+        """Authenticate with AWS and load the account-wide credential report."""
         self.access_key = credentials.get("access_key")
         self.secret_key = credentials.get("secret_key")
         self.region = credentials.get("region")
@@ -45,6 +47,32 @@ class AWSProvider(BaseProvider):
         )
         print("[AWS] Initialized connection session.")
 
+        # Generate and fetch credential report
+        try:
+            iam_client = self._session.client("iam")
+            print("[AWS] Generating credential report...")
+            iam_client.generate_credential_report()
+            
+            import time
+            import csv
+            import io
+            
+            for _ in range(5):
+                try:
+                    report_resp = iam_client.get_credential_report()
+                    report_csv = report_resp["Content"].decode("utf-8")
+                    reader = csv.DictReader(io.StringIO(report_csv))
+                    self._credential_report = list(reader)
+                    print("[AWS] Credential report loaded successfully.")
+                    break
+                except ClientError as e:
+                    if e.response["Error"]["Code"] == "ReportInProgress":
+                        time.sleep(1)
+                    else:
+                        raise e
+        except Exception as e:
+            print(f"[AWS] Failed to generate/load credential report: {e}")
+
     def validate_credentials(self) -> bool:
         """Verify the provided credentials using STS get_caller_identity."""
         if self._session is None:
@@ -53,7 +81,8 @@ class AWSProvider(BaseProvider):
         try:
             sts_client = self._session.client("sts")
             identity = sts_client.get_caller_identity()
-            print(f"[AWS] Authenticated as Account: {identity.get('Account')}")
+            self.account_id = identity.get("Account")
+            print(f"[AWS] Authenticated as Account: {self.account_id}")
             return True
         except ClientError as err:
             print(f"[AWS] Connection validation failed: {err}")
@@ -63,11 +92,13 @@ class AWSProvider(BaseProvider):
             return False
 
     def disconnect(self) -> None:
-        """Close the connection."""
+        """Close the connection and clear stored credentials."""
         self._session = None
         self.access_key = None
         self.secret_key = None
         self.region = None
+        self.account_id = None
+        self._credential_report = None
         print("[AWS] Disconnected.")
 
     def list_supported_resources(self) -> list[str]:
@@ -156,6 +187,31 @@ class AWSProvider(BaseProvider):
             print(f"[AWS] Failed to discover IAM resources: {err.response['Error']['Message']}")
         except Exception as err:
             print(f"[AWS] Unexpected error discovering IAM resources: {err}")
+
+        # 5. Discover Root Account
+        resources.append({
+            "type": "IAM",
+            "id": "<root_account>",
+            "name": "<root_account>"
+        })
+
+        # 6. Discover IAM Roles
+        try:
+            iam_client = self._session.client("iam")
+            response = iam_client.list_roles()
+            for role in response.get("Roles", []):
+                role_name = role["RoleName"]
+                if "/aws-service-role/" in role.get("Path", ""):
+                    continue
+                resources.append({
+                    "type": "IAM Role",
+                    "id": role["RoleId"],
+                    "name": role_name
+                })
+        except ClientError as err:
+            print(f"[AWS] Failed to discover IAM Roles: {err.response['Error']['Message']}")
+        except Exception as err:
+            print(f"[AWS] Unexpected error discovering IAM Roles: {err}")
 
         print(f"[AWS] Discovered {len(resources)} resources.")
         return resources
@@ -270,10 +326,25 @@ class AWSProvider(BaseProvider):
         elif resource_type == "IAM":
             try:
                 iam_client = self._session.client("iam")
+                
+                # Check if it is the root account
+                if resource_id == "<root_account>":
+                    config["is_root"] = True
+                    report_row = {}
+                    if self._credential_report:
+                        for row in self._credential_report:
+                            if row.get("user") == "<root_account>":
+                                report_row = row
+                                break
+                    config["credential_report_row"] = report_row
+                    return config
+
+                config["is_root"] = False
+                
+                # Standard IAM User config collection
                 user_response = iam_client.get_user(UserName=resource_name)
                 user_data = user_response.get("User", {})
                 
-                # Convert datetime to ISO string
                 if "CreateDate" in user_data:
                     user_data["CreateDate"] = user_data["CreateDate"].isoformat()
                 if "PasswordLastUsed" in user_data:
@@ -281,17 +352,36 @@ class AWSProvider(BaseProvider):
 
                 config["raw_data"] = user_data
 
-                # Fetch attached policies
+                # Fetch attached policy documents
                 try:
                     policies = iam_client.list_attached_user_policies(UserName=resource_name)
-                    config["attached_policies"] = policies.get("AttachedPolicies", [])
+                    attached_policies = policies.get("AttachedPolicies", [])
+                    config["attached_policies"] = []
+                    for p in attached_policies:
+                        p_arn = p["PolicyArn"]
+                        p_name = p["PolicyName"]
+                        p_info = iam_client.get_policy(PolicyArn=p_arn)
+                        default_version_id = p_info.get("Policy", {}).get("DefaultVersionId")
+                        p_ver = iam_client.get_policy_version(PolicyArn=p_arn, VersionId=default_version_id)
+                        config["attached_policies"].append({
+                            "PolicyName": p_name,
+                            "PolicyArn": p_arn,
+                            "PolicyDocument": p_ver.get("PolicyVersion", {}).get("Document", {})
+                        })
                 except ClientError as e:
                     config["attached_policies"] = {"error": str(e)}
 
-                # Fetch inline policies
+                # Fetch inline policy documents
                 try:
                     inline = iam_client.list_user_policies(UserName=resource_name)
-                    config["inline_policies"] = inline.get("PolicyNames", [])
+                    inline_policies = inline.get("PolicyNames", [])
+                    config["inline_policies"] = []
+                    for p_name in inline_policies:
+                        p_doc = iam_client.get_user_policy(UserName=resource_name, PolicyName=p_name)
+                        config["inline_policies"].append({
+                            "PolicyName": p_name,
+                            "PolicyDocument": p_doc.get("PolicyDocument", {})
+                        })
                 except ClientError as e:
                     config["inline_policies"] = {"error": str(e)}
 
@@ -309,8 +399,67 @@ class AWSProvider(BaseProvider):
                 except ClientError as e:
                     config["mfa_devices"] = {"error": str(e)}
 
+                # Fetch credential report row
+                report_row = {}
+                if self._credential_report:
+                    for row in self._credential_report:
+                        if row.get("user") == resource_name:
+                            report_row = row
+                            break
+                config["credential_report_row"] = report_row
+
             except ClientError as err:
                 print(f"[AWS] Failed to get configuration for IAM User {resource_name}: {err}")
+            except Exception as err:
+                print(f"[AWS] Unexpected error: {err}")
+
+        elif resource_type == "IAM Role":
+            try:
+                iam_client = self._session.client("iam")
+                role_response = iam_client.get_role(RoleName=resource_name)
+                role_data = role_response.get("Role", {})
+                
+                if "CreateDate" in role_data:
+                    role_data["CreateDate"] = role_data["CreateDate"].isoformat()
+                    
+                config["raw_data"] = role_data
+                config["is_role"] = True
+
+                # Fetch attached policy documents
+                try:
+                    policies = iam_client.list_attached_role_policies(RoleName=resource_name)
+                    attached_policies = policies.get("AttachedPolicies", [])
+                    config["attached_policies"] = []
+                    for p in attached_policies:
+                        p_arn = p["PolicyArn"]
+                        p_name = p["PolicyName"]
+                        p_info = iam_client.get_policy(PolicyArn=p_arn)
+                        default_version_id = p_info.get("Policy", {}).get("DefaultVersionId")
+                        p_ver = iam_client.get_policy_version(PolicyArn=p_arn, VersionId=default_version_id)
+                        config["attached_policies"].append({
+                            "PolicyName": p_name,
+                            "PolicyArn": p_arn,
+                            "PolicyDocument": p_ver.get("PolicyVersion", {}).get("Document", {})
+                        })
+                except ClientError as e:
+                    config["attached_policies"] = {"error": str(e)}
+
+                # Fetch inline policy documents
+                try:
+                    inline = iam_client.list_role_policies(RoleName=resource_name)
+                    inline_policies = inline.get("PolicyNames", [])
+                    config["inline_policies"] = []
+                    for p_name in inline_policies:
+                        p_doc = iam_client.get_role_policy(RoleName=resource_name, PolicyName=p_name)
+                        config["inline_policies"].append({
+                            "PolicyName": p_name,
+                            "PolicyDocument": p_doc.get("PolicyDocument", {})
+                        })
+                except ClientError as e:
+                    config["inline_policies"] = {"error": str(e)}
+
+            except ClientError as err:
+                print(f"[AWS] Failed to get configuration for IAM Role {resource_name}: {err}")
             except Exception as err:
                 print(f"[AWS] Unexpected error: {err}")
 

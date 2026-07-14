@@ -38,7 +38,7 @@ def evaluate_rules(resource: dict, configuration: dict, rules: list) -> list:
             match = True
         elif rule_id.startswith("S3") and resource_type == "S3":
             match = True
-        elif rule_id.startswith("IAM") and resource_type == "IAM":
+        elif rule_id.startswith("IAM") and resource_type.startswith("IAM"):
             match = True
             
         if match:

@@ -53,10 +53,30 @@ def main():
     provider_key = "aws" if "aws" in provider.name.lower() else provider.name.lower()
     rules = get_rules_for_provider(provider_key)
 
-    print("\nScanning started. Redirecting all output to out.log...")
+    import datetime
+    timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+    
+    # Extract clean provider name
+    prov_name = "PROVIDER"
+    if hasattr(provider, "name") and provider.name:
+        prov_upper = provider.name.upper()
+        if "AWS" in prov_upper:
+            prov_name = "AWS"
+        elif "GCP" in prov_upper:
+            prov_name = "GCP"
+        elif "OCI" in prov_upper or "ORC" in prov_upper:
+            prov_name = "OCI"
+            
+    account_id = getattr(provider, "account_id", None)
+    if not account_id:
+        account_id = "UNKNOWN"
+        
+    filename = f"RESULT-{prov_name}-{account_id}-{timestamp}.log"
 
-    with open("out.log", "w", encoding="utf-8") as f:
-        # Redirect stdout to out.log
+    print(f"\nScanning started. Redirecting all output to {filename}...")
+
+    with open(filename, "w", encoding="utf-8") as f:
+        # Redirect stdout to the dynamic log file
         original_stdout = sys.stdout
         sys.stdout = f
 
@@ -69,7 +89,7 @@ def main():
 
             print("\n--- Step 2 & 3: Scanning Resources ---")
             for idx, resource in enumerate(resources, 1):
-                # Print progress to both out.log and the interactive console
+                # Print progress to both the log file and the interactive console
                 progress_msg = f"[{idx}/{len(resources)}] Scanning resource: [{resource['type']}] {resource['name']} ({resource['id']})..."
                 print(f"\n{progress_msg}")
                 print(progress_msg, file=sys.__stdout__, flush=True)
@@ -95,7 +115,7 @@ def main():
             # Restore original stdout
             sys.stdout = original_stdout
 
-    print("Scan completed successfully. Results saved in out.log.")
+    print(f"Scan completed successfully. Results saved in {filename}.")
 
 
 if __name__ == "__main__":
