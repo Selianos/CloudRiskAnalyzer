@@ -101,3 +101,42 @@ The scanner follows a modular architecture:
 * **Main** orchestrates the scanning pipeline.
 
 This design simplifies adding new cloud providers, services, and security rules while keeping the codebase maintainable.
+
+---
+
+## Supabase Database & Edge Functions Backend
+
+This project integrates with **Supabase** to manage user authentication, store cloud connections, maintain a scan job queue, and hold scan results/findings.
+
+### 🗄️ Database Tables (PostgreSQL)
+The database is structured into 5 core normalized tables with **Row-Level Security (RLS)** active:
+1. **`connections`**: Holds cloud access credentials per user.
+2. **`scan_jobs`**: Serves as our task queue (tracks `PENDING`, `RUNNING`, `COMPLETED`, `FAILED` jobs).
+3. **`resources`**: Inventory database holding raw configurations inside `JSONB` columns.
+4. **`rules`**: Static check reference catalog (e.g., `SEC-001`, `IAM-001`).
+5. **`findings`**: Contains security alerts linking resources to rule statuses (`PASS`/`FAIL`).
+
+### ⚙️ Supabase CLI Commands
+We use the Supabase CLI for database schema migrations and serverless Edge Functions.
+
+#### 1. Enable script execution (Windows PowerShell)
+If PowerShell blocks Node/NPM scripts, run this developer override:
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+#### 2. Link local workspace to cloud project
+```powershell
+npx supabase link --project-ref <your-project-reference-id>
+```
+
+#### 3. Push schema migrations to remote database
+```powershell
+npx supabase db push
+```
+
+#### 4. Deploy serverless Edge Functions
+Deploy code directly to the cloud without needing a local Docker daemon:
+```powershell
+npx supabase functions deploy <function-name> --project-ref <your-project-ref> --use-api
+```
