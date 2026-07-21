@@ -3,7 +3,7 @@ import pprint
 from providers.aws import AWSProvider
 from providers.gcp import GCPProvider
 from providers.orc import OrcProvider
-from rules.executor import get_rules_for_provider, evaluate_rules, run_analysis_and_report
+from rules.executor import get_rules_for_provider, evaluate_rules
 
 SUPPORTED_PROVIDERS = {
     "aws": AWSProvider,
@@ -75,9 +75,6 @@ def main():
 
     print(f"\nScanning started. Redirecting all output to {filename}...")
 
-    # We will aggregate scanner results in memory to generate the JSON snapshot report later
-    results = []
-
     with open(filename, "w", encoding="utf-8") as f:
         # Redirect stdout to the dynamic log file
         original_stdout = sys.stdout
@@ -102,11 +99,6 @@ def main():
                 print("Configuration collected:")
                 pprint.pprint(configuration, indent=2)
 
-                results.append({
-                    "resource": resource,
-                    "configuration": configuration
-                })
-
                 # Step 3: Evaluate security rules
                 resource_evaluations = evaluate_rules(resource, configuration, rules)
                 print(f"Rule Evaluations (Checks: {len(resource_evaluations)}):")
@@ -117,16 +109,13 @@ def main():
                     if eval_res['status'] != "SAFE":
                         print(f"    Recommendation: {eval_res['recommendation']}")
 
+            provider.disconnect()
+
         finally:
             # Restore original stdout
             sys.stdout = original_stdout
 
     print(f"Scan completed successfully. Results saved in {filename}.")
-
-    # Evaluate security rules and generate output snapshot report (using standard run_analysis_and_report)
-    run_analysis_and_report(provider, results)
-
-    provider.disconnect()
 
 
 if __name__ == "__main__":

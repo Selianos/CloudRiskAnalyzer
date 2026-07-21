@@ -1,0 +1,158 @@
+{
+    "provider": "OCI (Oracle Cloud)",
+    "scanned_at": "2026-07-21T19:53:59.226155",
+    "resources_scanned": 6,
+    "results": [
+        {
+            "resource": {
+                "type": "Compute",
+                "id": "ocid1.instance.oc1.me-riyadh-1.anqwuljrdihto5qcsobwgkq7lsfknjo2nk45jovgsczxlzixcpr5hr74m6lq",
+                "name": "test-instance",
+                "compartment_id": "ocid1.tenancy.oc1..aaaaaaaaapcfxwuc2utq67fcsehhum6bg6qdacrjjjayo4ull4gpth4ze7kq"
+            },
+            "configuration": {
+                "id": "ocid1.instance.oc1.me-riyadh-1.anqwuljrdihto5qcsobwgkq7lsfknjo2nk45jovgsczxlzixcpr5hr74m6lq",
+                "name": "test-instance",
+                "shape": "VM.Standard.A1.Flex",
+                "lifecycle_state": "RUNNING",
+                "public_ips": [],
+                "has_public_ip": false
+            }
+        },
+        {
+            "resource": {
+                "type": "VCN",
+                "id": "ocid1.vcn.oc1.me-riyadh-1.amaaaaaadihto5qae7g6wntgwilzuxk4xxj3xmso52rbvgjrxflg22rdgyvq",
+                "name": "vcn-20260710-1853",
+                "compartment_id": "ocid1.tenancy.oc1..aaaaaaaaapcfxwuc2utq67fcsehhum6bg6qdacrjjjayo4ull4gpth4ze7kq"
+            },
+            "configuration": {
+                "id": "ocid1.vcn.oc1.me-riyadh-1.amaaaaaadihto5qae7g6wntgwilzuxk4xxj3xmso52rbvgjrxflg22rdgyvq",
+                "name": "vcn-20260710-1853",
+                "cidr_block": "10.0.0.0/16",
+                "lifecycle_state": "AVAILABLE"
+            }
+        },
+        {
+            "resource": {
+                "type": "Subnet",
+                "id": "ocid1.subnet.oc1.me-riyadh-1.aaaaaaaa5zqekzw3h4k2cpawwwhac2uf3sujg2im67vyewij3mwed7dcsmlq",
+                "name": "subnet-20260710-1851",
+                "vcn_id": "ocid1.vcn.oc1.me-riyadh-1.amaaaaaadihto5qae7g6wntgwilzuxk4xxj3xmso52rbvgjrxflg22rdgyvq",
+                "compartment_id": "ocid1.tenancy.oc1..aaaaaaaaapcfxwuc2utq67fcsehhum6bg6qdacrjjjayo4ull4gpth4ze7kq"
+            },
+            "configuration": {
+                "id": "ocid1.subnet.oc1.me-riyadh-1.aaaaaaaa5zqekzw3h4k2cpawwwhac2uf3sujg2im67vyewij3mwed7dcsmlq",
+                "name": "subnet-20260710-1851",
+                "cidr_block": "10.0.0.0/24",
+                "prohibit_public_ip_on_vnic": false,
+                "is_public": true,
+                "security_list_ids": [
+                    "ocid1.securitylist.oc1.me-riyadh-1.aaaaaaaaukbol2ykijjuqqcwsnil6zrrvsidutxwjktwpk6tfiwejqnzproa"
+                ]
+            }
+        },
+        {
+            "resource": {
+                "type": "SecurityList",
+                "id": "ocid1.securitylist.oc1.me-riyadh-1.aaaaaaaaukbol2ykijjuqqcwsnil6zrrvsidutxwjktwpk6tfiwejqnzproa",
+                "name": "Default Security List for vcn-20260710-1853",
+                "vcn_id": "ocid1.vcn.oc1.me-riyadh-1.amaaaaaadihto5qae7g6wntgwilzuxk4xxj3xmso52rbvgjrxflg22rdgyvq",
+                "compartment_id": "ocid1.tenancy.oc1..aaaaaaaaapcfxwuc2utq67fcsehhum6bg6qdacrjjjayo4ull4gpth4ze7kq"
+            },
+            "configuration": {
+                "id": "ocid1.securitylist.oc1.me-riyadh-1.aaaaaaaaukbol2ykijjuqqcwsnil6zrrvsidutxwjktwpk6tfiwejqnzproa",
+                "name": "Default Security List for vcn-20260710-1853",
+                "ingress_rules": [
+                    {
+                        "source": "0.0.0.0/0",
+                        "protocol": "6",
+                        "source_type": "CIDR_BLOCK",
+                        "port_min": 22,
+                        "port_max": 22
+                    },
+                    {
+                        "source": "0.0.0.0/0",
+                        "protocol": "1",
+                        "source_type": "CIDR_BLOCK"
+                    },
+                    {
+                        "source": "10.0.0.0/16",
+                        "protocol": "1",
+                        "source_type": "CIDR_BLOCK"
+                    }
+                ],
+                "public_ssh": true,
+                "public_rdp": false
+            }
+        },
+        {
+            "resource": {
+                "type": "IAM_Users",
+                "id": "ocid1.user.oc1..aaaaaaaaep3udkqa2tfwbo2bqrdraqo2pvzpif66iapmsqjsgb2doxwmonfq",
+                "name": "abdulaziz.aljofi@gmail.com",
+                "compartment_id": "ocid1.tenancy.oc1..aaaaaaaaapcfxwuc2utq67fcsehhum6bg6qdacrjjjayo4ull4gpth4ze7kq"
+            },
+            "configuration": {
+                "id": "ocid1.user.oc1..aaaaaaaaep3udkqa2tfwbo2bqrdraqo2pvzpif66iapmsqjsgb2doxwmonfq",
+                "name": "abdulaziz.aljofi@gmail.com",
+                "is_mfa_activated": true,
+                "api_key_count": 1
+            }
+        },
+        {
+            "resource": {
+                "type": "IAM_Policies",
+                "id": "ocid1.policy.oc1..aaaaaaaaxu2vnxmzrwdbzxahrmbwnmxutqrcunhxwq4rlvrluhqmf7bx57wa",
+                "name": "Tenant Admin Policy",
+                "compartment_id": "ocid1.tenancy.oc1..aaaaaaaaapcfxwuc2utq67fcsehhum6bg6qdacrjjjayo4ull4gpth4ze7kq"
+            },
+            "configuration": {
+                "id": "ocid1.policy.oc1..aaaaaaaaxu2vnxmzrwdbzxahrmbwnmxutqrcunhxwq4rlvrluhqmf7bx57wa",
+                "name": "Tenant Admin Policy",
+                "statements": [
+                    "ALLOW GROUP Administrators to manage all-resources IN TENANCY"
+                ],
+                "has_broad_permissions": true,
+                "broad_statements": [
+                    "ALLOW GROUP Administrators to manage all-resources IN TENANCY"
+                ]
+            }
+        }
+    ],
+    "findings": [
+        {
+            "provider": "oci",
+            "rule_id": "OCI-NET-001",
+            "rule_name": "Public Subnet Enabled",
+            "severity": "Low",
+            "resource_id": "ocid1.subnet.oc1.me-riyadh-1.aaaaaaaa5zqekzw3h4k2cpawwwhac2uf3sujg2im67vyewij3mwed7dcsmlq",
+            "resource_name": "subnet-20260710-1851",
+            "resource_type": "Subnet",
+            "description": "Subnet is public and allows public IP addresses on VNICs.",
+            "recommendation": "Make the subnet private and route traffic through a NAT Gateway."
+        },
+        {
+            "provider": "oci",
+            "rule_id": "OCI-NET-002",
+            "rule_name": "Public SSH Access Allowed",
+            "severity": "High",
+            "resource_id": "ocid1.securitylist.oc1.me-riyadh-1.aaaaaaaaukbol2ykijjuqqcwsnil6zrrvsidutxwjktwpk6tfiwejqnzproa",
+            "resource_name": "Default Security List for vcn-20260710-1853",
+            "resource_type": "SecurityList",
+            "description": "Security List allows incoming SSH traffic (port 22) from all source IPs (0.0.0.0/0).",
+            "recommendation": "Restrict source CIDR blocks to trusted IP addresses."
+        },
+        {
+            "provider": "oci",
+            "rule_id": "OCI-IAM-003",
+            "rule_name": "Overly Permissive Policy",
+            "severity": "High",
+            "resource_id": "ocid1.policy.oc1..aaaaaaaaxu2vnxmzrwdbzxahrmbwnmxutqrcunhxwq4rlvrluhqmf7bx57wa",
+            "resource_name": "Tenant Admin Policy",
+            "resource_type": "IAM_Policies",
+            "description": "IAM Policy contains statements that allow managing all resources.",
+            "recommendation": "Restrict policy statements to follow the principle of least privilege."
+        }
+    ]
+}
