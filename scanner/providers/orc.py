@@ -23,6 +23,7 @@ class OrcProvider():
 
         self._tenancy_id = self._config["tenancy"]
         self._compartment_id = self._tenancy_id
+        self.account_id = self._tenancy_id
 
         try:
             self._identity_client = oci.identity.IdentityClient(self._config)

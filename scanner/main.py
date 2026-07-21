@@ -3,7 +3,7 @@ import pprint
 from providers.aws import AWSProvider
 from providers.gcp import GCPProvider
 from providers.orc import OrcProvider
-from rules.executor import get_rules_for_provider, evaluate_rules, run_analysis_and_report
+from rules.executor import get_rules_for_provider, evaluate_rules
 
 SUPPORTED_PROVIDERS = {
     "aws": AWSProvider,
@@ -49,34 +49,39 @@ def main():
         print("Authentication failed.")
         return
 
-    # Load security rules for the selected provider
-    provider_key = "aws" if "aws" in provider.name.lower() else provider.name.lower()
+    # Load security rules for the selected provider using clean name checks
+    prov_lower = provider.name.lower()
+    if "aws" in prov_lower:
+        provider_key = "aws"
+    elif "gcp" in prov_lower:
+        provider_key = "gcp"
+    elif "oci" in prov_lower or "oracle" in prov_lower:
+        provider_key = "oci"
+    else:
+        provider_key = prov_lower
+
     rules = get_rules_for_provider(provider_key)
 
     import datetime
     timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-    
-    # Extract clean provider name
+
+    # Extract clean provider name for file logs
     prov_name = "PROVIDER"
-    if hasattr(provider, "name") and provider.name:
-        prov_upper = provider.name.upper()
-        if "AWS" in prov_upper:
-            prov_name = "AWS"
-        elif "GCP" in prov_upper:
-            prov_name = "GCP"
-        elif "OCI" in prov_upper or "ORC" in prov_upper:
-            prov_name = "OCI"
-            
+    prov_upper = provider.name.upper()
+    if "AWS" in prov_upper:
+        prov_name = "AWS"
+    elif "GCP" in prov_upper:
+        prov_name = "GCP"
+    elif "OCI" in prov_upper or "ORC" in prov_upper:
+        prov_name = "OCI"
+
     account_id = getattr(provider, "account_id", None)
     if not account_id:
         account_id = "UNKNOWN"
-        
+
     filename = f"RESULT-{prov_name}-{account_id}-{timestamp}.log"
 
     print(f"\nScanning started. Redirecting all output to {filename}...")
-
-    # We will aggregate scanner results in memory to generate the JSON snapshot report later
-    results = []
 
     with open(filename, "w", encoding="utf-8") as f:
         # Redirect stdout to the dynamic log file
@@ -102,11 +107,6 @@ def main():
                 print("Configuration collected:")
                 pprint.pprint(configuration, indent=2)
 
-                results.append({
-                    "resource": resource,
-                    "configuration": configuration
-                })
-
                 # Step 3: Evaluate security rules
                 resource_evaluations = evaluate_rules(resource, configuration, rules)
                 print(f"Rule Evaluations (Checks: {len(resource_evaluations)}):")
@@ -117,16 +117,13 @@ def main():
                     if eval_res['status'] != "SAFE":
                         print(f"    Recommendation: {eval_res['recommendation']}")
 
+            provider.disconnect()
+
         finally:
             # Restore original stdout
             sys.stdout = original_stdout
 
     print(f"Scan completed successfully. Results saved in {filename}.")
-
-    # Evaluate security rules and generate output snapshot report (using standard run_analysis_and_report)
-    run_analysis_and_report(provider, results)
-
-    provider.disconnect()
 
 
 if __name__ == "__main__":
