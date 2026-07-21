@@ -18,43 +18,8 @@ class OrcProvider():
         return []
 
     def connect(self, credentials):
-        import os
-        self._manually_entered = False
-        
-        use_config = input("Load OCI credentials from default config file (~/.oci/config)? (y/n): ").strip().lower()
-        if use_config == 'y':
-            try:
-                self._config = from_file()
-                validate_config(self._config)
-            except Exception as exc:
-                print(f"[OCI] Failed to load config file: {exc}")
-                self._config = None
-                return
-        else:
-            self._manually_entered = True
-            print("\nPlease enter your OCI Credentials details manually:")
-            user = input("user (OCID): ").strip()
-            fingerprint = input("fingerprint: ").strip()
-            tenancy = input("tenancy (OCID): ").strip()
-            region = input("region: ").strip()
-            key_file = input("key_file (path to private key file): ").strip()
-            
-            key_file = os.path.expanduser(key_file)
-            
-            self._config = {
-                "user": user,
-                "fingerprint": fingerprint,
-                "tenancy": tenancy,
-                "region": region,
-                "key_file": key_file
-            }
-            
-            try:
-                validate_config(self._config)
-            except Exception as exc:
-                print(f"[OCI] Provided config attributes are invalid: {exc}")
-                self._config = None
-                return
+        self._config = from_file()
+        validate_config(self._config)
 
         self._tenancy_id = self._config["tenancy"]
         self._compartment_id = self._tenancy_id
@@ -92,45 +57,9 @@ class OrcProvider():
             print("[OCI] Not connected. Call connect() first.")
             return False
 
-        try:
-            user = self._identity_client.get_user(self._config["user"]).data
-            print(f"[OCI] Authenticated as: {user.name} ({user.id})")
-            
-            if getattr(self, "_manually_entered", False):
-                save_choice = input("\nSuccessfully authenticated! Save these credentials to ~/.oci/config? (y/n): ").strip().lower()
-                if save_choice == 'y':
-                    try:
-                        import os
-                        oci_dir = os.path.expanduser(os.path.join("~", ".oci"))
-                        if not os.path.exists(oci_dir):
-                            os.makedirs(oci_dir, mode=0o700)
-                        
-                        config_path = os.path.join(oci_dir, "config")
-                        
-                        config_content = f"""[DEFAULT]
-user={self._config['user']}
-fingerprint={self._config['fingerprint']}
-key_file={self._config['key_file']}
-tenancy={self._config['tenancy']}
-region={self._config['region']}
-"""
-                        with open(config_path, "w") as f:
-                            f.write(config_content)
-                        
-                        try:
-                            os.chmod(config_path, 0o600)
-                        except Exception:
-                            pass
-                            
-                        print(f"[OCI] Credentials successfully saved to {config_path}")
-                    except Exception as e:
-                        print(f"[OCI] Failed to save config file: {e}")
-                else:
-                    print("[OCI] Running this session only without saving credentials.")
-            return True
-        except Exception as exc:
-            print(f"[OCI] Connection validation failed: {exc}")
-            return False
+        user = self._identity_client.get_user(self._config["user"]).data
+        print(f"[OCI] Authenticated as: {user.name} ({user.id})")
+        return True
 
     def disconnect(self):
         self._identity_client = None

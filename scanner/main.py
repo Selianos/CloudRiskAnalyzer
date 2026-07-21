@@ -49,36 +49,28 @@ def main():
         print("Authentication failed.")
         return
 
-    # Load security rules for the selected provider using clean name checks
-    prov_lower = provider.name.lower()
-    if "aws" in prov_lower:
-        provider_key = "aws"
-    elif "gcp" in prov_lower:
-        provider_key = "gcp"
-    elif "oci" in prov_lower or "oracle" in prov_lower:
-        provider_key = "oci"
-    else:
-        provider_key = prov_lower
-
+    # Load security rules for the selected provider
+    provider_key = "aws" if "aws" in provider.name.lower() else provider.name.lower()
     rules = get_rules_for_provider(provider_key)
 
     import datetime
     timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-
-    # Extract clean provider name for file logs
+    
+    # Extract clean provider name
     prov_name = "PROVIDER"
-    prov_upper = provider.name.upper()
-    if "AWS" in prov_upper:
-        prov_name = "AWS"
-    elif "GCP" in prov_upper:
-        prov_name = "GCP"
-    elif "OCI" in prov_upper or "ORC" in prov_upper:
-        prov_name = "OCI"
-
+    if hasattr(provider, "name") and provider.name:
+        prov_upper = provider.name.upper()
+        if "AWS" in prov_upper:
+            prov_name = "AWS"
+        elif "GCP" in prov_upper:
+            prov_name = "GCP"
+        elif "OCI" in prov_upper or "ORC" in prov_upper:
+            prov_name = "OCI"
+            
     account_id = getattr(provider, "account_id", None)
     if not account_id:
         account_id = "UNKNOWN"
-
+        
     filename = f"RESULT-{prov_name}-{account_id}-{timestamp}.log"
 
     print(f"\nScanning started. Redirecting all output to {filename}...")
