@@ -5,7 +5,8 @@ from providers.base import BaseProvider
 class OrcProvider(BaseProvider):
     name = "OCI (Oracle Cloud)"
     
-    def __init__(self):
+    def __init__(self) -> None:
+        """Initialize OCI provider instance variables."""
         self._config = None
         self._identity_client = None
         self._compute_client = None
@@ -16,9 +17,11 @@ class OrcProvider(BaseProvider):
         self._namespace = None
 
     def required_credentials(self) -> list[dict]:
+        """Return the required credentials for OCI connection."""
         return []
 
     def connect(self, credentials: dict) -> None:
+        """Connect to OCI using a local config file or manually entered credentials."""
         import os
         self._manually_entered = False
         
@@ -89,6 +92,7 @@ class OrcProvider(BaseProvider):
         print(f"[OCI] Connected - tenancy: {self._tenancy_id}")
 
     def validate_credentials(self) -> bool:
+        """Validate current OCI connection credentials by performing a test identity call."""
         if self._config is None or self._identity_client is None:
             print("[OCI] Not connected. Call connect() first.")
             return False
@@ -134,6 +138,7 @@ region={self._config['region']}
             return False
 
     def disconnect(self) -> None:
+        """Disconnect and clear all loaded OCI client configurations."""
         self._identity_client = None
         self._compute_client = None
         self._network_client = None
@@ -145,11 +150,14 @@ region={self._config['region']}
         print("[OCI] Disconnected.")
 
     def list_supported_resources(self) -> list[str]:
+        """Return a list of resource types supported by this scanner provider."""
         return ["Compute", "VCN", "Subnet", "SecurityList", "ObjectStorage", "IAM_Users", "IAM_Policies"]
 
     def discover_resources(self) -> list[dict]:
+        """Discover and list supported OCI resources across all accessible compartments."""
         compartments = [self._tenancy_id]
         try:
+            #Listing all compartments in the tenancy and get the active ones
             all_comps = oci.pagination.list_call_get_all_results(
                 self._identity_client.list_compartments,
                 compartment_id=self._tenancy_id,
@@ -176,7 +184,8 @@ region={self._config['region']}
         print(f"[OCI] Discovered {len(resources)} resources across all compartments.")
         return resources
 
-    def _discover_compute(self, compartments):
+    def _discover_compute(self, compartments: list[str]) -> list[dict]:
+        """Discover active Compute instances in the specified compartments."""
         results = []
         for cid in compartments:
             try:
@@ -196,7 +205,8 @@ region={self._config['region']}
                 print(f"[OCI] Error listing instances in compartment {cid}: {exc}")
         return results
 
-    def _discover_vcns(self, compartments):
+    def _discover_vcns(self, compartments: list[str]) -> list[dict]:
+        """Discover Virtual Cloud Networks (VCNs) in the specified compartments."""
         results = []
         for cid in compartments:
             try:
@@ -215,7 +225,8 @@ region={self._config['region']}
                 print(f"[OCI] Error listing VCNs in compartment {cid}: {exc}")
         return results
 
-    def _discover_subnets(self, compartments):
+    def _discover_subnets(self, compartments: list[str]) -> list[dict]:
+        """Discover Subnets in the specified compartments."""
         results = []
         for cid in compartments:
             try:
@@ -235,7 +246,8 @@ region={self._config['region']}
                 print(f"[OCI] Error listing subnets in compartment {cid}: {exc}")
         return results
 
-    def _discover_security_lists(self, compartments):
+    def _discover_security_lists(self, compartments: list[str]) -> list[dict]:
+        """Discover Security Lists in the specified compartments."""
         results = []
         for cid in compartments:
             try:
@@ -255,7 +267,8 @@ region={self._config['region']}
                 print(f"[OCI] Error listing security lists in compartment {cid}: {exc}")
         return results
 
-    def _discover_buckets(self, compartments):
+    def _discover_buckets(self, compartments: list[str]) -> list[dict]:
+        """Discover Object Storage Buckets in the specified compartments."""
         results = []
         if not (self._object_storage_client and self._namespace):
             return results
@@ -278,7 +291,8 @@ region={self._config['region']}
                 print(f"[OCI] Error listing buckets in compartment {cid}: {exc}")
         return results
 
-    def _discover_iam_users(self):
+    def _discover_iam_users(self) -> list[dict]:
+        """Discover IAM Users in the tenancy."""
         results = []
         try:
             users = oci.pagination.list_call_get_all_results(
@@ -296,7 +310,8 @@ region={self._config['region']}
             print(f"[OCI] Error listing IAM Users: {exc}")
         return results
 
-    def _discover_iam_policies(self, compartments):
+    def _discover_iam_policies(self, compartments: list[str]) -> list[dict]:
+        """Discover IAM Policies in the specified compartments."""
         results = []
         for cid in compartments:
             try:
@@ -316,6 +331,7 @@ region={self._config['region']}
         return results
 
     def get_configuration(self, resource: dict) -> dict:
+        """Collect detailed configuration settings for a given resource."""
         print(f"[OCI] Collecting configuration for {resource['type']}: {resource['name']}...")
         rtype = resource.get("type", "")
         cid = resource.get("compartment_id", self._compartment_id)
@@ -341,100 +357,73 @@ region={self._config['region']}
         }
 
     def _get_compute_config(self, resource, cid):
+        """Retrieve detailed configuration for a Compute instance."""
         try:
             inst = self._compute_client.get_instance(resource["id"]).data
-            public_ips = []
             vnic_attachments = oci.pagination.list_call_get_all_results(
                 self._compute_client.list_vnic_attachments,
                 compartment_id=cid,
                 instance_id=inst.id
             ).data
+            vnics = []
             for va in vnic_attachments:
                 try:
                     vnic = self._network_client.get_vnic(va.vnic_id).data
-                    if vnic.public_ip:
-                        public_ips.append(vnic.public_ip)
+                    vnics.append(oci.util.to_dict(vnic))
                 except Exception:
                     pass
+            raw_data = oci.util.to_dict(inst)
+            raw_data["vnics"] = vnics
             return {
                 "id": inst.id,
                 "name": inst.display_name,
-                "shape": inst.shape,
-                "lifecycle_state": inst.lifecycle_state,
-                "public_ips": public_ips,
-                "has_public_ip": len(public_ips) > 0
+                "raw_data": raw_data
             }
         except Exception as exc:
             print(f"[OCI] Error getting compute config: {exc}")
             return {}
 
     def _get_vcn_config(self, resource):
+        """Retrieve configuration details for a VCN."""
         try:
             vcn = self._network_client.get_vcn(resource["id"]).data
             return {
                 "id": vcn.id,
                 "name": vcn.display_name,
-                "cidr_block": vcn.cidr_block,
-                "lifecycle_state": vcn.lifecycle_state
+                "raw_data": oci.util.to_dict(vcn)
             }
         except Exception as exc:
             print(f"[OCI] Error getting VCN config: {exc}")
             return {}
 
     def _get_subnet_config(self, resource):
+        """Retrieve configuration details for a Subnet."""
         try:
             subnet = self._network_client.get_subnet(resource["id"]).data
             return {
                 "id": subnet.id,
                 "name": subnet.display_name,
-                "cidr_block": subnet.cidr_block,
-                "prohibit_public_ip_on_vnic": subnet.prohibit_public_ip_on_vnic,
-                "is_public": not subnet.prohibit_public_ip_on_vnic,
-                "security_list_ids": subnet.security_list_ids
+                "raw_data": oci.util.to_dict(subnet)
             }
         except Exception as exc:
             print(f"[OCI] Error getting Subnet config: {exc}")
             return {}
 
     def _get_security_list_config(self, resource):
+        """Retrieve and parse security rules for a Security List."""
         try:
             sl = self._network_client.get_security_list(resource["id"]).data
-            ingress_rules = []
-            for rule in (sl.ingress_security_rules or []):
-                entry = {
-                    "source": rule.source,
-                    "protocol": rule.protocol,
-                    "source_type": rule.source_type
-                }
-                if rule.tcp_options and rule.tcp_options.destination_port_range:
-                    entry["port_min"] = rule.tcp_options.destination_port_range.min
-                    entry["port_max"] = rule.tcp_options.destination_port_range.max
-                ingress_rules.append(entry)
-
-            public_ssh = any(
-                r.get("source") == "0.0.0.0/0" and
-                r.get("protocol") == "6" and
-                r.get("port_min", 0) <= 22 <= r.get("port_max", 0)
-                for r in ingress_rules
-            )
-            public_rdp = any(
-                r.get("source") == "0.0.0.0/0" and
-                r.get("protocol") == "6" and
-                r.get("port_min", 0) <= 3389 <= r.get("port_max", 0)
-                for r in ingress_rules
-            )
             return {
                 "id": sl.id,
                 "name": sl.display_name,
-                "ingress_rules": ingress_rules,
-                "public_ssh": public_ssh,
-                "public_rdp": public_rdp
+                "raw_data": oci.util.to_dict(sl)
             }
         except Exception as exc:
             print(f"[OCI] Error getting SecurityList config: {exc}")
             return {}
 
     def _get_bucket_config(self, resource):
+        """Retrieve configuration details for an Object Storage bucket."""
         try:
             bucket = self._object_storage_client.get_bucket(
                 namespace_name=resource["namespace"],
@@ -443,47 +432,41 @@ region={self._config['region']}
             return {
                 "id": bucket.name,
                 "name": bucket.name,
-                "public_access_type": bucket.public_access_type,
-                "is_public": bucket.public_access_type != "NoPublicAccess",
-                "kms_key_id": bucket.kms_key_id,
-                "encrypted_with_cmk": bucket.kms_key_id is not None,
-                "versioning": bucket.versioning
+                "raw_data": oci.util.to_dict(bucket)
             }
         except Exception as exc:
             print(f"[OCI] Error getting Bucket config: {exc}")
             return {}
 
     def _get_iam_user_config(self, resource):
+        """Retrieve configuration and API keys for an IAM User."""
         try:
             user = self._identity_client.get_user(resource["id"]).data
             api_keys = []
             try:
-                api_keys = self._identity_client.list_api_keys(user_id=user.id).data
+                api_keys_data = self._identity_client.list_api_keys(user_id=user.id).data
+                api_keys = [oci.util.to_dict(key) for key in api_keys_data]
             except Exception:
                 pass
+            raw_data = oci.util.to_dict(user)
+            raw_data["api_keys"] = api_keys
             return {
                 "id": user.id,
                 "name": user.name,
-                "is_mfa_activated": user.is_mfa_activated,
-                "api_key_count": len(api_keys)
+                "raw_data": raw_data
             }
         except Exception as exc:
             print(f"[OCI] Error getting IAM User config: {exc}")
             return {}
 
     def _get_iam_policy_config(self, resource):
+        """Retrieve policy statements for an IAM Policy."""
         try:
             policy = self._identity_client.get_policy(resource["id"]).data
-            broad_statements = [
-                s for s in (policy.statements or [])
-                if "manage all-resources" in s.lower()
-            ]
             return {
                 "id": policy.id,
                 "name": policy.name,
-                "statements": policy.statements or [],
-                "has_broad_permissions": len(broad_statements) > 0,
-                "broad_statements": broad_statements
+                "raw_data": oci.util.to_dict(policy)
             }
         except Exception as exc:
             print(f"[OCI] Error getting IAM Policy config: {exc}")
