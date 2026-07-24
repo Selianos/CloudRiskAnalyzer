@@ -13,7 +13,14 @@ def get_rules_for_provider(provider_name: str) -> list:
         rules.extend(getattr(aws_iam, "RULES", []))
         return rules
         
-    # Placeholder for other providers (GCP, OCI)
+    if "oci" in name or "oracle" in name:
+        try:
+            from rules.oci.oci import RULES as oci_rules
+            return oci_rules
+        except ImportError:
+            return []
+            
+    # Placeholder for other providers (GCP)
     return []
 
 
@@ -39,6 +46,8 @@ def evaluate_rules(resource: dict, configuration: dict, rules: list) -> list:
         elif rule_id.startswith("S3") and resource_type == "S3":
             match = True
         elif rule_id.startswith("IAM") and resource_type.startswith("IAM"):
+            match = True
+        elif rule_id.startswith("OCI") and rule.get("resource_type", "").upper() == resource_type:
             match = True
             
         if match:
