@@ -1,14 +1,14 @@
 import sys
 import pprint
-#from providers.aws import AWSProvider
+from providers.aws import AWSProvider
 from providers.gcp import GCPProvider
-#from providers.orc import OrcProvider
+from providers.orc import OrcProvider
 from rules.executor import get_rules_for_provider, evaluate_rules
 
 SUPPORTED_PROVIDERS = {
-    #"aws": AWSProvider,
+    "aws": AWSProvider,
     "gcp": GCPProvider,
-    #"oci": OrcProvider,
+    "oci": OrcProvider,
 }
 
 def choose_provider():
@@ -48,9 +48,16 @@ def main():
         return
 
     # Load security rules for the selected provider
-    provider_key = "aws" if "aws" in provider.name.lower() else provider.name.lower()
-    rules = get_rules_for_provider(provider_key)
+    if "aws" in provider.name.lower():
+        provider_key = "aws"
+    elif "gcp" in provider.name.lower():
+        provider_key = "gcp"
+    elif "oci" in provider.name.lower() or "orc" in provider.name.lower():
+        provider_key = "oci"
+    else:
+        raise ValueError(f"Unknown provider: {provider.name}")
 
+    rules = get_rules_for_provider(provider_key)
     import datetime
     timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     
