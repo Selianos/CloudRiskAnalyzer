@@ -14,7 +14,7 @@ services:
     restart: unless-stopped
     volumes:
       - pg_data:/var/lib/postgresql/data
-      - ./db:/docker-entrypoint-initdb.d
+      - ./db/00_init_auth.sql:/docker-entrypoint-initdb.d/00_init_auth.sql
     networks:
       - db_network
     healthcheck:
@@ -81,6 +81,26 @@ services:
       start_period: 5s
     networks:
       - db_network
+
+  db-migrator:
+    image: postgres:16.4-alpine
+    container_name: db_migrator_container
+    env_file:
+      - .env
+    environment:
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+    depends_on:
+      db:
+        condition: service_healthy
+      auth:
+        condition: service_healthy
+    volumes:
+      - ./db/01_init_db.sql:/01_init_db.sql
+    entrypoint: >
+      sh -c "psql -h db -U $${POSTGRES_USER} -d $${POSTGRES_DB} -f /01_init_db.sql"
+    networks:
+      - db_network
+
 
 
 networks:
