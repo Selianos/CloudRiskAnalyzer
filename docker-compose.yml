@@ -101,6 +101,23 @@ services:
     networks:
       - db_network
 
+  api:
+    build: ./api
+    container_name: express_api_container
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?schema=public
+      JWT_SECRET: ${GOTRUE_JWT_SECRET}
+      PORT: 3000
+    depends_on:
+      db:
+        condition: service_healthy
+      auth:
+        condition: service_healthy
+    networks:
+      - db_network
+
 
 
 networks:
