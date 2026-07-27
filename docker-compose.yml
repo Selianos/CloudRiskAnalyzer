@@ -53,6 +53,36 @@ services:
     networks:
       - db_network
 
+
+  auth:
+    image: supabase/gotrue:v2.146.0
+    container_name: gotrue_container
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${GOTRUE_PORT}:9999"
+    environment:
+      GOTRUE_API_HOST: 0.0.0.0
+      GOTRUE_API_PORT: 9999
+      GOTRUE_DB_DRIVER: postgres
+      GOTRUE_DB_DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?search_path=auth
+      GOTRUE_SITE_URL: ${GOTRUE_SITE_URL}
+      GOTRUE_JWT_SECRET: ${GOTRUE_JWT_SECRET}
+      GOTRUE_MAILER_AUTOCONFIRM: "true"
+      GOTRUE_EXTERNAL_EMAIL_ENABLED: "true"
+      API_EXTERNAL_URL: http://localhost:${GOTRUE_PORT}
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9999/health"]
+      timeout: 5s
+      interval: 10s
+      retries: 3
+      start_period: 5s
+    networks:
+      - db_network
+
+
 networks:
   db_network:
 
