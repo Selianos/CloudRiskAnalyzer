@@ -69,8 +69,9 @@ class GCPProvider(BaseProvider):
     TYPE_FIREWALL_RULE = "Firewall Rules"
 
     # Scopes required for the operations this provider performs.
-    _SCOPES = ["https://www.googleapis.com/auth/cloud-platform.read-only"]
-
+    _SCOPES = [
+        "https://www.googleapis.com/auth/cloud-platform"
+    ]
     def __init__(self) -> None:
         self.project_id: Optional[str] = None
         self.credentials = None
