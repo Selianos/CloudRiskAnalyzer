@@ -9,9 +9,6 @@ RUN npm install
 
 COPY . .
 
-# Set placeholder URL for build-time Prisma Client generation
-ENV API_DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres
-
 RUN npx prisma generate
 
 EXPOSE 3000
