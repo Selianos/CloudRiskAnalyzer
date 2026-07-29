@@ -9,6 +9,8 @@ RUN npm install
 
 COPY . .
 
+ARG API_DATABASE_URL="postgresql://placeholder:placeholder@localhost:5432/placeholder"
+ENV API_DATABASE_URL=${API_DATABASE_URL}
 RUN npx prisma generate
 
 EXPOSE 3000

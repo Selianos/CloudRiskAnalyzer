@@ -14,7 +14,7 @@ services:
     restart: unless-stopped
     volumes:
       - pg_data:/var/lib/postgresql/data
-      - ./db:/docker-entrypoint-initdb.d
+      - ./db:/docker-entrypoint-initdb.d:Z
     networks:
       - db_network
     healthcheck:
@@ -41,7 +41,7 @@ services:
       PGADMIN_CONFIG_SERVER_MODE: "False"
       PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
     volumes:
-      - ./pgadmin-init.sh:/entrypoint_custom.sh
+      - ./pgadmin-init.sh:/entrypoint_custom.sh:Z
       - pgadmin_data:/var/lib/pgadmin
     depends_on:
       db:
@@ -92,7 +92,7 @@ services:
       JWT_SECRET: ${GOTRUE_JWT_SECRET}
       PORT: 3000
     volumes:
-      - ./api:/app
+      - ./api:/app:Z
       - /app/node_modules
     command: npm run dev
     depends_on:
