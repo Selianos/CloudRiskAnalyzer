@@ -1,14 +1,14 @@
 import sys
 import pprint
-#from providers.aws import AWSProvider
+from providers.aws import AWSProvider
 from providers.gcp import GCPProvider
-#from providers.orc import OrcProvider
+from providers.orc import OrcProvider
 from rules.executor import get_rules_for_provider, evaluate_rules
 
 SUPPORTED_PROVIDERS = {
-    #"aws": AWSProvider,
+    "aws": AWSProvider,
     "gcp": GCPProvider,
-    #"oci": OrcProvider,
+    "oci": OrcProvider,
 }
 
 def choose_provider():
