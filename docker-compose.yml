@@ -95,6 +95,7 @@ services:
       POSTGRES_PORT: 5432
       JWT_SECRET: ${GOTRUE_JWT_SECRET}
       PORT: 3000
+      EXPRESS_GOTRUE_URL: ${EXPRESS_GOTRUE_URL}
     volumes:
       - ./api:/app:Z
       - /app/node_modules

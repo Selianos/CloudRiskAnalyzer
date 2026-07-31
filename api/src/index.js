@@ -3,7 +3,7 @@ import cors from 'cors';
 import pg from 'pg';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '@prisma/client';
-import connectionRoutes from './routes/connection.routes.js';
+import routes from './routes/index.js';
 import { config } from './config.js';
 
 const app = express();
@@ -48,7 +48,12 @@ app.get('/health', async (req, res) => {
   }
 });
 
-app.use('/connections', connectionRoutes);
+app.use('/api', routes);
+
+// 404 Not Found handler
+app.use((req, res, next) => {
+  res.status(404).end(`Can't ${req.url}`);
+});
 
 // Global JSON error handler
 app.use((err, req, res, next) => {
