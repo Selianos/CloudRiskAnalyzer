@@ -16,10 +16,12 @@ const dbName = process.env.POSTGRES_DB;
 const port = process.env.PORT || 3000;
 const jwtSecret = process.env.JWT_SECRET;
 const authUrl = process.env.EXPRESS_GOTRUE_URL;
+const internalBackendUrl = process.env.INTERNAL_BACKEND_URL || "http://internal-backend:8000";
 
 export const config = {
   port: port,
   databaseUrl: `postgresql://${dbUser}:${dbPassword}@${dbHost}:${dbPort}/${dbName}?schema=public`,
   jwtSecret: jwtSecret,
   authUrl: authUrl,
+  internalBackendUrl: internalBackendUrl,
 };

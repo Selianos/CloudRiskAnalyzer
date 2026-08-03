@@ -31,21 +31,24 @@ app.use(cors());
 app.use(express.json());
 
 app.get('/health', async (req, res) => {
-  try {
-    await prisma.$queryRaw`SELECT 1`;
+  const [dbResult, internalResult] = await Promise.allSettled([
+    prisma.$queryRaw`SELECT 1`,
+    fetch(`${config.internalBackendUrl}/internal/health`).then(res => {
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
+    })
+  ]);
 
-    res.json({
-      status: 'ok',
-      service: 'express-api',
-      database: 'healthy'
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: 'error',
-      database: 'unhealthy',
-      error: error.message
-    });
-  }
+  const database = dbResult.status === 'fulfilled' ? 'healthy' : 'unhealthy';
+  const internalBackend = internalResult.status === 'fulfilled' ? 'healthy' : 'unhealthy';
+  const allHealthy = database === 'healthy' && internalBackend === 'healthy';
+
+  res.status(allHealthy ? 200 : 503).json({
+    status: allHealthy ? 'ok' : 'error',
+    service: 'web-api',
+    database: database,
+    internal_backend: internalBackend,
+  });
 });
 
 app.use('/api', routes);
