@@ -1,6 +1,8 @@
 import logging
 
-from fastapi import FastAPI, APIRouter, Response
+from fastapi import FastAPI, APIRouter, Response, Request
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 
 from app.routers import jobs
 from app.database import ScanDatabase
@@ -11,6 +13,14 @@ logging.basicConfig(
 )
 
 app = FastAPI(title="Cloud Risk Analyzer Internal Backend")
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    logging.error(f" Invalid scan result format. Path: {request.url.path}")
+    return JSONResponse(
+        status_code=400,
+        content={"detail": "Invalid scan result format"},
+    )
 
 internal_router = APIRouter(prefix="/internal")
 
