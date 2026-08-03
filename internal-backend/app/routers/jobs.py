@@ -30,12 +30,12 @@ def poll_job(authorization: str | None = Header(None)):
 
 @router.get("/{job_id}")
 def get_job(job_id: str, authorization: str | None = Header(None)):
-    WorkerAuth.validate(authorization)
+    WorkerAuth.validate(authorization, job_id=job_id)
 
     job = ScanDatabase.get_job(job_id)
 
     if not job:
-        logging.error(f"Job not found: {job_id}")
+        logging.error(f" Scan job not found (Job ID: {job_id})")
         raise HTTPException(status_code=404, detail="Scan job not found")
 
     credentials = CredentialManager.decrypt(job["credentials"])
@@ -51,11 +51,12 @@ def get_job(job_id: str, authorization: str | None = Header(None)):
 def submit_results(
     job_id: str, result: ScanResult, authorization: str | None = Header(None)
 ):
-    WorkerAuth.validate(authorization)
+    WorkerAuth.validate(authorization, job_id=job_id)
 
     job = ScanDatabase.get_job(job_id)
 
     if not job:
+        logging.error(f" Scan job does not exist (Job ID: {job_id})")
         raise HTTPException(status_code=404, detail="Scan job does not exist")
 
     for resource in result.resources:
@@ -73,11 +74,12 @@ def submit_results(
 def update_status(
     job_id: str, update: StatusUpdate, authorization: str | None = Header(None)
 ):
-    WorkerAuth.validate(authorization)
+    WorkerAuth.validate(authorization, job_id=job_id)
 
     job = ScanDatabase.get_job(job_id)
 
     if not job:
+        logging.error(f" Scan job does not exist (Job ID: {job_id})")
         raise HTTPException(status_code=404, detail="Scan job does not exist")
 
     ScanDatabase.update_status(job_id, update.status)
