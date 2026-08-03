@@ -146,16 +146,19 @@ When you boot the container orchestration stack, the environment sets itself up 
    * Configures shared networking (`db_network`) and maps dependencies so that services start in their correct dependency order.
 2. **Init Postgres (`db` service)**
    * Starts a `postgres:16.4-alpine` container.
-   * Loads [00_init_auth.sql](file:///c:/Users/403/Documents/CloudRiskAnalyzer/db/00_init_auth.sql) in `/docker-entrypoint-initdb.d/` to create the `auth` schema, register default security roles (`authenticated`, `anon`), and set up the `auth.uid()` helper function.
+   * Loads [00_init_GoTrue_auth.sql](./db/00_init_GoTrue_auth.sql) in `/docker-entrypoint-initdb.d/` to create the `auth` schema, register default security roles (`authenticated`, `anon`), and set up the `auth.uid()` helper function.
 3. **Init Auth (`auth` service)**
    * Launches `supabase/gotrue:v2.146.0` (Supabase's standalone auth engine) on port `9999`.
 4. **Migrate Supabase**
    * During boot, the GoTrue auth service automatically connects to the Postgres database using `search_path=auth` and performs migration schemas to seed its internal user and session tables.
 5. **Migrate Database**
-   * Before booting the Express.js application, the `api` container runs `psql` to execute the database migrations.
-   * It executes the migration script [01_init_db.sql](file:///c:/Users/403/Documents/CloudRiskAnalyzer/db/01_init_db.sql) against the database to construct the core application tables, performance indices, and enforce Row-Level Security policies.
-6. **Init ExpressJS Backend (`api` service)**
-   * Builds the backend microservice inside [api/](file:///c:/Users/403/Documents/CloudRiskAnalyzer/api) with `postgresql-client` installed.
+   * Before booting the Express.js application, the `web-api` container runs `psql` to execute the database migrations.
+   * It executes the migration script [01_init_app_db.sql](./db/01_init_app_db.sql) against the database to construct the core application tables, performance indices, and enforce Row-Level Security policies.
+6. **Init ExpressJS Backend (`web-api` service)**
+   * Builds the backend microservice inside [web-api/](./web-api) with `postgresql-client` installed.
    * Runs `npx prisma generate` to inspect both `public` and `auth` schemas to create database client models.
    * Boots the backend REST API on port `3000` once the migration step completes successfully.
+7. **Init Internal Backend (`internal-backend` service)**
+   * Builds the internal Python FastAPI microservice inside [internal-backend/](./internal-backend).
+   * Runs migrations internally (if any) and boots the FastAPI server on port `8000` inside a private isolated docker network.
 
