@@ -60,10 +60,10 @@ def submit_results(
         raise HTTPException(status_code=404, detail="Scan job does not exist")
 
     for resource in result.resources:
-        ScanDatabase.insert_resource(job_id, resource)
+        ScanDatabase.insert_resource(job_id, resource.model_dump())
 
     for finding in result.findings:
-        ScanDatabase.insert_finding(job_id, finding)
+        ScanDatabase.insert_finding(job_id, finding.model_dump())
 
     ScanDatabase.update_status(job_id, "COMPLETED")
 

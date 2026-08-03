@@ -169,6 +169,7 @@ class ScanDatabase:
     def insert_resource(job_id: str, resource: dict) -> None:
         with get_session() as db:
             db.add(Resource(
+                id=                   uuid.UUID(resource.get("id")),
                 scan_job_id=          uuid.UUID(job_id),
                 resource_type=        resource.get("resource_type"),
                 provider_resource_id= resource.get("provider_resource_id"),
