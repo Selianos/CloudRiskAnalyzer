@@ -1,22 +1,51 @@
 # CloudRiskAnalyzer Public API
 
-This directory contains the Express.js Public API backend that serves the frontend application. It handles user authentication, cloud connections, and scan jobs.
+This directory contains the Express.js Public API backend that serves the frontend application. It handles user authentication, cloud connections (AWS, GCP, OCI), and scan jobs.
 
-## Overview
+---
 
-The API is built using Node.js and Express, with Prisma as the ORM to interact with the PostgreSQL database. Authentication is proxied to the GoTrue service.
+## 1. Environment & Configuration
 
-## Endpoints
+The Public API requires the following environment variables (which are automatically pre-configured in `docker-compose.yml`):
+* `ENCRYPTION_KEY`: A 32-byte URL-safe base64 Fernet key used to encrypt connection credentials before writing to PostgreSQL.
+* `REDIS_URL`: Connection string for the Redis queue broker (e.g. `redis://redis:6379/0`).
 
-All public API endpoints are prefixed with `/api`.
+---
+
+## 2. API Endpoints
+
+All public API endpoints are prefixed with `/api` and require `Authorization: Bearer <JWT_TOKEN>` (except login/register).
 
 ### Authentication Endpoints
+Interacts with the GoTrue identity service:
+* `POST /api/auth/register` - Create user.
+* `POST /api/auth/login` - Authenticate user and return a JWT access token.
+* `POST /api/auth/logout` - Revoke JWT session.
 
-These endpoints interact directly with the GoTrue service to manage user accounts.
+### Cloud Connections Endpoints
+Manages cloud account settings. Credentials payloads are encrypted:
+* `GET /api/connections` - List all connections (raw credentials are stripped for safety).
+* `POST /api/connections` - Register a connection (credentials are Fernet-encrypted).
+* `GET /api/connections/:id` - Get connection details (credentials stripped).
+* `PUT /api/connections/:id` - Update connection name or credentials.
+* `DELETE /api/connections/:id` - Delete connection.
 
-- `POST /api/auth/register`: Create a new user account.
-  - Body: `{ "email": "user@example.com", "password": "Password123", "fullname": "John Doe" }`
-- `POST /api/auth/login`: Authenticate a user and return a session token.
-  - Body: `{ "email": "user@example.com", "password": "Password123" }`
-- `POST /api/auth/logout`: End the user's session (requires `Authorization: Bearer <token>` header).
+### Scan Operations Endpoints
+Triggers and retrieves audits:
+* `GET /api/scans` - List all scans history.
+* `POST /api/scans` - Trigger a scan (saves a `PENDING` job and publishes its ID to Redis queue).
+* `GET /api/scans/:scan_id` - Fetch scan metadata and status (`PENDING`, `RUNNING`, `COMPLETED`, `FAILED`).
+* `GET /api/scans/:scan_id/results` - Fetch scan results (joins findings with resource detail).
 
+---
+
+## 3. Running Unit Tests
+
+The test suite has been migrated to **Vitest**. To run the tests locally or in the container:
+```bash
+# Run tests inside the web_api container
+docker exec web_api_container npm test
+
+# Run tests directly in this folder (requires npm install)
+npm test
+```

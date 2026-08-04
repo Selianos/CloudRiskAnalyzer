@@ -1,33 +1,46 @@
 # CloudRiskAnalyzer Internal Backend
 
-This directory contains the Python FastAPI Internal Backend that serves the scanner workers. It handles job polling, result submission, and status updates, acting as a secure bridge between the workers and the PostgreSQL database.
+This directory contains the Python FastAPI Internal Backend that serves the scanner workers. It handles job metadata retrieval, result submission, and status updates, acting as a secure bridge between the workers and the PostgreSQL database.
 
-## Overview
+It runs inside a **private Docker network** and is not exposed to the public internet or the host machine directly.
 
-The Internal API is built using Python 3.13, FastAPI, and SQLAlchemy 2.0 as the ORM to interact with the PostgreSQL database. It runs inside a private Docker network and is not exposed to the public internet or the host machine directly.
+---
 
-## Endpoints
+## 1. Overview & Security
 
-All internal API endpoints are prefixed with `/internal`.
+* **Worker Authentication**: All endpoints require an `Authorization: Bearer <WORKER_API_KEY>` header.
+* **Credentials Decryption**: It accesses the shared `ENCRYPTION_KEY` environment variable on startup. When a worker requests job details via `GET /internal/jobs/{job_id}`, it automatically decrypts the connection's credentials from PostgreSQL and returns them securely in-memory.
+
+---
+
+## 2. API Endpoints
+
+All internal endpoints are prefixed with `/internal`.
 
 ### Job Endpoints
+* `GET /internal/jobs/{job_id}`: Get the details of a specific scan job (including decrypted credentials).
+* `POST /internal/jobs/{job_id}/status`: Update the status of a specific scan job (e.g. to `RUNNING` or `FAILED`).
+  - Body: `{ "status": "RUNNING" }`
+* `POST /internal/jobs/{job_id}/results`: Submit the final resources and findings of a completed scan.
+  - Body: JSON object matching the `ScanResult` Pydantic model (`{"resources": [...], "findings": [...]}`).
+  - Action: Inserts resources and findings to the database, maps relations, and automatically marks the scan job status as `COMPLETED`.
 
-These endpoints interact directly with the database to manage scan jobs and are protected by a static `WORKER_API_KEY`.
+### Health Check Endpoint
+* `GET /internal/health`: Checks that the database connection is active and responsive. Returns `200 OK` or `503 Service Unavailable`.
 
-- `GET /internal/jobs/poll`: Atomically claim the next `PENDING` scan job.
-  - Headers: `Authorization: Bearer <WORKER_API_KEY>`
-  - Returns: Job details including decrypted cloud credentials.
-- `GET /internal/jobs/{job_id}`: Get the details of a specific scan job.
-  - Headers: `Authorization: Bearer <WORKER_API_KEY>`
-- `POST /internal/jobs/{job_id}/results`: Submit the final resources and findings of a completed scan.
-  - Headers: `Authorization: Bearer <WORKER_API_KEY>`
-  - Body: JSON containing `resources` array and `findings` array.
-- `POST /internal/jobs/{job_id}/status`: Update the status of a specific scan job (e.g., to `FAILED`).
-  - Headers: `Authorization: Bearer <WORKER_API_KEY>`
-  - Body: `{ "status": "FAILED" }`
+---
 
-### Health Endpoint
+## 3. Database Constraints & Payload Formats
 
-- `GET /internal/health`: Check the health of the internal backend.
-  - Validates the SQLAlchemy connection to the PostgreSQL database with a simple query.
-  - Returns `200 OK` if the database is reachable, or `503 Service Unavailable` if the database is unhealthy.
+To successfully submit results to `/results`, the scanner payload must conform to the database foreign key and model structure:
+1. **Client-Side IDs**: Every item in `resources` must have a temporary client-side generated key (e.g. `id: "res-1"`). Findings must link back to these resources using the `resource_id` field (e.g., `resource_id: "res-1"`).
+2. **Rule IDs Constraint**: Any `rule_id` in a finding must exist in the database `rules` catalog (e.g. `AWS-S3-001`, `AWS-EC2-001`, `AWS-IAM-001`). Unknown rule IDs will trigger an `IntegrityError` (Foreign Key Constraint Failure).
+
+---
+
+## 4. Running Unit Tests
+
+The backend uses **Pytest** for unit testing. To run the tests inside the Docker container:
+```bash
+docker exec internal_backend_container pytest /app/tests
+```
