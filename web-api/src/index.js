@@ -1,22 +1,10 @@
 import express from 'express';
 import cors from 'cors';
-import pg from 'pg';
-import { PrismaPg } from '@prisma/adapter-pg';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from './prisma.js';
 import routes from './routes/index.js';
 import { config } from './config.js';
 
 const app = express();
-
-const pool = new pg.Pool({
-  connectionString: config.databaseUrl
-});
-
-const adapter = new PrismaPg(pool);
-
-const prisma = new PrismaClient({
-  adapter
-});
 
 // Test connection on startup and log result
 prisma.$connect()
