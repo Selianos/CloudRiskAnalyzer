@@ -1,0 +1,43 @@
+name: Web API Continuous Integration
+
+on:
+  push:
+    paths:
+      - 'web-api/**'
+      - '.github/workflows/web-api-ci.yml'
+  pull_request:
+    paths:
+      - 'web-api/**'
+      - '.github/workflows/web-api-ci.yml'
+
+jobs:
+  test-web-api:
+    name: Run Web API Unit Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+          cache-dependency-path: web-api/package-lock.json
+
+      - name: Install Dependencies
+        run: npm ci
+        working-directory: web-api
+
+      - name: Generate Prisma Client
+        run: npm run prisma:generate
+        working-directory: web-api
+
+      - name: Run Unit Tests (Vitest)
+        run: npm test
+        working-directory: web-api
+
+      - name: Run Coverage Analysis
+        run: npm run test:coverage
+        working-directory: web-api
