@@ -1,95 +1,179 @@
-import crypto from 'crypto';
+import { prisma } from '../prisma.js';
+import { encryptFernet } from '../crypto.js';
+import { config } from '../config.js';
 
-// In-memory mock connection store
-let mockConnections = [
-  {
-    id: "e0a6d091-628d-4e94-8742-fa32c4e20790",
-    user_id: "e23b4cad-deab-44fe-b15b-b459551c92ce",
-    name: "My AWS Development Account",
-    provider: "aws",
-    credentials: { role_arn: "arn:aws:iam::123456789012:role/ScannerRole" },
-    created_at: new Date().toISOString(),
-  },
-  {
-    id: "f83a54b3-c5dc-4137-b769-cfad4f568a0a",
-    user_id: "7effdd70-eb9d-4d97-b3ea-0a26de7f649a",
-    name: "GCP Production Scan Connection",
-    provider: "gcp",
-    credentials: { project_id: "my-gcp-prod-project" },
-    created_at: new Date().toISOString(),
-  }
-];
+// Helper UUID validation regex
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export const getConnections = async (req, res) => {
   const userId = req.user?.sub;
-  const userConnections = mockConnections.filter(c => c.user_id === userId);
-  // Sanitize connections: omit the sensitive credentials field in GET responses
-  const sanitized = userConnections.map(({ credentials, ...rest }) => rest);
-  res.json(sanitized);
+  if (!userId) {
+    return res.status(401).json({ error: 'Unauthorized: Missing user identifier' });
+  }
+
+  try {
+    const userConnections = await prisma.connections.findMany({
+      where: { user_id: userId },
+      orderBy: { created_at: 'desc' }
+    });
+
+    // Sanitize connections: omit the sensitive credentials field in GET responses
+    const sanitized = userConnections.map(({ credentials, ...rest }) => rest);
+    res.json(sanitized);
+  } catch (error) {
+    console.error('Error fetching connections:', error);
+    res.status(500).json({ error: 'Internal server error while fetching connections' });
+  }
 };
 
 export const getConnectionById = async (req, res) => {
   const { id } = req.params;
   const userId = req.user?.sub;
-  const connection = mockConnections.find(c => c.id === id && c.user_id === userId);
-  
-  if (!connection) {
-    return res.status(404).json({ error: 'Connection not found or access denied' });
+  if (!userId) {
+    return res.status(401).json({ error: 'Unauthorized: Missing user identifier' });
   }
-  // Sanitize connection: omit the sensitive credentials field in GET responses
-  const { credentials, ...sanitized } = connection;
-  res.json(sanitized);
+
+  if (!UUID_REGEX.test(id)) {
+    return res.status(400).json({ error: 'Invalid connection ID format' });
+  }
+
+  try {
+    const connection = await prisma.connections.findFirst({
+      where: { id, user_id: userId }
+    });
+    
+    if (!connection) {
+      return res.status(404).json({ error: 'Connection not found or access denied' });
+    }
+
+    // Sanitize connection: omit the sensitive credentials field in GET responses
+    const { credentials, ...sanitized } = connection;
+    res.json(sanitized);
+  } catch (error) {
+    console.error('Error fetching connection details:', error);
+    res.status(500).json({ error: 'Internal server error while fetching connection details' });
+  }
 };
 
 export const createConnection = async (req, res) => {
   const { name, provider, credentials } = req.body;
   const userId = req.user?.sub;
+  if (!userId) {
+    return res.status(401).json({ error: 'Unauthorized: Missing user identifier' });
+  }
 
   if (!name || !provider || !credentials) {
     return res.status(400).json({ error: 'Missing required fields: name, provider, credentials' });
   }
 
-  const newConnection = {
-    id: crypto.randomUUID(),
-    user_id: userId,
-    name,
-    provider,
-    credentials,
-    created_at: new Date().toISOString(),
-  };
+  const supportedProviders = ['aws', 'gcp', 'oci'];
+  if (!supportedProviders.includes(provider.toLowerCase())) {
+    return res.status(400).json({ error: `Unsupported provider. Must be one of: ${supportedProviders.join(', ')}` });
+  }
 
-  mockConnections.push(newConnection);
-  res.status(201).json(newConnection);
+  try {
+    // Encrypt raw credentials using the shared Fernet encryption key
+    const credentialsString = JSON.stringify(credentials);
+    const encryptedToken = encryptFernet(credentialsString, config.encryptionKey);
+    const credentialsPayload = { encrypted: encryptedToken };
+
+    const newConnection = await prisma.connections.create({
+      data: {
+        user_id: userId,
+        name,
+        provider: provider.toLowerCase(),
+        credentials: credentialsPayload
+      }
+    });
+
+    // Return the response without the encrypted credentials
+    const { credentials: _, ...sanitized } = newConnection;
+    res.status(201).json(sanitized);
+  } catch (error) {
+    console.error('Error creating connection:', error);
+    res.status(500).json({ error: 'Internal server error while creating connection' });
+  }
 };
 
 export const updateConnection = async (req, res) => {
   const { id } = req.params;
   const { name, provider, credentials } = req.body;
   const userId = req.user?.sub;
-
-  const index = mockConnections.findIndex(c => c.id === id && c.user_id === userId);
-  if (index === -1) {
-    return res.status(404).json({ error: 'Connection not found or access denied' });
+  if (!userId) {
+    return res.status(401).json({ error: 'Unauthorized: Missing user identifier' });
   }
 
-  if (name !== undefined) mockConnections[index].name = name;
-  if (provider !== undefined) mockConnections[index].provider = provider;
-  if (credentials !== undefined) mockConnections[index].credentials = credentials;
+  if (!UUID_REGEX.test(id)) {
+    return res.status(400).json({ error: 'Invalid connection ID format' });
+  }
 
-  res.json(mockConnections[index]);
+  try {
+    const connection = await prisma.connections.findFirst({
+      where: { id, user_id: userId }
+    });
+
+    if (!connection) {
+      return res.status(404).json({ error: 'Connection not found or access denied' });
+    }
+
+    const updateData = {};
+    if (name !== undefined) updateData.name = name;
+    if (provider !== undefined) {
+      const supportedProviders = ['aws', 'gcp', 'oci'];
+      if (!supportedProviders.includes(provider.toLowerCase())) {
+        return res.status(400).json({ error: `Unsupported provider. Must be one of: ${supportedProviders.join(', ')}` });
+      }
+      updateData.provider = provider.toLowerCase();
+    }
+    if (credentials !== undefined) {
+      const credentialsString = JSON.stringify(credentials);
+      const encryptedToken = encryptFernet(credentialsString, config.encryptionKey);
+      updateData.credentials = { encrypted: encryptedToken };
+    }
+
+    const updated = await prisma.connections.update({
+      where: { id },
+      data: updateData
+    });
+
+    // Return sanitized update response
+    const { credentials: _, ...sanitized } = updated;
+    res.json(sanitized);
+  } catch (error) {
+    console.error('Error updating connection:', error);
+    res.status(500).json({ error: 'Internal server error while updating connection' });
+  }
 };
 
 export const deleteConnection = async (req, res) => {
   const { id } = req.params;
   const userId = req.user?.sub;
-
-  const index = mockConnections.findIndex(c => c.id === id && c.user_id === userId);
-  if (index === -1) {
-    return res.status(404).json({ error: 'Connection not found or access denied' });
+  if (!userId) {
+    return res.status(401).json({ error: 'Unauthorized: Missing user identifier' });
   }
 
-  mockConnections.splice(index, 1);
-  res.json({ message: 'Connection deleted successfully' });
+  if (!UUID_REGEX.test(id)) {
+    return res.status(400).json({ error: 'Invalid connection ID format' });
+  }
+
+  try {
+    const connection = await prisma.connections.findFirst({
+      where: { id, user_id: userId }
+    });
+
+    if (!connection) {
+      return res.status(404).json({ error: 'Connection not found or access denied' });
+    }
+
+    await prisma.connections.delete({
+      where: { id }
+    });
+
+    res.json({ message: 'Connection deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting connection:', error);
+    res.status(500).json({ error: 'Internal server error while deleting connection' });
+  }
 };
 
 export const getPublicInfo = (req, res) => {

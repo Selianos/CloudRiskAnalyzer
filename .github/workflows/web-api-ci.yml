@@ -17,6 +17,7 @@ jobs:
       POSTGRES_DB: dummy_db
       JWT_SECRET: dummy_secret_key_1234567890
       EXPRESS_GOTRUE_URL: http://localhost:9999
+      ENCRYPTION_KEY: k5u52fV1g-uY17XvFmQW4l_4_w8qXh1L1hF_89f0Xk8=
 
     steps:
       - name: Checkout Code

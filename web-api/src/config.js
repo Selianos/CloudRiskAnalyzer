@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-const requiredEnv = ['POSTGRES_USER', 'POSTGRES_PASSWORD', 'POSTGRES_HOST', 'POSTGRES_DB', 'JWT_SECRET', 'EXPRESS_GOTRUE_URL'];
+const requiredEnv = ['POSTGRES_USER', 'POSTGRES_PASSWORD', 'POSTGRES_HOST', 'POSTGRES_DB', 'JWT_SECRET', 'EXPRESS_GOTRUE_URL', 'ENCRYPTION_KEY'];
 for (const envVar of requiredEnv) {
   if (!process.env[envVar]) {
     throw new Error(`Missing required database environment variable: ${envVar}`);
@@ -24,4 +24,5 @@ export const config = {
   jwtSecret: jwtSecret,
   authUrl: authUrl,
   internalBackendUrl: internalBackendUrl,
+  encryptionKey: process.env.ENCRYPTION_KEY,
 };
