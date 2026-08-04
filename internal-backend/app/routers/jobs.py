@@ -1,6 +1,6 @@
 import logging
 
-from fastapi import APIRouter, Header, HTTPException
+from fastapi import APIRouter, Header, HTTPException, Response
 from fastapi.responses import JSONResponse
 
 from app.auth import WorkerAuth
@@ -69,10 +69,7 @@ def submit_results(
         logging.error(f"Integrity Error: {e}")
         raise HTTPException(status_code=400, detail="Invalid rule_id or foreign key constraint violation")
 
-    return JSONResponse(
-        status_code=201,
-        content={"status": "created", "message": "Results submitted successfully"}
-    )
+    return Response(status_code=201)
 
 
 @router.post("/{job_id}/status")
@@ -89,4 +86,4 @@ def update_status(
 
     ScanDatabase.update_status(job_id, update.status)
 
-    return JSONResponse(content={"status": "ok", "message": "Status updated successfully"})
+    return Response(status_code=200)
