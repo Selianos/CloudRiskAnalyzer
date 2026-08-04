@@ -1,4 +1,15 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
+
+vi.mock('redis', () => {
+  return {
+    createClient: () => ({
+      on: vi.fn(),
+      connect: vi.fn().mockResolvedValue(true),
+      rPush: vi.fn().mockResolvedValue(1)
+    })
+  };
+});
+
 import { prisma } from '../src/prisma.js';
 import {
   getScans,
