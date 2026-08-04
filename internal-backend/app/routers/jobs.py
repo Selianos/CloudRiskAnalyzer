@@ -1,6 +1,7 @@
 import logging
 
-from fastapi import APIRouter, Header, HTTPException
+from fastapi import APIRouter, Header, HTTPException, Response
+from fastapi.responses import JSONResponse
 
 from app.auth import WorkerAuth
 from app.crypto import CredentialManager
@@ -17,15 +18,15 @@ def poll_job(authorization: str | None = Header(None)):
     job = ScanDatabase.next_pending_job()
 
     if not job:
-        return {"job": None}
+        return JSONResponse(content={"job": None})
 
     credentials = CredentialManager.decrypt(job["credentials"])
 
-    return {
+    return JSONResponse(content={
         "job_id":      job["id"],
         "provider":    job["provider"],
         "credentials": credentials,
-    }
+    })
 
 
 @router.get("/{job_id}")
@@ -40,11 +41,11 @@ def get_job(job_id: str, authorization: str | None = Header(None)):
 
     credentials = CredentialManager.decrypt(job["credentials"])
 
-    return {
+    return JSONResponse(content={
         "job_id":      job["id"],
         "provider":    job["provider"],
         "credentials": credentials,
-    }
+    })
 
 
 @router.post("/{job_id}/results", status_code=201)
@@ -59,15 +60,16 @@ def submit_results(
         logging.error(f" Scan job does not exist (Job ID: {job_id})")
         raise HTTPException(status_code=404, detail="Scan job does not exist")
 
-    for resource in result.resources:
-        ScanDatabase.insert_resource(job_id, resource.model_dump())
+    from sqlalchemy.exc import IntegrityError
+    try:
+        ScanDatabase.save_scan_results(job_id, result.model_dump())
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except IntegrityError as e:
+        logging.error(f"Integrity Error: {e}")
+        raise HTTPException(status_code=400, detail="Invalid rule_id or foreign key constraint violation")
 
-    for finding in result.findings:
-        ScanDatabase.insert_finding(job_id, finding.model_dump())
-
-    ScanDatabase.update_status(job_id, "COMPLETED")
-
-    return
+    return Response(status_code=201)
 
 
 @router.post("/{job_id}/status")
@@ -84,4 +86,4 @@ def update_status(
 
     ScanDatabase.update_status(job_id, update.status)
 
-    return
+    return Response(status_code=200)

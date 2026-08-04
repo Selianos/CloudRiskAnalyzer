@@ -55,7 +55,7 @@ class Connection(Base):
     user_id:     Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True))
     name:        Mapped[str]       = mapped_column(String)
     provider:    Mapped[str]       = mapped_column(String)
-    credentials: Mapped[str]       = mapped_column(String)   # Fernet-encrypted blob
+    credentials: Mapped[dict]      = mapped_column(JSONB)   # Fetched as dict from JSONB column
 
     scan_jobs: Mapped[list["ScanJob"]] = relationship(back_populates="connection")
 
@@ -67,6 +67,9 @@ class ScanJob(Base):
     connection_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("connections.id"))
     user_id:       Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True))
     status:        Mapped[str]       = mapped_column(String, default="PENDING")
+    started_at:    Mapped[datetime | None] = mapped_column(nullable=True)
+    completed_at:  Mapped[datetime | None] = mapped_column(nullable=True)
+    error_message: Mapped[str | None] = mapped_column(String, nullable=True)
     created_at:    Mapped[datetime]
 
     connection: Mapped["Connection"] = relationship(back_populates="scan_jobs")
@@ -82,6 +85,13 @@ class Resource(Base):
     name:                 Mapped[str]       = mapped_column(String)
     region:               Mapped[str | None]= mapped_column(String, nullable=True)
     configuration:        Mapped[dict]      = mapped_column(JSONB)
+
+
+class Rule(Base):
+    __tablename__ = "rules"
+
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+
 
 
 class Finding(Base):
@@ -113,8 +123,13 @@ class ScanDatabase:
 
     @staticmethod
     def get_job(job_id: str) -> dict | None:
+        try:
+            parsed_uuid = uuid.UUID(job_id)
+        except ValueError:
+            return None
+            
         with get_session() as db:
-            job = db.get(ScanJob, uuid.UUID(job_id))
+            job = db.get(ScanJob, parsed_uuid)
 
             if not job:
                 return None
@@ -148,6 +163,7 @@ class ScanDatabase:
                 return None
 
             job.status = "RUNNING"
+            job.started_at = datetime.utcnow()
 
             return {
                 "id":            str(job.id),
@@ -159,32 +175,60 @@ class ScanDatabase:
     @staticmethod
     def update_status(job_id: str, status: str) -> None:
         with get_session() as db:
+            values = {"status": status}
+            if status in ("COMPLETED", "FAILED"):
+                values["completed_at"] = datetime.utcnow()
+                
             db.execute(
                 update(ScanJob)
                 .where(ScanJob.id == uuid.UUID(job_id))
-                .values(status=status)
+                .values(**values)
             )
 
     @staticmethod
-    def insert_resource(job_id: str, resource: dict) -> None:
+    def save_scan_results(job_id: str, result: dict) -> None:
         with get_session() as db:
-            db.add(Resource(
-                id=                   uuid.UUID(resource.get("id")),
-                scan_job_id=          uuid.UUID(job_id),
-                resource_type=        resource.get("resource_type"),
-                provider_resource_id= resource.get("provider_resource_id"),
-                name=                 resource.get("name"),
-                region=               resource.get("region"),
-                configuration=        resource.get("configuration", {}),
-            ))
+            resource_map = {}
+            
+            # 1. Insert Resources and map their client-provided IDs to valid DB UUIDs
+            for res in result.get("resources", []):
+                new_id = uuid.uuid4()
+                client_id = res.get("id")
+                if client_id:
+                    resource_map[client_id] = new_id
+                
+                db.add(Resource(
+                    id=                   new_id,
+                    scan_job_id=          uuid.UUID(job_id),
+                    resource_type=        res.get("resource_type"),
+                    provider_resource_id= res.get("provider_resource_id"),
+                    name=                 res.get("name"),
+                    region=               res.get("region"),
+                    configuration=        res.get("configuration", {}),
+                ))
 
-    @staticmethod
-    def insert_finding(job_id: str, finding: dict) -> None:
-        with get_session() as db:
-            db.add(Finding(
-                scan_job_id= uuid.UUID(job_id),
-                resource_id= uuid.UUID(finding.get("resource_id")),
-                rule_id=     finding.get("rule_id"),
-                status=      finding.get("status"),
-                details=     finding.get("details"),
-            ))
+            # Force flush so that resources exist in the DB before findings reference them
+            db.flush()
+
+            # 2. Insert Findings using the mapped Resource UUIDs
+            for finding in result.get("findings", []):
+                client_resource_id = finding.get("resource_id")
+                mapped_id = resource_map.get(client_resource_id)
+                
+                if not mapped_id:
+                    raise ValueError(f"Finding references unknown resource_id: {client_resource_id}")
+
+                db.add(Finding(
+                    scan_job_id= uuid.UUID(job_id),
+                    resource_id= mapped_id,
+                    rule_id=     finding.get("rule_id"),
+                    status=      finding.get("status"),
+                    details=     finding.get("details"),
+                ))
+
+            # 3. Mark the job as COMPLETED
+            db.execute(
+                update(ScanJob)
+                .where(ScanJob.id == uuid.UUID(job_id))
+                .values(status="COMPLETED", completed_at=datetime.utcnow())
+            )
