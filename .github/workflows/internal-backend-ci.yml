@@ -1,10 +1,6 @@
 name: Internal Backend Continuous Integration
 
 on:
-  push:
-    paths:
-      - 'internal-backend/**'
-      - '.github/workflows/internal-backend-ci.yml'
   pull_request:
     paths:
       - 'internal-backend/**'

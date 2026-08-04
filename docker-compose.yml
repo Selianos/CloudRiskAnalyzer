@@ -139,6 +139,33 @@ services:
       - private_network
       - db_network
 
+  redis:
+    image: redis:7-alpine
+    container_name: redis_container
+    restart: unless-stopped
+    networks:
+      - private_network
+
+  scanner:
+    build: ./scanner
+    container_name: scanner_container
+    restart: unless-stopped
+    environment:
+      WORKER_API_KEY: ${WORKER_API_KEY}
+      INTERNAL_BACKEND_URL: http://internal-backend:8000
+      REDIS_URL: redis://redis:6379/0
+    volumes:
+      - ./scanner:/app:Z
+    command: python worker.py
+    depends_on:
+      redis:
+        condition: service_started
+      internal-backend:
+        condition: service_healthy
+    networks:
+      - private_network
+
+
 
 networks:
   db_network:
