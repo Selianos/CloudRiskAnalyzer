@@ -122,6 +122,9 @@ services:
       WORKER_API_KEY: ${WORKER_API_KEY}
       ENCRYPTION_KEY: ${ENCRYPTION_KEY}
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+    volumes:
+      - ./internal-backend:/app:Z
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     depends_on:
       db:
         condition: service_healthy

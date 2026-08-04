@@ -5,3 +5,5 @@ sqlalchemy
 psycopg2-binary
 cryptography
 pydantic
+pytest
+httpx
