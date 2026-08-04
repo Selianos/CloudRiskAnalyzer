@@ -23,7 +23,9 @@ let mockConnections = [
 export const getConnections = async (req, res) => {
   const userId = req.user?.sub;
   const userConnections = mockConnections.filter(c => c.user_id === userId);
-  res.json(userConnections);
+  // Sanitize connections: omit the sensitive credentials field in GET responses
+  const sanitized = userConnections.map(({ credentials, ...rest }) => rest);
+  res.json(sanitized);
 };
 
 export const getConnectionById = async (req, res) => {
@@ -34,7 +36,9 @@ export const getConnectionById = async (req, res) => {
   if (!connection) {
     return res.status(404).json({ error: 'Connection not found or access denied' });
   }
-  res.json(connection);
+  // Sanitize connection: omit the sensitive credentials field in GET responses
+  const { credentials, ...sanitized } = connection;
+  res.json(sanitized);
 };
 
 export const createConnection = async (req, res) => {

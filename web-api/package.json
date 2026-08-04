@@ -6,6 +6,9 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "node src/seed.js && nodemon -L src/index.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "prisma:generate": "prisma generate"
   },
   "dependencies": {
@@ -18,7 +21,9 @@
     "pg": "^8.22.0"
   },
   "devDependencies": {
+    "@vitest/coverage-v8": "^4.1.10",
     "nodemon": "^3.1.14",
-    "prisma": "^7.9.1"
+    "prisma": "^7.9.1",
+    "vitest": "^4.1.10"
   }
 }
