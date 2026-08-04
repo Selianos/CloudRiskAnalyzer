@@ -1,10 +1,6 @@
 name: Web API Continuous Integration
 
 on:
-  push:
-    paths:
-      - 'web-api/**'
-      - '.github/workflows/web-api-ci.yml'
   pull_request:
     paths:
       - 'web-api/**'
@@ -14,6 +10,13 @@ jobs:
   test-web-api:
     name: Run Web API Unit Tests
     runs-on: ubuntu-latest
+    env:
+      POSTGRES_USER: dummy_user
+      POSTGRES_PASSWORD: dummy_password
+      POSTGRES_HOST: localhost
+      POSTGRES_DB: dummy_db
+      JWT_SECRET: dummy_secret_key_1234567890
+      EXPRESS_GOTRUE_URL: http://localhost:9999
 
     steps:
       - name: Checkout Code
