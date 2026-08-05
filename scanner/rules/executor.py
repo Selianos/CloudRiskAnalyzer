@@ -29,10 +29,9 @@ from __future__ import annotations
 
 from typing import Optional
 
-from rules.aws import ec2 as aws_ec2, s3 as aws_s3, iam as aws_iam
+from aws import ec2 as aws_ec2, s3 as aws_s3, iam as aws_iam
 from rules.gcp import compute as gcp_compute, firewall as gcp_firewall, iam as gcp_iam, storage as gcp_storage
 from rules.common import BaseRule
-
 
 def get_rules_for_provider(provider_name: str) -> list:
     """Return all rule definitions for the specified cloud provider."""

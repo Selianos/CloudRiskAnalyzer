@@ -11,6 +11,7 @@ SUPPORTED_PROVIDERS = {
     "oci": OrcProvider,
 }
 
+
 def choose_provider():
     print("Supported providers:")
 
@@ -24,6 +25,7 @@ def choose_provider():
             return SUPPORTED_PROVIDERS[choice]()
 
         print("Invalid provider.")
+
 
 def request_credentials(provider):
     credentials = {}
@@ -56,8 +58,8 @@ def main():
         provider_key = "oci"
     else:
         raise ValueError(f"Unknown provider: {provider.name}")
-
     rules = get_rules_for_provider(provider_key)
+
     import datetime
     timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     

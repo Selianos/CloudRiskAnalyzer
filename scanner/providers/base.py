@@ -20,8 +20,8 @@ class BaseProvider(ABC):
 
     @abstractmethod
     def validate_credentials(self) -> bool:
-        """
-        Verify the stored credentials are valid.
+        """Verify the stored credentials are valid.
+
         Returns True when the provider can successfully reach the cloud
         API and confirm the caller's identity.
         """
@@ -36,8 +36,8 @@ class BaseProvider(ABC):
 
     @abstractmethod
     def discover_resources(self) -> list[dict]:
-        """
-        Discover all scannable resources in the target environment.
+        """Discover all scannable resources in the target environment.
+
         Returns a list of resource dicts, each containing at minimum:
             - type (str):  resource type name
             - id   (str):  provider-specific unique identifier
@@ -46,8 +46,8 @@ class BaseProvider(ABC):
 
     @abstractmethod
     def get_configuration(self, resource: dict) -> dict:
-        """
-        Retrieve the full configuration for a single *resource*.
+        """Retrieve the full configuration for a single *resource*.
+
         The returned dict should contain all fields needed by the
         security rules engine to evaluate the resource.
         """
