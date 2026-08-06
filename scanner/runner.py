@@ -1,7 +1,7 @@
 import logging
 from providers.aws import AWSProvider
 from providers.gcp import GCPProvider
-from providers.orc import OrcProvider
+from providers.oci import OCIProvider
 from rules.executor import get_rules_for_provider, evaluate_rules
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
@@ -9,14 +9,31 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(mess
 SUPPORTED_PROVIDERS = {
     "aws": AWSProvider,
     "gcp": GCPProvider,
-    "oci": OrcProvider,
+    "oci": OCIProvider,
 }
 
 # Maps local rules in scanner directory to rule IDs seeded in the database
 RULE_MAPPING = {
+    # AWS Rules
     "S3-001": "AWS-S3-001",
+    "S3-002": "AWS-S3-002",
     "SEC-001": "AWS-EC2-001",
-    "IAM-002": "AWS-IAM-001"
+    "SEC-002": "AWS-EC2-002",
+    "SEC-003": "AWS-EC2-003",
+    "SEC-004": "AWS-EC2-004",
+    "IAM-001": "AWS-IAM-002",
+    "IAM-002": "AWS-IAM-001",
+    "IAM-003": "AWS-IAM-003",
+    # OCI Rules
+    "OCI-COMPUTE-001": "OCI-COMPUTE-001",
+    "OCI-NET-001": "OCI-NET-001",
+    "OCI-NET-002": "OCI-NET-002",
+    "OCI-NET-003": "OCI-NET-003",
+    "OCI-STORAGE-001": "OCI-STORAGE-001",
+    "OCI-STORAGE-002": "OCI-STORAGE-002",
+    "OCI-IAM-001": "OCI-IAM-001",
+    "OCI-IAM-002": "OCI-IAM-002",
+    "OCI-IAM-003": "OCI-IAM-003",
 }
 
 class ScanRunner:
@@ -106,3 +123,27 @@ class ScanRunner:
             logging.error(f"Error during scan pipeline execution: {e}")
             provider.disconnect()
             raise
+
+    @staticmethod
+    def get_all_rules_metadata() -> list[dict]:
+        """Loads all local rules (AWS, OCI, GCP) and extracts their metadata."""
+        metadata_list = []
+        for provider_name in ["aws", "gcp", "oci"]:
+            try:
+                rules = get_rules_for_provider(provider_name)
+                for r in rules:
+                    # Resolve database mapped ID
+                    mapped_id = RULE_MAPPING.get(r["id"], r["id"])
+                    
+                    metadata_list.append({
+                        "id": mapped_id,
+                        "provider": provider_name,
+                        "name": r["name"],
+                        "severity": r["severity"],
+                        "description": r["description"],
+                        "recommendation": r["recommendation"]
+                    })
+            except Exception as e:
+                logging.warning(f"Could not load rules metadata for provider {provider_name}: {e}")
+        return metadata_list
+

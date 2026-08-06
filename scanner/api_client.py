@@ -58,3 +58,16 @@ class InternalBackendClient:
         except Exception as e:
             logging.error(f"Failed to submit scan results for job {job_id}: {e}")
             raise
+
+    def sync_rules(self, rules_payload: list[dict]) -> bool:
+        """Send the local rules catalog metadata to the internal backend to sync."""
+        url = f"{self.base_url}/internal/jobs/rules/sync"
+        try:
+            logging.info("Publishing local rules metadata to database...")
+            res = requests.post(url, headers=self.headers, json=rules_payload, timeout=15)
+            res.raise_for_status()
+            logging.info("Successfully synced rules catalog with database.")
+            return True
+        except Exception as e:
+            logging.error(f"Failed to sync rules catalog with backend: {e}")
+            raise

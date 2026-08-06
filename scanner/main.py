@@ -2,13 +2,13 @@ import sys
 import pprint
 from providers.aws import AWSProvider
 from providers.gcp import GCPProvider
-from providers.orc import OrcProvider
+from providers.oci import OCIProvider
 from rules.executor import get_rules_for_provider, evaluate_rules
 
 SUPPORTED_PROVIDERS = {
     "aws": AWSProvider,
     "gcp": GCPProvider,
-    "oci": OrcProvider,
+    "oci": OCIProvider,
 }
 
 
@@ -64,7 +64,7 @@ def main():
             prov_name = "AWS"
         elif "GCP" in prov_upper:
             prov_name = "GCP"
-        elif "OCI" in prov_upper or "ORC" in prov_upper:
+        elif "OCI" in prov_upper:
             prov_name = "OCI"
             
     account_id = getattr(provider, "account_id", None)

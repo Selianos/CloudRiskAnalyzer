@@ -41,6 +41,23 @@ def main():
         logging.critical(f"Failed to initialize API client: {e}")
         sys.exit(1)
 
+    # Sync the rules catalog with database on startup (with retries for backend boot time)
+    max_retries = 10
+    retry_delay = 2
+    for attempt in range(1, max_retries + 1):
+        try:
+            logging.info(f"Initiating rules catalog sync (Attempt {attempt}/{max_retries})...")
+            rules_metadata = ScanRunner.get_all_rules_metadata()
+            client.sync_rules(rules_metadata)
+            logging.info("Rules catalog successfully synced!")
+            break
+        except Exception as e:
+            if attempt == max_retries:
+                logging.error(f"Rules sync failed after {max_retries} attempts: {e}. Worker will proceed anyway.")
+            else:
+                logging.warning(f"Backend not ready yet ({e}). Retrying in {retry_delay}s...")
+                time.sleep(retry_delay)
+
     logging.info("Scanner worker is up and listening for jobs...")
 
     while not shutdown_requested:

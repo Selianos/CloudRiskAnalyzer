@@ -22,3 +22,12 @@ class ScanResult(BaseModel):
 
 class StatusUpdate(BaseModel):
     status: str
+
+class RuleSync(BaseModel):
+    id: str
+    provider: str
+    name: str
+    severity: str
+    description: str
+    recommendation: str
+

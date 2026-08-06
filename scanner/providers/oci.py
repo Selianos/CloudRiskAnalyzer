@@ -3,7 +3,7 @@ from oci.config import validate_config
 from oci.retry import NoneRetryStrategy
 from providers.base import BaseProvider
 
-class OrcProvider(BaseProvider):
+class OCIProvider(BaseProvider):
     name = "OCI (Oracle Cloud)"
     
     def __init__(self) -> None:
