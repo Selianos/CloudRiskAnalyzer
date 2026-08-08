@@ -1,11 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router';
 import { useAuth } from '../contexts/AuthContext';
-import { Button, Card, Flex, Heading, Text, TextField } from '@radix-ui/themes';
+import { Button, Card, Flex, Heading, Text, TextField, Callout } from '@radix-ui/themes';
 
 export default function Login() {
   const { login } = useAuth();
   const [error, setError] = useState('');
+  const [sessionExpired, setSessionExpired] = useState(false);
+
+  useEffect(() => {
+    if (sessionStorage.getItem('sessionExpired') === 'true') {
+      setSessionExpired(true);
+      sessionStorage.removeItem('sessionExpired');
+    }
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -26,6 +34,15 @@ export default function Login() {
       <Card size="4" style={{ width: '100%', maxWidth: '400px' }}>
         <Flex direction="column" gap="4">
           <Heading size="6" align="center">Sign in</Heading>
+          
+          {sessionExpired && (
+            <Callout.Root color="amber">
+              <Callout.Text>
+                Your session has expired. Please sign in again.
+              </Callout.Text>
+            </Callout.Root>
+          )}
+
           {error && <Text color="red" size="2" align="center">{error}</Text>}
           <form onSubmit={handleLogin}>
             <Flex direction="column" gap="3">
