@@ -18,7 +18,7 @@ All public API endpoints are prefixed with `/api` and require `Authorization: Be
 
 ### Authentication Endpoints
 Interacts with the GoTrue identity service:
-* `POST /api/auth/register` - Create user.
+* `POST /api/auth/signup` - Create user.
 * `POST /api/auth/login` - Authenticate user and return a JWT access token.
 * `POST /api/auth/logout` - Revoke JWT session.
 

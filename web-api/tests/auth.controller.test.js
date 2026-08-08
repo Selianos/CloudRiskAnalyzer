@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { register, login, logout } from '../src/controllers/auth.controller.js';
+import { signup, login, logout } from '../src/controllers/auth.controller.js';
 import { mockRequest, mockResponse } from './helpers.js';
 
 describe('Auth Controller', () => {
@@ -7,8 +7,8 @@ describe('Auth Controller', () => {
     vi.restoreAllMocks();
   });
 
-  describe('register()', () => {
-    it('should successfully register a new user via GoTrue API', async () => {
+  describe('signup()', () => {
+    it('should successfully sign up a new user via GoTrue API', async () => {
       const mockUserPayload = { user: { id: 'new-user-uuid', email: 'test@example.com' } };
       const fetchSpy = vi.spyOn(global, 'fetch').mockResolvedValue({
         ok: true,
@@ -25,7 +25,7 @@ describe('Auth Controller', () => {
       });
       const res = mockResponse();
 
-      await register(req, res);
+      await signup(req, res);
 
       expect(fetchSpy).toHaveBeenCalledTimes(1);
       expect(res.statusCode).toBe(201);
@@ -41,13 +41,13 @@ describe('Auth Controller', () => {
       });
       const res = mockResponse();
 
-      await register(req, res);
+      await signup(req, res);
 
       expect(res.statusCode).toBe(400);
       expect(res.jsonData.error).toBe('Email, password, and fullname are required');
     });
 
-    it('should forward GoTrue error responses on registration failure', async () => {
+    it('should forward GoTrue error responses on signup failure', async () => {
       const mockErrorResponse = { msg: 'User already exists', code: 'email_exists' };
       const fetchSpy = vi.spyOn(global, 'fetch').mockResolvedValue({
         ok: false,
@@ -64,7 +64,7 @@ describe('Auth Controller', () => {
       });
       const res = mockResponse();
 
-      await register(req, res);
+      await signup(req, res);
 
       expect(fetchSpy).toHaveBeenCalledTimes(1);
       expect(res.statusCode).toBe(409);

@@ -1,6 +1,6 @@
 import { config } from '../config.js';
 
-export const register = async (req, res) => {
+export const signup = async (req, res) => {
   try {
     const { email, password, fullname } = req.body;
 
@@ -29,8 +29,8 @@ export const register = async (req, res) => {
 
     res.status(201).json(data);
   } catch (error) {
-    console.error('Registration Error:', error.message);
-    res.status(500).json({ error: 'Internal server error during registration' });
+    console.error('Signup Error:', error.message);
+    res.status(500).json({ error: 'Internal server error during signup' });
   }
 };
 

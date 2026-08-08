@@ -1,19 +1,34 @@
 import { Routes, Route } from 'react-router'
+import { AuthProvider } from './contexts/AuthContext'
 import RootLayout from './layouts/RootLayout'
+import ProtectedRoute from './components/ProtectedRoute'
+import GuestRoute from './components/GuestRoute'
 
 import Home from './pages/Home'
 import NotFound from './pages/NotFound'
+import Login from './pages/Login'
+import Signup from './pages/Signup'
+import AppPage from './pages/AppPage'
 
 export default function App() {
-
   return (
-    <Routes>
-      <Route element={<RootLayout />}>
-        <Route index element={<Home />} />
-      </Route>
+    <AuthProvider>
+      <Routes>
+        <Route element={<RootLayout />}>
+          <Route index element={<Home />} />
+          
+          <Route element={<GuestRoute />}>
+            <Route path="login" element={<Login />} />
+            <Route path="signup" element={<Signup />} />
+          </Route>
+          
+          <Route element={<ProtectedRoute />}>
+            <Route path="app" element={<AppPage />} />
+          </Route>
+        </Route>
 
-      {/* 404 */}
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </AuthProvider>
   )
 }
