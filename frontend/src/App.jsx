@@ -1,8 +1,8 @@
 import { Routes, Route } from 'react-router'
 import { AuthProvider } from './contexts/AuthContext'
 import RootLayout from './layouts/RootLayout'
-import ProtectedRoute from './components/ProtectedRoute'
-import GuestRoute from './components/GuestRoute'
+import ProtectedRoute from './components/auth/ProtectedRoute'
+import GuestRoute from './components/auth/GuestRoute'
 
 import Home from './pages/Home'
 import NotFound from './pages/NotFound'

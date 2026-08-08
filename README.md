@@ -1,4 +1,4 @@
-# Cloud Security Analyzer
+# Sahaba - Cloud Security Analyzer
 
 A modular cloud security analyzer that discovers cloud resources, collects their configurations, evaluates security rules, and generates security findings. The architecture is provider-agnostic, making it easy to support multiple cloud platforms.
 
