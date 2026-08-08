@@ -18,6 +18,7 @@ export const AuthProvider = ({ children }) => {
     return localStorage.getItem('isAuthenticated') === 'true';
   });
 
+  const [sessionExpired, setSessionExpired] = useState(false);
   const [isInitializing, setIsInitializing] = useState(true);
   const refreshTokenPromise = useRef(null);
 
@@ -52,10 +53,8 @@ export const AuthProvider = ({ children }) => {
       try {
         return await refreshTokenPromise.current;
       } catch (e) {
-        // Flag for the Login page to show an alert
-        sessionStorage.setItem('sessionExpired', 'true');
-        
         // Force logout on failure using direct state setters
+        setSessionExpired(true);
         localStorage.removeItem('token');
         localStorage.removeItem('refreshToken');
         localStorage.removeItem('isAuthenticated');
@@ -85,6 +84,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
+    setSessionExpired(false); // Reset on new login attempt
     const response = await loginUser({ email, password });
 
     const token = response?.token || response?.access_token;
@@ -133,7 +133,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, sessionExpired, login, signup, logout }}>
       {children}
     </AuthContext.Provider>
   );

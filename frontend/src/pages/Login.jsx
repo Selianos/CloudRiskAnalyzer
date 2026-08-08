@@ -1,19 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router';
 import { useAuth } from '../contexts/AuthContext';
 import { Button, Card, Flex, Heading, Text, TextField, Callout } from '@radix-ui/themes';
 
 export default function Login() {
-  const { login } = useAuth();
+  const { login, sessionExpired } = useAuth();
   const [error, setError] = useState('');
-  const [sessionExpired, setSessionExpired] = useState(false);
-
-  useEffect(() => {
-    if (sessionStorage.getItem('sessionExpired') === 'true') {
-      setSessionExpired(true);
-      sessionStorage.removeItem('sessionExpired');
-    }
-  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
