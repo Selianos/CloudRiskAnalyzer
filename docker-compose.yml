@@ -164,6 +164,7 @@ services:
         condition: service_healthy
     networks:
       - private_network
+      - web_network
   
   frontend:
     build:
