@@ -1,2 +1,60 @@
 /* Tailwind CSS v4 */
 @import "tailwindcss";
+
+/* Marquee Components */
+.marquee-container {
+  position: relative;
+}
+
+.marquee-track {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center; /* Ensures logos stay vertically centered */
+  justify-content: space-around;
+  gap: var(--gap);
+  animation: scroll var(--duration) linear infinite;
+}
+
+.marquee-container:hover .pause-on-hover {
+  animation-play-state: paused;
+}
+
+.marquee-vertical {
+  flex-direction: column;
+  animation-name: scroll-vertical;
+}
+
+.marquee-reverse {
+  animation-direction: reverse;
+}
+
+@keyframes scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(-100% - var(--gap))); }
+}
+
+@keyframes scroll-vertical {
+  from { transform: translateY(0); }
+  to { transform: translateY(calc(-100% - var(--gap))); }
+}
+
+/* Home Page Sponsors */
+.faded-edges {
+  -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+}
+
+.sponsor-item {
+  height: 50px;
+  flex-shrink: 0; /* Prevents logos from being squished when there are many */
+  object-fit: contain;
+  filter: grayscale(100%) opacity(0.5);
+  transition: filter 0.3s ease, transform 0.3s ease;
+  cursor: pointer;
+}
+
+.sponsor-item:hover {
+  filter: grayscale(0%) opacity(1);
+  transform: scale(1.1);
+}
+

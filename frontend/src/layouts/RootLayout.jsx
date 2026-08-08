@@ -1,4 +1,6 @@
 import { Outlet } from 'react-router'
+import Header from '../components/Header'
+import { Box } from '@radix-ui/themes'
 
 /**
  * RootLayout — shared shell for all pages.
@@ -6,8 +8,11 @@ import { Outlet } from 'react-router'
  */
 export default function RootLayout() {
   return (
-    <div>
-      <Outlet />
-    </div>
+    <Box style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <Header />
+      <Box style={{ flex: 1 }}>
+        <Outlet />
+      </Box>
+    </Box>
   )
 }
