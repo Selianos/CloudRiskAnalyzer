@@ -1,6 +1,6 @@
 import { Flex, Heading, Button, Box, Link as RadixLink } from '@radix-ui/themes';
 import { Link, useNavigate } from 'react-router';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 
 export default function Header() {
   const { isAuthenticated, logout } = useAuth();
