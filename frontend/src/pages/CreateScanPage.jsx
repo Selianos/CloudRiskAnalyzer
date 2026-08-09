@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Flex, Box, Card, Heading, Text, Button, TextField, Select, RadioCards, Badge, Checkbox, TextArea } from '@radix-ui/themes';
+import { Flex, Box, Card, Heading, Text, Button, TextField, RadioCards, Badge, Checkbox, TextArea } from '@radix-ui/themes';
 
 import awsLogo from '../assets/providers/aws.png';
 import ociLogo from '../assets/providers/oci.png';

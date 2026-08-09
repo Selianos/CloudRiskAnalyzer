@@ -35,7 +35,7 @@ export const apiClient = async (endpoint, options = {}) => {
     try {
       const errorData = await response.json();
       errorMsg = errorData.error || errorData.message || errorMsg;
-    } catch (e) {
+    } catch {
       // Ignore if response is not JSON
     }
     
@@ -48,7 +48,7 @@ export const apiClient = async (endpoint, options = {}) => {
           options.headers = { ...options.headers, 'Authorization': `Bearer ${newToken}` };
           return apiClient(endpoint, options);
         }
-      } catch (handlerError) {
+      } catch {
         throw new Error(errorMsg);
       }
     }

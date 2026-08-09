@@ -1,8 +1,8 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useOutletContext } from 'react-router';
 import { useAuth } from '../contexts/AuthContext';
-import { Button, Heading, Text, Flex, Box, Card, Badge, IconButton } from '@radix-ui/themes';
-import { ReactFlow, Background, Controls, Panel, applyNodeChanges, applyEdgeChanges, addEdge, MiniMap, useReactFlow, Handle, Position } from '@xyflow/react';
+import { Button, Flex, Box } from '@radix-ui/themes';
+import { ReactFlow, Background, Controls, Panel, applyNodeChanges, applyEdgeChanges, addEdge, MiniMap, useReactFlow } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
 import { nodeTypes } from '../components/graph/CustomNodes';
@@ -137,8 +137,8 @@ function GraphController({ selectedScan, selectedNode }) {
 }
 
 export default function AppPage() {
-  const { user, logout } = useAuth();
-  const userName = user?.user_metadata?.fullname || 'User';
+  const { user, logout: _logout } = useAuth();
+  const _userName = user?.user_metadata?.fullname || 'User';
   
   const context = useOutletContext();
   const selectedScan = context?.selectedScan || 'AWS';
