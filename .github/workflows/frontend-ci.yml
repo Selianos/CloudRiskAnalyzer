@@ -2,7 +2,6 @@ name: Frontend CI
 
 on:
   pull_request:
-    branches: [ "main" ]
     paths:
       - 'frontend/**'
 
@@ -30,6 +29,9 @@ jobs:
 
     - name: Run linter
       run: npm run lint
+
+    - name: Create mock .env
+      run: echo "VITE_FRONTEND_PORT=5173" > ../.env
 
     - name: Build project
       run: npm run build
