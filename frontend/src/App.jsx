@@ -12,7 +12,6 @@ import AppPage from './pages/AppPage'
 import CreateScanPage from './pages/CreateScanPage'
 import SettingsPage from './pages/SettingsPage'
 import AppLayout from './layouts/AppLayout'
-
 export default function App() {
   return (
     <AuthProvider>
