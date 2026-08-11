@@ -13,6 +13,17 @@ import iamLogo from '../assets/aws/iam.png';
 import ec2Logo from '../assets/aws/ec2.png';
 import s3Logo from '../assets/aws/s3.png';
 import elbLogo from '../assets/aws/elb.png';
+import ociComputeLogo from '../assets/oci/compute.png';
+import ociVcnLogo from '../assets/oci/vcn.png';
+import ociSecurityListLogo from '../assets/oci/security-list.png';
+import ociStorageLogo from '../assets/oci/storage.png';
+import ociIamLogo from '../assets/oci/iam.png';
+import ociAdwLogo from '../assets/oci/adw.png';
+import gcpComputeLogo from '../assets/gcp/compute.png';
+import gcpStorageLogo from '../assets/gcp/storage.png';
+import gcpIamLogo from '../assets/gcp/iam.png';
+import gcpFirewallLogo from '../assets/gcp/firewall.png';
+import gcpSqlLogo from '../assets/gcp/sql.png';
 
 const iconInternet = 'https://api.dicebear.com/9.x/icons/svg?icon=globe&seed=net';
 
@@ -72,10 +83,14 @@ const awsEdges = [
 const ociNodes = [
   { id: 'internet', type: 'cloudNode', position: { x: 300, y: -100 }, data: { label: 'Public Internet', logoUrl: iconInternet, details: { ip: '0.0.0.0/0', status: 'External', risk: 'Info' } } },
   { id: 'vcn-prod', type: 'networkGroup', position: { x: 100, y: 100 }, style: { width: 500, height: 400, zIndex: -2 }, data: { label: 'OCI VCN', color: '#f59e0b', bgColor: 'rgba(245, 158, 11, 0.05)' } },
+  { id: 'vcn-logo-oci', type: 'cloudNode', parentId: 'vcn-prod', position: { x: 20, y: 10 }, data: { label: 'VCN / Subnet', logoUrl: ociVcnLogo, isSafe: true, details: { ip: '10.0.0.0/16', status: 'Configured', risk: 'Low' } } },
   { id: 'sub-pub', type: 'networkGroup', parentId: 'vcn-prod', position: { x: 20, y: 40 }, style: { width: 460, height: 160, zIndex: -1 }, data: { label: 'Public Subnet', color: '#f59e0b', bgColor: 'rgba(245, 158, 11, 0.1)' } },
-  { id: 'compute-oci', type: 'cloudNode', parentId: 'sub-pub', position: { x: 40, y: 10 }, data: { label: 'Compute Instance', logoUrl: iconInternet, isSafe: true, details: { ip: 'Public IP', status: 'Running', risk: 'Low' } } },
+  { id: 'compute-oci', type: 'cloudNode', parentId: 'sub-pub', position: { x: 40, y: 10 }, data: { label: 'Compute Instance', logoUrl: ociComputeLogo, isSafe: true, details: { ip: 'Public IP', status: 'Running', risk: 'Low' } } },
   { id: 'sub-priv', type: 'networkGroup', parentId: 'vcn-prod', position: { x: 20, y: 220 }, style: { width: 460, height: 160, zIndex: -1 }, data: { label: 'Private Subnet', color: '#10b981', bgColor: 'rgba(16, 185, 129, 0.05)' } },
-  { id: 'adw-oci', type: 'cloudNode', parentId: 'sub-priv', position: { x: 250, y: 10 }, data: { label: 'Autonomous DB', logoUrl: iconInternet, isFailed: true, details: { ip: 'Internal', status: 'Exposed Backups', risk: 'High', description: 'Database backup lacks encryption.' } } }
+  { id: 'adw-oci', type: 'cloudNode', parentId: 'sub-priv', position: { x: 250, y: 10 }, data: { label: 'Autonomous DB', logoUrl: ociAdwLogo, isFailed: true, details: { ip: 'Internal', status: 'Exposed Backups', risk: 'High', description: 'Database backup lacks encryption.' } } },
+  { id: 'oci-security-list', type: 'cloudNode', parentId: 'sub-pub', position: { x: 210, y: 10 }, data: { label: 'Security List', logoUrl: ociSecurityListLogo, isSafe: true, details: { ip: 'VCN rules', status: 'Protected', risk: 'Low' } } },
+  { id: 'oci-storage', type: 'cloudNode', position: { x: 660, y: 140 }, data: { label: 'Object Storage', logoUrl: ociStorageLogo, isSafe: true, details: { ip: 'Regional', status: 'Encrypted', risk: 'Low' } } },
+  { id: 'oci-iam', type: 'cloudNode', position: { x: 660, y: 300 }, data: { label: 'IAM Users & Policies', logoUrl: ociIamLogo, isSafe: true, details: { ip: 'Tenancy', status: 'Least Privilege', risk: 'Low' } } }
 ];
 
 const ociEdges = [
@@ -87,8 +102,11 @@ const gcpNodes = [
   { id: 'internet', type: 'cloudNode', position: { x: 300, y: -100 }, data: { label: 'Public Internet', logoUrl: iconInternet, details: { ip: '0.0.0.0/0', status: 'External', risk: 'Info' } } },
   { id: 'vpc-gcp', type: 'networkGroup', position: { x: 100, y: 100 }, style: { width: 500, height: 400, zIndex: -2 }, data: { label: 'GCP VPC Network', color: '#3b82f6', bgColor: 'rgba(59, 130, 246, 0.05)' } },
   { id: 'sub-gcp', type: 'networkGroup', parentId: 'vpc-gcp', position: { x: 20, y: 40 }, style: { width: 460, height: 340, zIndex: -1 }, data: { label: 'us-central1 Subnet', color: '#3b82f6', bgColor: 'rgba(59, 130, 246, 0.1)' } },
-  { id: 'compute-gcp', type: 'cloudNode', parentId: 'sub-gcp', position: { x: 40, y: 30 }, data: { label: 'Compute Engine', logoUrl: iconInternet, isSafe: true, details: { ip: '10.128.0.2', status: 'Running', risk: 'Low' } } },
-  { id: 'sql-gcp', type: 'cloudNode', parentId: 'sub-gcp', position: { x: 250, y: 180 }, data: { label: 'Cloud SQL', logoUrl: iconInternet, isSafe: true, details: { ip: 'Internal', status: 'Secure', risk: 'Low' } } }
+  { id: 'compute-gcp', type: 'cloudNode', parentId: 'sub-gcp', position: { x: 40, y: 30 }, data: { label: 'Compute Engine', logoUrl: gcpComputeLogo, isSafe: true, details: { ip: '10.128.0.2', status: 'Running', risk: 'Low' } } },
+  { id: 'sql-gcp', type: 'cloudNode', parentId: 'sub-gcp', position: { x: 250, y: 180 }, data: { label: 'Cloud SQL', logoUrl: gcpSqlLogo, isSafe: true, details: { ip: 'Internal', status: 'Secure', risk: 'Low' } } },
+  { id: 'storage-gcp', type: 'cloudNode', parentId: 'sub-gcp', position: { x: 300, y: 30 }, data: { label: 'Cloud Storage', logoUrl: gcpStorageLogo, isSafe: true, details: { ip: 'Regional', status: 'Private', risk: 'Low' } } },
+  { id: 'iam-gcp', type: 'cloudNode', position: { x: 660, y: 140 }, data: { label: 'IAM', logoUrl: gcpIamLogo, isSafe: true, details: { ip: 'Project', status: 'Least Privilege', risk: 'Low' } } },
+  { id: 'firewall-gcp', type: 'cloudNode', position: { x: 660, y: 300 }, data: { label: 'Firewall Rules / VPC', logoUrl: gcpFirewallLogo, isSafe: true, details: { ip: 'VPC', status: 'Protected', risk: 'Low' } } }
 ];
 
 const gcpEdges = [
