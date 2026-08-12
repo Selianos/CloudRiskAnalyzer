@@ -1,11 +1,14 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 import { Flex, Box, Card, Heading, Text, Button, TextField, RadioCards, Badge, Checkbox, TextArea } from '@radix-ui/themes';
+import { ArrowLeft } from 'lucide-react';
 
 import awsLogo from '../assets/providers/aws.png';
 import ociLogo from '../assets/providers/oci.png';
 import gcpLogo from '../assets/providers/gcp.png';
 
 export default function CreateScanPage() {
+  const navigate = useNavigate();
   const [provider, setProvider] = useState('aws');
   const [scanType, setScanType] = useState('simple');
   const [scanName, setScanName] = useState('');
@@ -14,12 +17,18 @@ export default function CreateScanPage() {
   return (
     <Box p="6" style={{ height: '100%', overflowY: 'auto' }}>
       <Box style={{ maxWidth: '800px', margin: '0 auto' }}>
+        <Flex align="center" gap="2" mb="4">
+          <Button variant="ghost" color="gray" onClick={() => navigate('/app/connections')} style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+            <ArrowLeft size={16} /> Back to Connections
+          </Button>
+        </Flex>
+
         <Heading size="6" mb="2">Create New Scan</Heading>
         <Text color="gray" mb="6" as="div">Configure a new cloud environment security scan.</Text>
 
         <Card size="4">
           <Flex direction="column" gap="5">
-            
+
             {/* 1. Cloud Provider */}
             <Box>
               <Text as="div" size="3" weight="bold" mb="3">1. Cloud Provider</Text>
@@ -46,7 +55,7 @@ export default function CreateScanPage() {
             {/* 2. Scan Type */}
             <Box>
               <Text as="div" size="3" weight="bold" mb="3">2. Scan Type</Text>
-              <RadioCards.Root value={scanType} onValueChange={(val) => { if(val === 'simple') setScanType(val) }} columns={{ initial: '1', sm: '2' }}>
+              <RadioCards.Root value={scanType} onValueChange={(val) => { if (val === 'simple') setScanType(val) }} columns={{ initial: '1', sm: '2' }}>
                 <RadioCards.Item value="simple" style={{ cursor: 'pointer' }}>
                   <Flex direction="column" gap="1">
                     <Text weight="bold">Simple Scan</Text>
@@ -131,7 +140,7 @@ export default function CreateScanPage() {
                 <Checkbox checked={showAdvanced} onCheckedChange={setShowAdvanced} />
                 <Text size="2" weight="medium" style={{ cursor: 'pointer' }} onClick={() => setShowAdvanced(!showAdvanced)}>Show Advanced Settings</Text>
               </Flex>
-              
+
               {showAdvanced && (
                 <Card variant="surface" style={{ backgroundColor: 'var(--gray-2)' }}>
                   <Flex direction="column" gap="3" style={{ opacity: 0.6 }}>
@@ -140,7 +149,7 @@ export default function CreateScanPage() {
                       <Badge color="gray">Coming Soon</Badge>
                     </Flex>
                     <Text size="2">Custom IAM role assumption, cross-account scanning, and specific compliance framework targeting (CIS, HIPAA, etc.) are currently disabled while in development.</Text>
-                    
+
                     <Box mt="2">
                       <Text as="div" size="2" mb="1" weight="medium">Assume IAM Role ARN</Text>
                       <TextField.Root disabled placeholder="arn:aws:iam::123456789012:role/SecurityAudit" />

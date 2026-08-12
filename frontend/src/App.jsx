@@ -11,6 +11,7 @@ import Signup from './pages/Signup'
 import AppPage from './pages/AppPage'
 import CreateScanPage from './pages/CreateScanPage'
 import SettingsPage from './pages/SettingsPage'
+import ConnectionsPage from './pages/ConnectionsPage'
 import AppLayout from './layouts/AppLayout'
 export default function App() {
   return (
@@ -30,6 +31,7 @@ export default function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="app" element={<AppLayout />}>
             <Route index element={<AppPage />} />
+            <Route path="connections" element={<ConnectionsPage />} />
             <Route path="scans/new" element={<CreateScanPage />} />
             <Route path="settings" element={<SettingsPage />} />
           </Route>
