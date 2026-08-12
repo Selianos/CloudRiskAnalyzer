@@ -140,3 +140,81 @@ export const me = async (req, res) => {
     res.status(500).json({ error: 'Internal server error during user fetch' });
   }
 };
+
+
+export const changePassword = async (req, res) => {
+  try {
+    const { password } = req.body;
+
+    if (!password) {
+      return res.status(400).json({
+        error: 'New password is required'
+      });
+    }
+
+    const response = await fetch(`${config.authUrl}/user`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': req.headers.authorization,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        password
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return res.status(response.status).json(data);
+    }
+
+    res.status(200).json(data);
+  } catch (error) {
+    console.error('Change Password Error:', error.message);
+
+    res.status(500).json({
+      error: 'Internal server error during password change'
+    });
+  }
+};
+
+
+export const changeName = async (req, res) => {
+  try {
+    const { fullname } = req.body;
+
+    if (!fullname) {
+      return res.status(400).json({
+        error: 'Full name is required'
+      });
+    }
+
+    const response = await fetch(`${config.authUrl}/user`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': req.headers.authorization,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        data: {
+          fullname
+        }
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return res.status(response.status).json(data);
+    }
+
+    res.status(200).json(data);
+  } catch (error) {
+    console.error('Change Name Error:', error.message);
+
+    res.status(500).json({
+      error: 'Internal server error during name change'
+    });
+  }
+};
