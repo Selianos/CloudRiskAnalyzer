@@ -28,7 +28,7 @@ export default function AppLayout() {
   const [selectedScan, setSelectedScan] = useState('AWS');
 
   const navItems = [
-    { label: 'Scans & Connections', path: '/app/scans', icon: Link2 },
+    { label: 'Scans & Connections', path: '/app/connections', icon: Link2 },
     { label: 'Workspace', path: '/app', icon: LayoutDashboard },
     { label: 'Settings', path: '/app/settings', icon: Settings }
   ];
@@ -118,7 +118,7 @@ export default function AppLayout() {
                     <DropdownMenu.Item onClick={() => setSelectedScan('OCI')} onSelect={() => setSelectedScan('OCI')}>OCI Production Environment</DropdownMenu.Item>
                     <DropdownMenu.Item onClick={() => setSelectedScan('GCP')} onSelect={() => setSelectedScan('GCP')}>GCP Production Environment</DropdownMenu.Item>
                     <DropdownMenu.Separator />
-                    <DropdownMenu.Item onClick={() => navigate('/app/scans/new')}>View All Scans...</DropdownMenu.Item>
+                    <DropdownMenu.Item onClick={() => navigate('/app/connections')}>View All Scans...</DropdownMenu.Item>
                   </DropdownMenu.Content>
                 </DropdownMenu.Root>
               </>

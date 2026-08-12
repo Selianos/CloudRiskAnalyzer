@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Flex, Box, Heading, Text, Button } from '@radix-ui/themes';
-import { Plus, Link2 } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import ConnectionTable from '../components/connections/ConnectionTable';
 
 import awsLogo from '../assets/providers/aws.png';
 import ociLogo from '../assets/providers/oci_small.png';
 import gcpLogo from '../assets/providers/gcp_small.png';
 
-export default function ScansPage() {
+export default function ConnectionsPage() {
   const navigate = useNavigate();
 
   // Fake demo data for connections
@@ -75,7 +75,6 @@ export default function ScansPage() {
         <Flex justify="between" align="center" mb="6" wrap="wrap" gap="4">
           <Box>
             <Heading size="6" mb="1" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Link2 size={24} style={{ color: 'var(--primary-color)' }} />
               Cloud Connections
             </Heading>
             <Text color="gray" size="2">

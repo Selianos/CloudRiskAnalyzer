@@ -1,5 +1,5 @@
 import { Table, Flex, Box, Text, Button, Avatar, Badge } from '@radix-ui/themes';
-import { Shield, RefreshCw, Calendar } from 'lucide-react';
+import { Calendar } from 'lucide-react';
 
 const getStatusBadge = (status, count) => {
   switch (status) {
@@ -82,20 +82,19 @@ export default function ConnectionRow({ conn, onNavigateToWorkspace, onScanTrigg
             size="1" 
             variant="soft" 
             color="indigo" 
-            style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+            style={{ cursor: 'pointer' }}
             onClick={onNavigateToWorkspace}
           >
-            <Shield size={12} />
-            Workspace
+            Last results
           </Button>
           <Button 
             size="1" 
-            variant="ghost" 
-            color="gray"
+            variant="solid" 
+            color="green"
             style={{ cursor: 'pointer' }}
             onClick={onScanTrigger}
           >
-            <RefreshCw size={12} />
+            New scan
           </Button>
         </Flex>
       </Table.Cell>
