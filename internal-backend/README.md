@@ -1,6 +1,6 @@
 # CloudRiskAnalyzer Internal Backend
 
-This directory contains the Python FastAPI Internal Backend that serves the scanner workers. It handles job metadata retrieval, result submission, and status updates, acting as a secure bridge between the workers and the PostgreSQL database.
+This directory contains the Python FastAPI Internal Backend that serves the scanner workers. It handles job polling, result submission, and status updates, acting as a secure bridge between the workers and the PostgreSQL database.
 
 It runs inside a **private Docker network** and is not exposed to the public internet or the host machine directly.
 
@@ -9,7 +9,7 @@ It runs inside a **private Docker network** and is not exposed to the public int
 ## 1. Overview & Security
 
 * **Worker Authentication**: All endpoints require an `Authorization: Bearer <WORKER_API_KEY>` header.
-* **Credentials Decryption**: It accesses the shared `ENCRYPTION_KEY` environment variable on startup. When a worker requests job details via `GET /internal/jobs/{job_id}`, it automatically decrypts the connection's credentials from PostgreSQL and returns them securely in-memory.
+* **Credentials Decryption**: It accesses the shared `ENCRYPTION_KEY` environment variable on startup. When a worker requests job details or polls a job, it automatically decrypts the connection's credentials from PostgreSQL and returns them securely in-memory.
 
 ---
 
@@ -18,7 +18,9 @@ It runs inside a **private Docker network** and is not exposed to the public int
 All internal endpoints are prefixed with `/internal`.
 
 ### Job Endpoints
-* `GET /internal/jobs/{job_id}`: Get the details of a specific scan job (including decrypted credentials).
+* `GET /internal/jobs/poll`: Atomically claim the next `PENDING` scan job.
+  - Returns: Job details including decrypted cloud credentials.
+* `GET /internal/jobs/{job_id}`: Get the details of a specific scan job.
 * `POST /internal/jobs/{job_id}/status`: Update the status of a specific scan job (e.g. to `RUNNING` or `FAILED`).
   - Body: `{ "status": "RUNNING" }`
 * `POST /internal/jobs/{job_id}/results`: Submit the final resources and findings of a completed scan.

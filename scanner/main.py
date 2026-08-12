@@ -50,7 +50,14 @@ def main():
         return
 
     # Load security rules for the selected provider
-    provider_key = "aws" if "aws" in provider.name.lower() else provider.name.lower()
+    if "aws" in provider.name.lower():
+        provider_key = "aws"
+    elif "gcp" in provider.name.lower():
+        provider_key = "gcp"
+    elif "oci" in provider.name.lower() or "orc" in provider.name.lower():
+        provider_key = "oci"
+    else:
+        raise ValueError(f"Unknown provider: {provider.name}")
     rules = get_rules_for_provider(provider_key)
 
     import datetime

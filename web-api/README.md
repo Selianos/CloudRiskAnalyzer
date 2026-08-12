@@ -2,6 +2,8 @@
 
 This directory contains the Express.js Public API backend that serves the frontend application. It handles user authentication, cloud connections (AWS, GCP, OCI), and scan jobs.
 
+The API is built using Node.js and Express, with Prisma as the ORM to interact with the PostgreSQL database. Authentication is proxied to the GoTrue service.
+
 ---
 
 ## 1. Environment & Configuration
@@ -14,11 +16,11 @@ The Public API requires the following environment variables (which are automatic
 
 ## 2. API Endpoints
 
-All public API endpoints are prefixed with `/api` and require `Authorization: Bearer <JWT_TOKEN>` (except login/register).
+All public API endpoints are prefixed with `/api` and require `Authorization: Bearer <JWT_TOKEN>` (except login/signup/register).
 
 ### Authentication Endpoints
 Interacts with the GoTrue identity service:
-* `POST /api/auth/signup` - Create user.
+* `POST /api/auth/signup` (or `/register`) - Create user.
 * `POST /api/auth/login` - Authenticate user and return a JWT access token.
 * `POST /api/auth/logout` - Revoke JWT session.
 

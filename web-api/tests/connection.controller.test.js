@@ -207,6 +207,50 @@ describe('Connection Controller', () => {
       expect(res.statusCode).toBe(200);
       expect(res.jsonData.message).toBe('Connection deleted successfully');
     });
+
+    it('should return 400 if connection ID format is invalid', async () => {
+      const req = mockRequest({
+        user: { sub: MOCK_USER_ID },
+        params: { id: 'invalid-uuid-format' }
+      });
+      const res = mockResponse();
+
+      await deleteConnection(req, res);
+
+      expect(res.statusCode).toBe(400);
+      expect(res.jsonData.error).toBe('Invalid connection ID format');
+    });
+
+    it('should return 404 if connection does not exist or user does not own it', async () => {
+      vi.spyOn(prisma.connections, 'findFirst').mockResolvedValue(null);
+
+      const req = mockRequest({
+        user: { sub: MOCK_USER_ID },
+        params: { id: MOCK_CONNECTION_ID }
+      });
+      const res = mockResponse();
+
+      await deleteConnection(req, res);
+
+      expect(res.statusCode).toBe(404);
+      expect(res.jsonData.error).toBe('Connection not found or access denied');
+    });
+
+    it('should return 500 when database delete throws an error', async () => {
+      vi.spyOn(prisma.connections, 'findFirst').mockResolvedValue(MOCK_CONNECTION);
+      vi.spyOn(prisma.connections, 'delete').mockRejectedValue(new Error('DB Delete Failure'));
+
+      const req = mockRequest({
+        user: { sub: MOCK_USER_ID },
+        params: { id: MOCK_CONNECTION_ID }
+      });
+      const res = mockResponse();
+
+      await deleteConnection(req, res);
+
+      expect(res.statusCode).toBe(500);
+      expect(res.jsonData.error).toBe('Internal server error while deleting connection');
+    });
   });
 
   describe('getPublicInfo()', () => {

@@ -30,4 +30,3 @@ class RuleSync(BaseModel):
     severity: str
     description: str
     recommendation: str
-

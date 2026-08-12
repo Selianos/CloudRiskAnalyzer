@@ -34,6 +34,8 @@ export const signup = async (req, res) => {
   }
 };
 
+export const register = signup;
+
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -87,7 +89,6 @@ export const logout = async (req, res) => {
     res.status(500).json({ error: 'Internal server error during logout' });
   }
 };
-
 export const refresh = async (req, res) => {
   try {
     const { refresh_token } = req.body;

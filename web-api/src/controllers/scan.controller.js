@@ -13,7 +13,6 @@ redisClient.on('error', (err) => console.error('Redis Client Error', err));
 redisClient.connect().catch((err) => {
   console.error('Failed to connect to Redis queue:', err.message);
 });
-
 export const getScans = async (req, res) => {
   try {
     const userId = req.user?.sub;
@@ -81,7 +80,6 @@ export const createScan = async (req, res) => {
       console.error('Failed to push job ID to Redis queue:', redisError.message);
       // Proceed gracefully as database fallback will still pick it up
     }
-
     res.status(201).json(newScanJob);
   } catch (error) {
     console.error('Error creating scan job:', error);

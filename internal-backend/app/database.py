@@ -231,12 +231,12 @@ class ScanDatabase:
                     details=     finding.get("details"),
                 ))
 
+            # 3. Mark the job as COMPLETED
             db.execute(
                 update(ScanJob)
                 .where(ScanJob.id == uuid.UUID(job_id))
                 .values(status="COMPLETED", completed_at=datetime.utcnow())
             )
-
     @staticmethod
     def sync_rules(rules: list[dict]) -> None:
         with get_session() as db:

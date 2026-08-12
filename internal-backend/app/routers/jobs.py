@@ -86,8 +86,6 @@ def update_status(
 
     ScanDatabase.update_status(job_id, update.status)
 
-    return Response(status_code=200)
-
 
 @router.post("/rules/sync")
 def sync_rules(rules: list[RuleSync], authorization: str | None = Header(None)):
