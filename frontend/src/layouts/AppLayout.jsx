@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router';
 import { Flex, Box, Text, Button, DropdownMenu, Avatar } from '@radix-ui/themes';
 import { useAuth } from '../contexts/AuthContext';
-import { LayoutDashboard, ShieldAlert, Settings, LogOut, Activity } from 'lucide-react';
+import { LayoutDashboard, ShieldAlert, Settings, LogOut, Activity, Link2 } from 'lucide-react';
 
 import {
   SidebarProvider,
@@ -28,7 +28,7 @@ export default function AppLayout() {
   const [selectedScan, setSelectedScan] = useState('AWS');
 
   const navItems = [
-    { label: 'Scans & Connections', path: '/app/scans/new', icon: ShieldAlert },
+    { label: 'Scans & Connections', path: '/app/connections', icon: Link2 },
     { label: 'Workspace', path: '/app', icon: LayoutDashboard },
     { label: 'Settings', path: '/app/settings', icon: Settings }
   ];
