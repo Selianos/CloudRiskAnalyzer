@@ -33,7 +33,14 @@ async function seed() {
       const response = await fetch(`${authUrl}/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ 
+          email, 
+          password,
+          data: {
+            fullname: 'Test User',
+            role: 'individual'
+          }
+        })
       });
 
       if (!response.ok) {

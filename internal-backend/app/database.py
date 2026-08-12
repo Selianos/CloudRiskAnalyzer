@@ -90,7 +90,12 @@ class Resource(Base):
 class Rule(Base):
     __tablename__ = "rules"
 
-    id: Mapped[str] = mapped_column(String, primary_key=True)
+    id:             Mapped[str] = mapped_column(String, primary_key=True)
+    provider:       Mapped[str] = mapped_column(String)
+    name:           Mapped[str] = mapped_column(String)
+    severity:       Mapped[str] = mapped_column(String)
+    description:    Mapped[str] = mapped_column(String)
+    recommendation: Mapped[str] = mapped_column(String)
 
 
 
@@ -232,3 +237,30 @@ class ScanDatabase:
                 .where(ScanJob.id == uuid.UUID(job_id))
                 .values(status="COMPLETED", completed_at=datetime.utcnow())
             )
+    @staticmethod
+    def sync_rules(rules: list[dict]) -> None:
+        with get_session() as db:
+            sync_rules_catalog(db, rules)
+
+from sqlalchemy.dialects.postgresql import insert
+
+def sync_rules_catalog(db: Session, rules: list[dict]):
+    for rule in rules:
+        # Standardize severity to uppercase to match DB constraints
+        rule["severity"] = rule["severity"].upper()
+        if rule["severity"] == "LOW":
+            rule["severity"] = "INFO"  # Map LOW to INFO
+            
+        stmt = insert(Rule).values(**rule)
+        # ON CONFLICT (id) DO UPDATE with new metadata
+        upsert_stmt = stmt.on_conflict_do_update(
+            constraint="rules_pkey",
+            set_={
+                "name": stmt.excluded.name,
+                "severity": stmt.excluded.severity,
+                "description": stmt.excluded.description,
+                "recommendation": stmt.excluded.recommendation
+            }
+        )
+        db.execute(upsert_stmt)
+    db.commit()

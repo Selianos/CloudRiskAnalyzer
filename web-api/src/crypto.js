@@ -48,7 +48,8 @@ export function encryptFernet(plaintext, keyBase64) {
   // 7. Assemble final token (basicToken + signature)
   const finalToken = Buffer.concat([basicToken, signature]);
 
-  // Fernet specifies base64url encoding (RFC 4648 Section 5)
-  // which replaces '+' with '-', '/' with '_', and strips padding '='
-  return finalToken.toString('base64url');
+  // Fernet specifies urlsafe base64 encoding (RFC 4648 Section 5)
+  // which replaces '+' with '-' and '/' with '_', keeping trailing '=' padding
+  const base64String = finalToken.toString('base64');
+  return base64String.replace(/\+/g, '-').replace(/\//g, '_');
 }

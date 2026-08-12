@@ -1,13 +1,14 @@
 import oci
-from oci.config import from_file, validate_config
+from oci.config import validate_config
+from oci.retry import NoneRetryStrategy
 from providers.base import BaseProvider
 
-class OrcProvider(BaseProvider):
+class OCIProvider(BaseProvider):
     name = "OCI (Oracle Cloud)"
     
     def __init__(self) -> None:
         """Initialize OCI provider instance variables."""
-        self._config = None
+        super().__init__()
         self._identity_client = None
         self._compute_client = None
         self._network_client = None
@@ -18,120 +19,113 @@ class OrcProvider(BaseProvider):
 
     def required_credentials(self) -> list[dict]:
         """Return the required credentials for OCI connection."""
-        return []
+        return [
+            {
+                "name": "user",
+                "label": "OCI User OCID",
+                "secret": False,
+            },
+            {
+                "name": "fingerprint",
+                "label": "OCI Fingerprint",
+                "secret": False,
+            },
+            {
+                "name": "tenancy",
+                "label": "OCI Tenancy OCID",
+                "secret": False,
+            },
+            {
+                "name": "region",
+                "label": "OCI Region",
+                "secret": False,
+            },
+            {
+                "name": "key_file",
+                "label": "OCI Private Key File Path",
+                "secret": False,
+            },
+        ]
 
     def connect(self, credentials: dict) -> None:
-        """Connect to OCI using a local config file or manually entered credentials."""
+        """Connect to OCI using manual credentials from the database connection payload."""
         import os
-        self._manually_entered = False
-        
-        use_config = input("Load OCI credentials from default config file (~/.oci/config)? (y/n): ").strip().lower()
-        if use_config == 'y':
-            try:
-                self._config = from_file()
-                validate_config(self._config)
-            except Exception as exc:
-                print(f"[OCI] Failed to load config file: {exc}")
-                self._config = None
-                return
-        else:
-            self._manually_entered = True
-            print("\nPlease enter your OCI Credentials details manually:")
-            user = input("user (OCID): ").strip()
-            fingerprint = input("fingerprint: ").strip()
-            tenancy = input("tenancy (OCID): ").strip()
-            region = input("region: ").strip()
-            key_file = input("key_file (path to private key file): ").strip()
-            
-            key_file = os.path.expanduser(key_file)
-            
-            self._config = {
-                "user": user,
-                "fingerprint": fingerprint,
-                "tenancy": tenancy,
-                "region": region,
-                "key_file": key_file
-            }
-            
-            try:
-                validate_config(self._config)
-            except Exception as exc:
-                print(f"[OCI] Provided config attributes are invalid: {exc}")
-                self._config = None
-                return
+        import tempfile
 
-        self._tenancy_id = self._config["tenancy"]
+        # Clean up any existing temp key file
+        if hasattr(self, "_temp_key_file") and self._temp_key_file:
+            try:
+                os.unlink(self._temp_key_file.name)
+            except OSError:
+                pass
+            self._temp_key_file = None
+
+        user = credentials.get("user")
+        fingerprint = credentials.get("fingerprint")
+        tenancy = credentials.get("tenancy")
+        region = credentials.get("region")
+        key_content = credentials.get("key_content")
+        key_file = credentials.get("key_file")
+
+        if not (user and fingerprint and tenancy and region):
+            print("[OCI] Connection failed: Missing required OCI configuration attributes.")
+            self._config = None
+            return
+
+        if key_content:
+            # Write key content to a temporary file
+            self._temp_key_file = tempfile.NamedTemporaryFile(delete=False, mode="w")
+            self._temp_key_file.write(key_content)
+            self._temp_key_file.close()
+            key_path = self._temp_key_file.name
+        elif key_file:
+            key_path = os.path.expanduser(key_file)
+        else:
+            key_path = None
+
+        self._config = {
+            "user": user,
+            "fingerprint": fingerprint,
+            "tenancy": tenancy,
+            "region": region,
+            "key_file": key_path
+        }
+        
+        try:
+            validate_config(self._config)
+            print("[OCI] Connected using connection payload credentials.")
+        except Exception as exc:
+            print(f"[OCI] Connection validation failed: {exc}")
+            self._config = None
+            return
+
+        # 4. Initialize clients with timeout and retry strategy settings
+        self._tenancy_id = self._config.get("tenancy")
         self._compartment_id = self._tenancy_id
         self.account_id = self._tenancy_id
-
+        
+        client_kwargs = {
+            "timeout": (5, 5),
+            "retry_strategy": NoneRetryStrategy()
+        }
         try:
-            self._identity_client = oci.identity.IdentityClient(self._config)
-        except Exception as exc:
-            print(f"[OCI] Could not initialize Identity client: {exc}")
-
-        try:
-            self._compute_client = oci.core.ComputeClient(self._config)
-        except Exception as exc:
-            print(f"[OCI] Could not initialize Compute client: {exc}")
-
-        try:
-            self._network_client = oci.core.VirtualNetworkClient(self._config)
-        except Exception as exc:
-            print(f"[OCI] Could not initialize Network client: {exc}")
-
-        try:
-            self._object_storage_client = oci.object_storage.ObjectStorageClient(self._config)
-        except Exception as exc:
-            print(f"[OCI] Could not initialize Object Storage client: {exc}")
-
-        try:
+            self._identity_client = oci.identity.IdentityClient(self._config, **client_kwargs)
+            self._compute_client = oci.core.ComputeClient(self._config, **client_kwargs)
+            self._network_client = oci.core.VirtualNetworkClient(self._config, **client_kwargs)
+            self._object_storage_client = oci.object_storage.ObjectStorageClient(self._config, **client_kwargs)
             self._namespace = self._object_storage_client.get_namespace().data
         except Exception as exc:
-            print(f"[OCI] Could not fetch Object Storage namespace: {exc}")
+            print(f"[OCI] Connection failed (configuration or network error): {exc}")
+            self._config = None
+            return
 
         print(f"[OCI] Connected - tenancy: {self._tenancy_id}")
 
     def validate_credentials(self) -> bool:
         """Validate current OCI connection credentials by performing a test identity call."""
-        if self._config is None or self._identity_client is None:
-            print("[OCI] Not connected. Call connect() first.")
-            return False
-
         try:
             user = self._identity_client.get_user(self._config["user"]).data
             print(f"[OCI] Authenticated as: {user.name} ({user.id})")
-            
-            if getattr(self, "_manually_entered", False):
-                save_choice = input("\nSuccessfully authenticated! Save these credentials to ~/.oci/config? (y/n): ").strip().lower()
-                if save_choice == 'y':
-                    try:
-                        import os
-                        oci_dir = os.path.expanduser(os.path.join("~", ".oci"))
-                        if not os.path.exists(oci_dir):
-                            os.makedirs(oci_dir, mode=0o700)
-                        
-                        config_path = os.path.join(oci_dir, "config")
-                        
-                        config_content = f"""[DEFAULT]
-user={self._config['user']}
-fingerprint={self._config['fingerprint']}
-key_file={self._config['key_file']}
-tenancy={self._config['tenancy']}
-region={self._config['region']}
-"""
-                        with open(config_path, "w") as f:
-                            f.write(config_content)
-                        
-                        try:
-                            os.chmod(config_path, 0o600)
-                        except Exception:
-                            pass
-                            
-                        print(f"[OCI] Credentials successfully saved to {config_path}")
-                    except Exception as e:
-                        print(f"[OCI] Failed to save config file: {e}")
-                else:
-                    print("[OCI] Running this session only without saving credentials.")
             return True
         except Exception as exc:
             print(f"[OCI] Connection validation failed: {exc}")
@@ -139,6 +133,7 @@ region={self._config['region']}
 
     def disconnect(self) -> None:
         """Disconnect and clear all loaded OCI client configurations."""
+        import os
         self._identity_client = None
         self._compute_client = None
         self._network_client = None
@@ -147,6 +142,15 @@ region={self._config['region']}
         self._tenancy_id = None
         self._compartment_id = None
         self._namespace = None
+        
+        # Clean up temporary private key file if exists
+        if hasattr(self, "_temp_key_file") and self._temp_key_file:
+            try:
+                os.unlink(self._temp_key_file.name)
+            except OSError:
+                pass
+            self._temp_key_file = None
+
         print("[OCI] Disconnected.")
 
     def list_supported_resources(self) -> list[str]:
@@ -184,6 +188,32 @@ region={self._config['region']}
         print(f"[OCI] Discovered {len(resources)} resources across all compartments.")
         return resources
 
+    def get_configuration(self, resource: dict) -> dict:
+        """Collect detailed configuration settings for a given resource."""
+        print(f"[OCI] Collecting configuration for {resource['type']}: {resource['name']}...")
+        rtype = resource.get("type", "")
+        cid = resource.get("compartment_id", self._compartment_id)
+
+        dispatch = {
+            "Compute": lambda: self._get_compute_config(resource, cid),
+            "VCN": lambda: self._get_vcn_config(resource),
+            "Subnet": lambda: self._get_subnet_config(resource),
+            "SecurityList": lambda: self._get_security_list_config(resource),
+            "ObjectStorage": lambda: self._get_bucket_config(resource),
+            "IAM_Users": lambda: self._get_iam_user_config(resource),
+            "IAM_Policies": lambda: self._get_iam_policy_config(resource)
+        }
+
+        handler = dispatch.get(rtype)
+        if handler:
+            return handler()
+
+        return {
+            "id": resource.get("id"),
+            "name": resource.get("name"),
+            "type": rtype
+        }
+        
     def _discover_compute(self, compartments: list[str]) -> list[dict]:
         """Discover active Compute instances in the specified compartments."""
         results = []
@@ -329,32 +359,6 @@ region={self._config['region']}
             except Exception as exc:
                 print(f"[OCI] Error listing IAM Policies in compartment {cid}: {exc}")
         return results
-
-    def get_configuration(self, resource: dict) -> dict:
-        """Collect detailed configuration settings for a given resource."""
-        print(f"[OCI] Collecting configuration for {resource['type']}: {resource['name']}...")
-        rtype = resource.get("type", "")
-        cid = resource.get("compartment_id", self._compartment_id)
-
-        dispatch = {
-            "Compute": lambda: self._get_compute_config(resource, cid),
-            "VCN": lambda: self._get_vcn_config(resource),
-            "Subnet": lambda: self._get_subnet_config(resource),
-            "SecurityList": lambda: self._get_security_list_config(resource),
-            "ObjectStorage": lambda: self._get_bucket_config(resource),
-            "IAM_Users": lambda: self._get_iam_user_config(resource),
-            "IAM_Policies": lambda: self._get_iam_policy_config(resource)
-        }
-
-        handler = dispatch.get(rtype)
-        if handler:
-            return handler()
-
-        return {
-            "id": resource.get("id"),
-            "name": resource.get("name"),
-            "type": rtype
-        }
 
     def _get_compute_config(self, resource, cid):
         """Retrieve detailed configuration for a Compute instance."""

@@ -6,7 +6,7 @@ from fastapi.responses import JSONResponse
 from app.auth import WorkerAuth
 from app.crypto import CredentialManager
 from app.database import ScanDatabase
-from app.models import ScanResult, StatusUpdate
+from app.models import ScanResult, StatusUpdate, RuleSync
 
 router = APIRouter(prefix="/jobs")
 
@@ -86,4 +86,9 @@ def update_status(
 
     ScanDatabase.update_status(job_id, update.status)
 
+
+@router.post("/rules/sync")
+def sync_rules(rules: list[RuleSync], authorization: str | None = Header(None)):
+    WorkerAuth.validate(authorization)
+    ScanDatabase.sync_rules([r.model_dump() for r in rules])
     return Response(status_code=200)

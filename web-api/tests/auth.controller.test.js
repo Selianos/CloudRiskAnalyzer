@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { register, login, logout } from '../src/controllers/auth.controller.js';
+import { signup, login, logout, refresh, me } from '../src/controllers/auth.controller.js';
 import { mockRequest, mockResponse } from './helpers.js';
 
 describe('Auth Controller', () => {
@@ -7,8 +7,8 @@ describe('Auth Controller', () => {
     vi.restoreAllMocks();
   });
 
-  describe('register()', () => {
-    it('should successfully register a new user via GoTrue API', async () => {
+  describe('signup()', () => {
+    it('should successfully sign up a new user via GoTrue API', async () => {
       const mockUserPayload = { user: { id: 'new-user-uuid', email: 'test@example.com' } };
       const fetchSpy = vi.spyOn(global, 'fetch').mockResolvedValue({
         ok: true,
@@ -25,7 +25,7 @@ describe('Auth Controller', () => {
       });
       const res = mockResponse();
 
-      await register(req, res);
+      await signup(req, res);
 
       expect(fetchSpy).toHaveBeenCalledTimes(1);
       expect(res.statusCode).toBe(201);
@@ -41,13 +41,13 @@ describe('Auth Controller', () => {
       });
       const res = mockResponse();
 
-      await register(req, res);
+      await signup(req, res);
 
       expect(res.statusCode).toBe(400);
       expect(res.jsonData.error).toBe('Email, password, and fullname are required');
     });
 
-    it('should forward GoTrue error responses on registration failure', async () => {
+    it('should forward GoTrue error responses on signup failure', async () => {
       const mockErrorResponse = { msg: 'User already exists', code: 'email_exists' };
       const fetchSpy = vi.spyOn(global, 'fetch').mockResolvedValue({
         ok: false,
@@ -64,7 +64,7 @@ describe('Auth Controller', () => {
       });
       const res = mockResponse();
 
-      await register(req, res);
+      await signup(req, res);
 
       expect(fetchSpy).toHaveBeenCalledTimes(1);
       expect(res.statusCode).toBe(409);
@@ -140,6 +140,97 @@ describe('Auth Controller', () => {
 
       expect(res.statusCode).toBe(400);
       expect(res.jsonData.error).toBe('No authorization header provided');
+    });
+  });
+  describe('refresh()', () => {
+    it('should successfully refresh the token and return a new session', async () => {
+      const mockSessionPayload = { access_token: 'new-jwt-token', refresh_token: 'new-refresh-token' };
+      const fetchSpy = vi.spyOn(global, 'fetch').mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: async () => mockSessionPayload
+      });
+
+      const req = mockRequest({
+        body: { refresh_token: 'valid-refresh-token' }
+      });
+      const res = mockResponse();
+
+      await refresh(req, res);
+
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
+      expect(res.statusCode).toBe(200);
+      expect(res.jsonData).toEqual(mockSessionPayload);
+    });
+
+    it('should return 400 if refresh_token is missing from request body', async () => {
+      const req = mockRequest({ body: {} });
+      const res = mockResponse();
+
+      await refresh(req, res);
+
+      expect(res.statusCode).toBe(400);
+      expect(res.jsonData.error).toBe('Refresh token is required');
+    });
+
+    it('should forward GoTrue error responses if refresh token is invalid', async () => {
+      const mockErrorResponse = { error: 'invalid_grant', error_description: 'Invalid Refresh Token' };
+      const fetchSpy = vi.spyOn(global, 'fetch').mockResolvedValue({
+        ok: false,
+        status: 400,
+        json: async () => mockErrorResponse
+      });
+
+      const req = mockRequest({
+        body: { refresh_token: 'invalid-token' }
+      });
+      const res = mockResponse();
+
+      await refresh(req, res);
+
+      expect(res.statusCode).toBe(400);
+      expect(res.jsonData).toEqual(mockErrorResponse);
+    });
+  });
+
+  describe('me()', () => {
+    it('should successfully fetch the user object from GoTrue', async () => {
+      const mockUserPayload = { id: 'user-uuid', email: 'test@example.com', user_metadata: { fullname: 'Test User' } };
+      const fetchSpy = vi.spyOn(global, 'fetch').mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: async () => mockUserPayload
+      });
+
+      const req = mockRequest({
+        headers: { authorization: 'Bearer valid-jwt-token' }
+      });
+      const res = mockResponse();
+
+      await me(req, res);
+
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
+      expect(res.statusCode).toBe(200);
+      expect(res.jsonData).toEqual({ user: mockUserPayload });
+    });
+
+    it('should forward error if GoTrue fails to fetch user', async () => {
+      const mockErrorResponse = { error: 'invalid_token', error_description: 'Token expired' };
+      const fetchSpy = vi.spyOn(global, 'fetch').mockResolvedValue({
+        ok: false,
+        status: 401,
+        json: async () => mockErrorResponse
+      });
+
+      const req = mockRequest({
+        headers: { authorization: 'Bearer expired-jwt-token' }
+      });
+      const res = mockResponse();
+
+      await me(req, res);
+
+      expect(res.statusCode).toBe(401);
+      expect(res.jsonData).toEqual(mockErrorResponse);
     });
   });
 });

@@ -1,0 +1,37 @@
+name: Internal Backend Continuous Integration
+
+on:
+  pull_request:
+    paths:
+      - 'internal-backend/**'
+      - '.github/workflows/internal-backend-ci.yml'
+
+jobs:
+  test-internal-backend:
+    name: Run Python Internal Backend Tests
+    runs-on: ubuntu-latest
+    env:
+      WORKER_API_KEY: "test_worker_key_12345"
+      DATABASE_URL: "sqlite:///:memory:"
+      ENCRYPTION_KEY: "k5u52fV1g-uY17XvFmQW4l_4_w8qXh1L1hF_89f0Xk8="
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: internal-backend/requirements.txt
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+        working-directory: internal-backend
+
+      - name: Run Unit Tests (Pytest)
+        run: pytest
+        working-directory: internal-backend

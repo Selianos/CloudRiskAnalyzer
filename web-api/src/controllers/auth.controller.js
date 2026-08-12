@@ -1,6 +1,6 @@
 import { config } from '../config.js';
 
-export const register = async (req, res) => {
+export const signup = async (req, res) => {
   try {
     const { email, password, fullname } = req.body;
 
@@ -11,8 +11,8 @@ export const register = async (req, res) => {
     const response = await fetch(`${config.authUrl}/signup`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 
-        email, 
+      body: JSON.stringify({
+        email,
         password,
         data: {
           fullname,
@@ -29,8 +29,12 @@ export const register = async (req, res) => {
 
     res.status(201).json(data);
   } catch (error) {
-    console.error('Registration Error:', error.message);
-    res.status(500).json({ error: 'Internal server error during registration' });
+    console.error('Signup Error:', error.message);
+    res.status(500).json({ error: 'Internal server error during signup' });
+  }
+};
+
+export const register = signup;
   }
 };
 
@@ -85,5 +89,57 @@ export const logout = async (req, res) => {
   } catch (error) {
     console.error('Logout Error:', error.message);
     res.status(500).json({ error: 'Internal server error during logout' });
+  }
+};
+export const refresh = async (req, res) => {
+  try {
+    const { refresh_token } = req.body;
+
+    if (!refresh_token) {
+      return res.status(400).json({ error: 'Refresh token is required' });
+    }
+
+    const response = await fetch(`${config.authUrl}/token?grant_type=refresh_token`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refresh_token }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return res.status(response.status).json(data);
+    }
+
+    res.status(200).json(data);
+  } catch (error) {
+    console.error('Refresh Error:', error.message);
+    res.status(500).json({ error: 'Internal server error during token refresh' });
+  }
+};
+
+export const me = async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+
+    // Proxy the request to GoTrue's /user endpoint to get the exact same user object
+    const response = await fetch(`${config.authUrl}/user`, {
+      method: 'GET',
+      headers: {
+        'Authorization': authHeader,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return res.status(response.status).json(data);
+    }
+
+    res.status(200).json({ user: data });
+  } catch (error) {
+    console.error('Me Error:', error.message);
+    res.status(500).json({ error: 'Internal server error during user fetch' });
   }
 };

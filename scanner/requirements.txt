@@ -2,3 +2,5 @@ oci
 boto3
 google-cloud-compute
 google-cloud-storage
+redis
+requests

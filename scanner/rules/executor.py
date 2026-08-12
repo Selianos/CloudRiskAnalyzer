@@ -44,7 +44,6 @@ def get_rules_for_provider(provider_name: str) -> list:
         rules.extend(getattr(aws_s3, "RULES", []))
         rules.extend(getattr(aws_iam, "RULES", []))
         return rules
-
     if name == "gcp":
         rules = []
         rules.extend(getattr(gcp_iam, "RULES", []))
@@ -53,7 +52,14 @@ def get_rules_for_provider(provider_name: str) -> list:
         rules.extend(getattr(gcp_firewall, "RULES", []))
         return rules
 
-    # Placeholder for other providers (OCI, and future Azure)
+    if "oci" in name or "oracle" in name:
+        try:
+            from rules.oci.oci import RULES as oci_rules
+            return oci_rules
+        except ImportError:
+            return []
+
+    # Placeholder for other providers (and future Azure)
     return []
 
 
@@ -74,6 +80,8 @@ def _evaluate_legacy_dict_rule(resource: dict, configuration: dict, rule: dict) 
     elif rule_id.startswith("S3") and resource_type == "S3":
         match = True
     elif rule_id.startswith("IAM") and resource_type.startswith("IAM"):
+        match = True
+    elif rule_id.startswith("OCI") and rule.get("resource_type", "").upper() == resource_type:
         match = True
 
     if not match:
