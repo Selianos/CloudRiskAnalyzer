@@ -140,3 +140,102 @@ export const me = async (req, res) => {
     res.status(500).json({ error: 'Internal server error during user fetch' });
   }
 };
+
+
+export const changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({
+        error: 'Both current password and new password are required'
+      });
+    }
+
+    const email = req.user?.email;
+    if (!email) {
+      return res.status(401).json({
+        error: 'Unauthorized: Missing user email in token'
+      });
+    }
+
+    // 1. Verify the current password by attempting a token login
+    const verifyResponse = await fetch(`${config.authUrl}/token?grant_type=password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password: currentPassword }),
+    });
+
+    if (!verifyResponse.ok) {
+      return res.status(400).json({
+        error: 'Incorrect current password'
+      });
+    }
+
+    // 2. Update to the new password
+    const response = await fetch(`${config.authUrl}/user`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': req.headers.authorization,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        password: newPassword
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return res.status(response.status).json(data);
+    }
+
+    res.status(200).json(data);
+  } catch (error) {
+    console.error('Change Password Error:', error.message);
+
+    res.status(500).json({
+      error: 'Internal server error during password change'
+    });
+  }
+};
+
+
+export const changeName = async (req, res) => {
+  try {
+    const { fullname } = req.body;
+
+    if (!fullname) {
+      return res.status(400).json({
+        error: 'Full name is required'
+      });
+    }
+
+    const response = await fetch(`${config.authUrl}/user`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': req.headers.authorization,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        data: {
+          fullname
+        }
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return res.status(response.status).json(data);
+    }
+
+    res.status(200).json(data);
+  } catch (error) {
+    console.error('Change Name Error:', error.message);
+
+    res.status(500).json({
+      error: 'Internal server error during name change'
+    });
+  }
+};
