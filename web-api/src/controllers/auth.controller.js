@@ -35,8 +35,6 @@ export const signup = async (req, res) => {
 };
 
 export const register = signup;
-  }
-};
 
 export const login = async (req, res) => {
   try {

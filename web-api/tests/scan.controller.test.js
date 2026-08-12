@@ -232,5 +232,46 @@ describe('Scan Controller', () => {
       expect(res.statusCode).toBe(404);
       expect(res.jsonData.error).toBe('Scan job not found or access denied');
     });
+
+    it('should return 401 if user ID is missing or invalid', async () => {
+      const req = mockRequest({
+        user: { sub: 'invalid-user-uuid' },
+        params: { scan_id: MOCK_SCAN_ID }
+      });
+      const res = mockResponse();
+
+      await getScanResults(req, res);
+
+      expect(res.statusCode).toBe(401);
+      expect(res.jsonData.error).toBe('Unauthorized: Invalid user identifier');
+    });
+
+    it('should return 400 if scan_id parameter is malformed', async () => {
+      const req = mockRequest({
+        user: { sub: MOCK_USER_ID },
+        params: { scan_id: 'bad-scan-uuid' }
+      });
+      const res = mockResponse();
+
+      await getScanResults(req, res);
+
+      expect(res.statusCode).toBe(400);
+      expect(res.jsonData.error).toBe('Invalid scan_id format');
+    });
+
+    it('should return 500 when database query throws an error', async () => {
+      vi.spyOn(prisma.scan_jobs, 'findFirst').mockRejectedValue(new Error('Database error'));
+
+      const req = mockRequest({
+        user: { sub: MOCK_USER_ID },
+        params: { scan_id: MOCK_SCAN_ID }
+      });
+      const res = mockResponse();
+
+      await getScanResults(req, res);
+
+      expect(res.statusCode).toBe(500);
+      expect(res.jsonData.error).toBe('Internal server error while retrieving scan results');
+    });
   });
 });
