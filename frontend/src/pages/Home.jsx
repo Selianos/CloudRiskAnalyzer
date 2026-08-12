@@ -1,9 +1,24 @@
-import React from 'react'
+import React from 'react';
+import { Box } from '@radix-ui/themes';
+
+import HeroSection from '../components/home/HeroSection';
+import AboutSection from '../components/home/AboutSection';
+import ProvidersSection from '../components/home/ProvidersSection';
+import SponsorsSection from '../components/home/SponsorsSection';
+import Footer from '../components/common/Footer';
 
 export default function Home() {
     return (
-        <div>
-            <h1>Home</h1>
-        </div>
-    )
+        <Box>
+            <HeroSection />
+            <AboutSection />
+            <ProvidersSection />
+            
+            <Box style={{ backgroundColor: 'var(--gray-2)', padding: '60px 0' }}>
+                <SponsorsSection />
+            </Box>
+
+            <Footer />
+        </Box>
+    );
 }
