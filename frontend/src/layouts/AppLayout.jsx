@@ -28,7 +28,7 @@ export default function AppLayout() {
   const [selectedScan, setSelectedScan] = useState('AWS');
 
   const navItems = [
-    { label: 'Scans & Connections', path: '/app/connections', icon: Link2 },
+    { label: 'Scans & Connections', path: '/app/scans', icon: Link2 },
     { label: 'Workspace', path: '/app', icon: LayoutDashboard },
     { label: 'Settings', path: '/app/settings', icon: Settings }
   ];
