@@ -29,7 +29,7 @@ from __future__ import annotations
 
 from typing import Optional
 
-from aws import ec2 as aws_ec2, s3 as aws_s3, iam as aws_iam
+from rules.aws import ec2 as aws_ec2, s3 as aws_s3, iam as aws_iam
 from rules.gcp import compute as gcp_compute, firewall as gcp_firewall, iam as gcp_iam, storage as gcp_storage
 from rules.common import BaseRule
 

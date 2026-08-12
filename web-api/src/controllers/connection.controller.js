@@ -14,6 +14,19 @@ export const getConnections = async (req, res) => {
   try {
     const userConnections = await prisma.connections.findMany({
       where: { user_id: userId },
+      include: {
+        scan_jobs: {
+          orderBy: { created_at: 'desc' },
+          take: 1,
+          include: {
+            findings: {
+              include: {
+                rules: true
+              }
+            }
+          }
+        }
+      },
       orderBy: { created_at: 'desc' }
     });
 

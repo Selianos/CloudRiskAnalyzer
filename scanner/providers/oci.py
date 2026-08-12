@@ -63,9 +63,13 @@ class OCIProvider(BaseProvider):
         user = credentials.get("user")
         fingerprint = credentials.get("fingerprint")
         tenancy = credentials.get("tenancy")
-        region = credentials.get("region")
+        region = credentials.get("region", "us-ashburn-1")
         key_content = credentials.get("key_content")
         key_file = credentials.get("key_file")
+
+        if key_file and "-----BEGIN" in key_file:
+            key_content = key_file
+            key_file = None
 
         if not (user and fingerprint and tenancy and region):
             print("[OCI] Connection failed: Missing required OCI configuration attributes.")
@@ -73,6 +77,9 @@ class OCIProvider(BaseProvider):
             return
 
         if key_content:
+            # Fix literal escaped newlines if they exist
+            if "\\n" in key_content:
+                key_content = key_content.replace("\\n", "\n")
             # Write key content to a temporary file
             self._temp_key_file = tempfile.NamedTemporaryFile(delete=False, mode="w")
             self._temp_key_file.write(key_content)
@@ -123,6 +130,9 @@ class OCIProvider(BaseProvider):
 
     def validate_credentials(self) -> bool:
         """Validate current OCI connection credentials by performing a test identity call."""
+        if not self._config or not self._identity_client:
+            return False
+            
         try:
             user = self._identity_client.get_user(self._config["user"]).data
             print(f"[OCI] Authenticated as: {user.name} ({user.id})")

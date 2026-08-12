@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router';
-import { Flex, Box, Text, Button, DropdownMenu, Avatar } from '@radix-ui/themes';
+import { Flex, Box, Text, Button, DropdownMenu, Avatar, Badge, Spinner } from '@radix-ui/themes';
 import { useAuth } from '../contexts/AuthContext';
-import { LayoutDashboard, ShieldAlert, Settings, LogOut, Activity, Link2 } from 'lucide-react';
+import { LayoutDashboard, Settings, LogOut, Activity, Link2 } from 'lucide-react';
+import { getScans } from '../api/scan';
 
 import {
   SidebarProvider,
@@ -20,18 +21,75 @@ import {
   SidebarInset
 } from '@/components/animate-ui/components/radix/sidebar';
 
+function formatScanDate(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
 export default function AppLayout() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [selectedScan, setSelectedScan] = useState('AWS');
+  // The currently selected scan (full scan object or null)
+  const [selectedScan, setSelectedScan] = useState(null);
+  const [scans, setScans] = useState([]);
+  const [scansLoading, setScansLoading] = useState(false);
 
   const navItems = [
     { label: 'Scans & Connections', path: '/app/connections', icon: Link2 },
     { label: 'Workspace', path: '/app', icon: LayoutDashboard },
     { label: 'Settings', path: '/app/settings', icon: Settings }
   ];
+
+  // Fetch scans when we're on the workspace page (or any time)
+  useEffect(() => {
+    const loadScans = async () => {
+      try {
+        setScansLoading(true);
+        const data = await getScans();
+        // Already sorted desc by created_at from backend
+        setScans(data);
+        // Auto-select latest scan if nothing selected yet
+        if (data.length > 0 && !selectedScan) {
+          setSelectedScan(data[0]);
+        }
+      } catch (err) {
+        console.error('Failed to fetch scans for workspace:', err);
+      } finally {
+        setScansLoading(false);
+      }
+    };
+
+    if (location.pathname === '/app') {
+      loadScans();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
+
+  // Allow child pages to trigger a scan selection (e.g. after creating one)
+  const handleSelectScan = (scan) => {
+    setSelectedScan(scan);
+    navigate('/app');
+  };
+
+  const getDropdownLabel = (scan, index) => {
+    if (!scan) return 'No scans yet';
+    const isLatest = index === 0;
+    const label = scan.connections?.name || `Scan ${scan.id.slice(0, 6)}`;
+    const date = formatScanDate(scan.created_at);
+    return isLatest ? `${label} — ${date}` : `${label} — ${date}`;
+  };
+
+  const getButtonLabel = () => {
+    if (scansLoading) return 'Loading...';
+    if (!selectedScan) return 'No scans';
+    const isLatest = scans.length > 0 && scans[0].id === selectedScan.id;
+    const label = selectedScan.connections?.name || `Scan ${selectedScan.id.slice(0, 6)}`;
+    const date = formatScanDate(selectedScan.created_at);
+    return isLatest ? `${label} — ${date}` : `${label} — ${date}`;
+  };
 
   return (
     <SidebarProvider>
@@ -106,21 +164,70 @@ export default function AppLayout() {
             {location.pathname === '/app' ? (
               <>
                 <Text weight="bold" size="4">Current Scan:</Text>
-                <DropdownMenu.Root>
-                  <DropdownMenu.Trigger>
-                    <Button variant="soft" color="gray" style={{ cursor: 'pointer' }}>
-                      {selectedScan} Production Environment
-                      <DropdownMenu.TriggerIcon />
+                {scansLoading ? (
+                  <Flex align="center" gap="2">
+                    <Spinner size="1" />
+                    <Text color="gray" size="2">Loading scans...</Text>
+                  </Flex>
+                ) : scans.length === 0 ? (
+                  <Flex align="center" gap="2">
+                    <Text color="gray" size="2">No scans yet.</Text>
+                    <Button variant="soft" size="1" onClick={() => navigate('/app/scans/new')} style={{ cursor: 'pointer' }}>
+                      Start one
                     </Button>
-                  </DropdownMenu.Trigger>
-                  <DropdownMenu.Content>
-                    <DropdownMenu.Item onClick={() => setSelectedScan('AWS')} onSelect={() => setSelectedScan('AWS')}>AWS Production Environment</DropdownMenu.Item>
-                    <DropdownMenu.Item onClick={() => setSelectedScan('OCI')} onSelect={() => setSelectedScan('OCI')}>OCI Production Environment</DropdownMenu.Item>
-                    <DropdownMenu.Item onClick={() => setSelectedScan('GCP')} onSelect={() => setSelectedScan('GCP')}>GCP Production Environment</DropdownMenu.Item>
-                    <DropdownMenu.Separator />
-                    <DropdownMenu.Item onClick={() => navigate('/app/connections')}>View All Scans...</DropdownMenu.Item>
-                  </DropdownMenu.Content>
-                </DropdownMenu.Root>
+                  </Flex>
+                ) : (
+                  <DropdownMenu.Root>
+                    <DropdownMenu.Trigger>
+                      <Button variant="soft" color="gray" style={{ cursor: 'pointer', maxWidth: '400px' }}>
+                        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          {getButtonLabel()}
+                        </span>
+                        {selectedScan && scans.length > 0 && scans[0].id === selectedScan.id && (
+                          <Badge color="blue" size="1" variant="solid" style={{ marginLeft: '6px', flexShrink: 0 }}>
+                            Latest
+                          </Badge>
+                        )}
+                        <DropdownMenu.TriggerIcon />
+                      </Button>
+                    </DropdownMenu.Trigger>
+                    <DropdownMenu.Content style={{ maxHeight: '320px', overflowY: 'auto', minWidth: '320px' }}>
+                      {scans.map((scan, index) => {
+                        const connName = scan.connections?.name || `Scan ${scan.id.slice(0, 8)}`;
+                        const date = formatScanDate(scan.created_at);
+                        const isLatest = index === 0;
+                        const isSelected = selectedScan?.id === scan.id;
+
+                        return (
+                          <DropdownMenu.Item
+                            key={scan.id}
+                            onSelect={() => setSelectedScan(scan)}
+                            style={{ fontWeight: isSelected ? 'bold' : 'normal' }}
+                          >
+                            <Flex align="center" gap="2" style={{ width: '100%' }}>
+                              <Box style={{ flexGrow: 1 }}>
+                                <Text size="2" weight={isSelected ? 'bold' : 'regular'}>{connName}</Text>
+                                <Text size="1" color="gray" as="div">{date}</Text>
+                              </Box>
+                              {isLatest && (
+                                <Badge color="blue" size="1" variant="soft">Latest</Badge>
+                              )}
+                              {scan.status === 'PENDING' || scan.status === 'RUNNING' ? (
+                                <Badge color="orange" size="1" variant="soft">Scanning…</Badge>
+                              ) : scan.status === 'FAILED' ? (
+                                <Badge color="red" size="1" variant="soft">Failed</Badge>
+                              ) : null}
+                            </Flex>
+                          </DropdownMenu.Item>
+                        );
+                      })}
+                      <DropdownMenu.Separator />
+                      <DropdownMenu.Item onSelect={() => navigate('/app/connections')}>
+                        View All Connections…
+                      </DropdownMenu.Item>
+                    </DropdownMenu.Content>
+                  </DropdownMenu.Root>
+                )}
               </>
             ) : (
               <Text weight="bold" size="5" style={{ color: 'var(--gray-12)' }}>
@@ -131,14 +238,20 @@ export default function AppLayout() {
 
           {location.pathname === '/app' && (
             <Button variant="solid" onClick={() => navigate('/app/scans/new')} style={{ cursor: 'pointer' }}>
-              + Create Scan
+              + New Scan
             </Button>
           )}
         </Flex>
 
         {/* Main Content */}
         <Box style={{ flexGrow: 1, overflow: 'hidden' }}>
-          <Outlet context={{ selectedScan }} />
+          <Outlet context={{ selectedScan, onSelectScan: handleSelectScan, refreshScans: () => {
+            // Triggers a re-load when called from child
+            getScans().then(data => {
+              setScans(data);
+              if (data.length > 0) setSelectedScan(data[0]);
+            }).catch(console.error);
+          }}} />
         </Box>
       </SidebarInset>
     </SidebarProvider>

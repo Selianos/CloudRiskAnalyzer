@@ -16,9 +16,10 @@ export default function ConnectionTable({ connections, onNavigateToWorkspace, on
       </Table.Header>
 
       <Table.Body>
-        {connections.map((conn) => (
+        {connections.map((conn, index) => (
           <ConnectionRow
             key={conn.id}
+            index={index + 1}
             conn={conn}
             onNavigateToWorkspace={() => onNavigateToWorkspace(conn)}
             onScanTrigger={() => onScanTrigger(conn)}

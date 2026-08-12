@@ -26,6 +26,11 @@ export const getScans = async (req, res) => {
       },
       orderBy: {
         created_at: 'desc'
+      },
+      include: {
+        connections: {
+          select: { id: true, name: true, provider: true }
+        }
       }
     });
 

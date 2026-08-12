@@ -1,84 +1,181 @@
-import { Box, Flex, Heading, IconButton, Text, Badge, Card, Button } from '@radix-ui/themes';
+import { Box, Flex, Heading, IconButton, Text, Badge, Card, ScrollArea, Code } from '@radix-ui/themes';
+import { ShieldAlert, ShieldCheck, Info, MapPin, Tag } from 'lucide-react';
+
+const SEVERITY_COLOR = {
+  CRITICAL: 'red',
+  HIGH:     'orange',
+  MEDIUM:   'amber',
+  LOW:      'gray',
+  INFO:     'gray',
+};
+
+function FindingCard({ finding }) {
+  const isFail = finding.status === 'FAIL';
+  const severity = finding.rules?.severity || 'INFO';
+  const color = SEVERITY_COLOR[severity] || 'gray';
+
+  return (
+    <Card
+      size="2"
+      variant="surface"
+      style={{
+        backgroundColor: isFail ? `var(--${color}-2)` : 'var(--green-2)',
+        borderColor: isFail ? `var(--${color}-6)` : 'var(--green-5)',
+        marginBottom: '12px',
+      }}
+    >
+      <Flex direction="column" gap="2">
+        <Flex justify="between" align="center">
+          <Code color={isFail ? color : 'green'} variant="soft" style={{ fontWeight: 'bold' }}>
+            {finding.rule_id || 'UNKNOWN_RULE'}
+          </Code>
+          <Badge color={isFail ? color : 'green'} size="1" variant="solid" style={{ letterSpacing: '0.5px' }}>
+            {isFail ? severity : 'PASS'}
+          </Badge>
+        </Flex>
+
+        {finding.rules?.name && (
+          <Text size="2" weight="bold" style={{ color: `var(--${color}-11)` }}>
+            {finding.rules.name}
+          </Text>
+        )}
+
+        <Text size="1" color="gray" style={{ lineHeight: 1.5, fontFamily: 'monospace' }}>
+          {finding.rules?.description}
+        </Text>
+
+        {isFail && finding.rules?.recommendation && (
+          <Box mt="2" p="2" style={{ backgroundColor: 'var(--gray-3)', borderRadius: '4px', borderLeft: '3px solid var(--blue-8)' }}>
+            <Text size="1" style={{ color: 'var(--gray-11)', fontFamily: 'monospace' }}>
+              <span style={{ fontWeight: 'bold', color: 'var(--blue-11)' }}>REMEDIATION:</span> {finding.rules.recommendation}
+            </Text>
+          </Box>
+        )}
+      </Flex>
+    </Card>
+  );
+}
 
 export default function NodeDetailsPanel({ selectedNode, onClose }) {
   if (!selectedNode) return null;
 
+  const data = selectedNode.data;
+  const findings = data.findings || [];
+  const failFindings = findings.filter(f => f.status === 'FAIL');
+  const passFindings = findings.filter(f => f.status === 'PASS');
+
+  // Determine panel accent color
+  const hasCritical = failFindings.some(f => f.rules?.severity === 'CRITICAL');
+  const hasHigh = failFindings.some(f => f.rules?.severity === 'HIGH');
+  const accentColor = hasCritical ? '#ef4444' : hasHigh ? '#f97316' : failFindings.length > 0 ? '#f59e0b' : '#10b981';
+
   return (
-    <Box 
-      style={{ 
-        width: '380px', 
-        backgroundColor: 'white', 
+    <Box
+      style={{
+        width: '400px',
+        backgroundColor: 'white',
         borderLeft: '1px solid var(--gray-4)',
-        boxShadow: '-4px 0 15px rgba(0,0,0,0.03)',
+        boxShadow: '-4px 0 15px rgba(0,0,0,0.05)',
         overflowY: 'auto',
-        flexShrink: 0
+        flexShrink: 0,
+        display: 'flex',
+        flexDirection: 'column',
       }}
     >
-      <Flex direction="column" p="5" gap="5">
-        <Flex justify="between" align="center" mb="2">
+      {/* Header stripe */}
+      <Box style={{ height: '4px', backgroundColor: accentColor, flexShrink: 0 }} />
+
+      <Flex direction="column" p="4" gap="4" style={{ flexGrow: 1, overflow: 'hidden' }}>
+
+        {/* Node title row */}
+        <Flex justify="between" align="start">
           <Flex align="center" gap="3">
-            {selectedNode.data.logoUrl && (
-              <img src={selectedNode.data.logoUrl} alt="icon" style={{ width: '32px', height: '32px', objectFit: 'contain' }} />
+            {data.logoUrl && (
+              <img
+                src={data.logoUrl}
+                alt="icon"
+                style={{ width: '36px', height: '36px', objectFit: 'contain', flexShrink: 0 }}
+              />
             )}
-            <Heading size="5" style={{ color: 'var(--gray-12)' }}>{selectedNode.data.label}</Heading>
+            <Box>
+              <Heading size="4" style={{ color: 'var(--gray-12)', lineHeight: 1.2 }}>{data.label}</Heading>
+              {data.resourceType && (
+                <Text size="1" color="gray" style={{ fontFamily: 'monospace' }}>{data.resourceType}</Text>
+              )}
+            </Box>
           </Flex>
-          <IconButton variant="ghost" color="gray" onClick={onClose} style={{ cursor: 'pointer' }}>
-            <Text size="4" weight="bold">✕</Text>
+          <IconButton variant="ghost" color="gray" onClick={onClose} style={{ cursor: 'pointer', flexShrink: 0 }}>
+            <Text size="3" weight="bold">✕</Text>
           </IconButton>
         </Flex>
-        
-        <Box style={{ height: '1px', backgroundColor: 'var(--gray-4)', width: '100%' }} />
 
-        {selectedNode.data.details ? (
-          <Flex direction="column" gap="4">
-            <Box>
-              <Text size="2" color="gray" weight="bold" style={{ textTransform: 'uppercase', letterSpacing: '0.5px' }}>Resource Type</Text>
-              <Text as="div" size="3" mt="1">{selectedNode.type === 'cloudNode' ? 'Cloud Service' : selectedNode.type}</Text>
-            </Box>
+        <Box style={{ height: '1px', backgroundColor: 'var(--gray-4)' }} />
 
-            <Box>
-              <Text size="2" color="gray" weight="bold" style={{ textTransform: 'uppercase', letterSpacing: '0.5px' }}>IP / Endpoint</Text>
-              <Text as="div" size="3" mt="1" style={{ fontFamily: 'monospace', backgroundColor: 'var(--gray-2)', padding: '4px 8px', borderRadius: '4px', display: 'inline-block' }}>
-                {selectedNode.data.details.ip}
-              </Text>
-            </Box>
-
-            <Box>
-              <Text size="2" color="gray" weight="bold" style={{ textTransform: 'uppercase', letterSpacing: '0.5px' }}>Current Status</Text>
-              <Text as="div" size="3" mt="1">{selectedNode.data.details.status}</Text>
-            </Box>
-
-            <Box>
-              <Text size="2" color="gray" weight="bold" style={{ textTransform: 'uppercase', letterSpacing: '0.5px' }}>Security Risk Level</Text>
-              <Box mt="2">
-                <Badge size="2" color={selectedNode.data.details.risk.includes('Critical') ? 'red' : selectedNode.data.details.risk.includes('High') ? 'orange' : 'green'} variant="soft">
-                  {selectedNode.data.details.risk}
-                </Badge>
-              </Box>
-            </Box>
-
-            {selectedNode.data.details.description && (
-              <Card style={{ backgroundColor: selectedNode.data.isFailed ? 'var(--red-2)' : 'var(--gray-2)', border: selectedNode.data.isFailed ? '1px solid var(--red-5)' : 'none' }}>
-                <Flex gap="2" align="start">
-                  {selectedNode.data.isFailed && <Text style={{ fontSize: '18px' }}>⚠️</Text>}
-                  <Text size="2" style={{ fontStyle: 'italic', color: selectedNode.data.isFailed ? 'var(--red-11)' : 'var(--gray-11)', lineHeight: '1.5' }}>
-                    {selectedNode.data.details.description}
-                  </Text>
-                </Flex>
-              </Card>
-            )}
-            
-            <Box style={{ height: '1px', backgroundColor: 'var(--gray-4)', width: '100%', marginTop: '10px' }} />
-
-            <Flex direction="column" gap="2" mt="2">
-              <Button variant="solid" color="blue" size="3" style={{ cursor: 'pointer', width: '100%' }}>View Full Logs & Metrics</Button>
-              <Button variant="outline" color="gray" size="3" style={{ cursor: 'pointer', width: '100%' }}>Run Security Scan</Button>
+        {/* Meta info */}
+        <Flex direction="column" gap="2">
+          {data.region && (
+            <Flex align="center" gap="2">
+              <MapPin size={13} color="var(--gray-9)" />
+              <Text size="2" color="gray">Region:</Text>
+              <Text size="2" style={{ fontFamily: 'monospace' }}>{data.region}</Text>
             </Flex>
+          )}
+          {data.providerResourceId && (
+            <Flex align="center" gap="2">
+              <Tag size={13} color="var(--gray-9)" />
+              <Text size="2" color="gray">Resource ID:</Text>
+              <Text size="2" style={{ fontFamily: 'monospace', wordBreak: 'break-all' }}>{data.providerResourceId}</Text>
+            </Flex>
+          )}
+          {data.details?.ip && (
+            <Flex align="center" gap="2">
+              <Info size={13} color="var(--gray-9)" />
+              <Text size="2" color="gray">IP / Endpoint:</Text>
+              <Text size="2" style={{ fontFamily: 'monospace' }}>{data.details.ip}</Text>
+            </Flex>
+          )}
+        </Flex>
 
-          </Flex>
-        ) : (
-          <Text color="gray" style={{ fontStyle: 'italic' }}>No detailed metrics available for this node.</Text>
-        )}
+        {/* Summary badges */}
+        <Flex gap="2" wrap="wrap">
+          {failFindings.length > 0 ? (
+            <>
+              {['CRITICAL','HIGH','MEDIUM','LOW'].map(sev => {
+                const cnt = failFindings.filter(f => f.rules?.severity === sev).length;
+                if (!cnt) return null;
+                return (
+                  <Badge key={sev} color={SEVERITY_COLOR[sev]} size="2" variant="soft">
+                    {cnt} {sev}
+                  </Badge>
+                );
+              })}
+            </>
+          ) : (
+            <Badge color="green" size="2" variant="soft">✓ All checks passed</Badge>
+          )}
+          {passFindings.length > 0 && (
+            <Badge color="green" size="2" variant="outline">{passFindings.length} passed</Badge>
+          )}
+        </Flex>
+
+        <Box style={{ height: '1px', backgroundColor: 'var(--gray-4)' }} />
+
+        {/* Findings list */}
+        <Box style={{ flexGrow: 1, overflowY: 'auto' }}>
+          <Text size="2" weight="bold" color="gray" style={{ textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '10px' }}>
+            Findings ({findings.length})
+          </Text>
+          <ScrollArea style={{ maxHeight: '360px' }}>
+            {findings.length === 0 ? (
+              <Text size="2" color="gray" style={{ fontStyle: 'italic' }}>No findings recorded.</Text>
+            ) : (
+              // Show FAIL findings first, then PASS
+              [...failFindings, ...passFindings].map(finding => (
+                <FindingCard key={finding.id} finding={finding} />
+              ))
+            )}
+          </ScrollArea>
+        </Box>
       </Flex>
     </Box>
   );

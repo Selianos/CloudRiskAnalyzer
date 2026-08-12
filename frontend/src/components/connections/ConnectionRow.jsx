@@ -9,19 +9,23 @@ const getStatusBadge = (status, count) => {
       return <Badge color="amber" size="2">Warning ({count} alerts)</Badge>;
     case 'critical':
       return <Badge color="red" size="2">Critical ({count} alerts)</Badge>;
+    case 'running':
+      return <Badge color="blue" size="2">Scanning...</Badge>;
+    case 'failed':
+      return <Badge color="red" size="2">Scan Failed</Badge>;
     case 'never':
     default:
       return <Badge color="gray" size="2">Never Scanned</Badge>;
   }
 };
 
-export default function ConnectionRow({ conn, onNavigateToWorkspace, onScanTrigger }) {
+export default function ConnectionRow({ conn, index, onNavigateToWorkspace, onScanTrigger }) {
   return (
     <Table.Row align="center">
       {/* ID */}
       <Table.Cell>
         <Text size="2" weight="medium" style={{ fontFamily: 'monospace', color: 'var(--gray-11)' }}>
-          {conn.id}
+          {index}
         </Text>
       </Table.Cell>
 

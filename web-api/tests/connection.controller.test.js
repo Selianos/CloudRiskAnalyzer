@@ -27,6 +27,19 @@ describe('Connection Controller', () => {
 
       expect(prismaSpy).toHaveBeenCalledWith({
         where: { user_id: MOCK_USER_ID },
+        include: {
+          scan_jobs: {
+            orderBy: { created_at: 'desc' },
+            take: 1,
+            include: {
+              findings: {
+                include: {
+                  rules: true
+                }
+              }
+            }
+          }
+        },
         orderBy: { created_at: 'desc' }
       });
       expect(res.statusCode).toBe(200);
