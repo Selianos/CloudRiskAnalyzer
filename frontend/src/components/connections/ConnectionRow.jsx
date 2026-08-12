@@ -28,15 +28,13 @@ export default function ConnectionRow({ conn, onNavigateToWorkspace, onScanTrigg
       {/* Provider Logo + Name */}
       <Table.Cell>
         <Flex align="center" gap="3">
-          <Avatar
+          <img
             src={conn.logo}
-            fallback={conn.provider.toUpperCase()}
-            size="1"
-            radius="medium"
+            alt={conn.provider}
             style={{ 
-              objectFit: 'contain', 
-              backgroundColor: 'var(--gray-2)', 
-              padding: '4px' 
+              height: '36px', 
+              width: '36px',
+              objectFit: 'contain' 
             }}
           />
           <Box>
@@ -52,7 +50,7 @@ export default function ConnectionRow({ conn, onNavigateToWorkspace, onScanTrigg
 
       {/* Name */}
       <Table.Cell>
-        <Text size="2" weight="bold">
+        <Text size="2">
           {conn.name}
         </Text>
       </Table.Cell>

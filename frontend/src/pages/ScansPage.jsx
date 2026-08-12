@@ -5,8 +5,8 @@ import { Plus, Link2 } from 'lucide-react';
 import ConnectionTable from '../components/connections/ConnectionTable';
 
 import awsLogo from '../assets/providers/aws.png';
-import ociLogo from '../assets/providers/oci.png';
-import gcpLogo from '../assets/providers/gcp.png';
+import ociLogo from '../assets/providers/oci_small.png';
+import gcpLogo from '../assets/providers/gcp_small.png';
 
 export default function ScansPage() {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ export default function ScansPage() {
   // Fake demo data for connections
   const [connections] = useState([
     {
-      id: 'conn_aws_prod_01',
+      id: '1',
       name: 'AWS Production Environment',
       provider: 'aws',
       providerName: 'Amazon Web Services',
@@ -25,7 +25,7 @@ export default function ScansPage() {
       findingsCount: 3
     },
     {
-      id: 'conn_oci_core_02',
+      id: '2',
       name: 'Oracle Cloud Core Tenancy',
       provider: 'oci',
       providerName: 'Oracle Cloud Infrastructure',
@@ -36,7 +36,7 @@ export default function ScansPage() {
       findingsCount: 14
     },
     {
-      id: 'conn_gcp_dev_03',
+      id: '3',
       name: 'GCP Staging & Development',
       provider: 'gcp',
       providerName: 'Google Cloud Platform',
@@ -47,7 +47,7 @@ export default function ScansPage() {
       findingsCount: 38
     },
     {
-      id: 'conn_aws_test_04',
+      id: '4',
       name: 'AWS Sandboxed Testing Env',
       provider: 'aws',
       providerName: 'Amazon Web Services',
@@ -70,7 +70,7 @@ export default function ScansPage() {
   return (
     <Box p="6" style={{ height: '100%', overflowY: 'auto' }}>
       <Box style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        
+
         {/* Header Section */}
         <Flex justify="between" align="center" mb="6" wrap="wrap" gap="4">
           <Box>
@@ -82,10 +82,10 @@ export default function ScansPage() {
               Manage your connected cloud accounts and monitor their latest scan reports.
             </Text>
           </Box>
-          <Button 
-            variant="solid" 
-            size="3" 
-            onClick={() => navigate('/app/scans/new')} 
+          <Button
+            variant="solid"
+            size="3"
+            onClick={() => navigate('/app/scans/new')}
             style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
           >
             <Plus size={18} />
