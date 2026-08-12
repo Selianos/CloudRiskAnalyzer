@@ -15,12 +15,13 @@ import { useAuth } from '../contexts/AuthContext';
 import { apiClient } from '../api/apiClient';
 
 export default function SettingsPage() {
-  const { user, logout } = useAuth();
+  const { user, setUser, logout } = useAuth();
 
   const [fullname, setFullname] = useState(
     user?.user_metadata?.fullname || ''
   );
 
+  const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
@@ -69,6 +70,7 @@ export default function SettingsPage() {
 
       if (updatedUser) {
         localStorage.setItem('user', JSON.stringify(updatedUser));
+        setUser(updatedUser);
       }
     } catch (error) {
       console.error('Change Name Error:', error);
@@ -87,6 +89,14 @@ export default function SettingsPage() {
 
     setPasswordMessage(null);
 
+    if (!currentPassword) {
+      setPasswordMessage({
+        type: 'error',
+        text: 'Please enter your current password.',
+      });
+      return;
+    }
+
     if (!newPassword) {
       setPasswordMessage({
         type: 'error',
@@ -99,6 +109,14 @@ export default function SettingsPage() {
       setPasswordMessage({
         type: 'error',
         text: 'Password must be at least 6 characters long.',
+      });
+      return;
+    }
+
+    if (newPassword === currentPassword) {
+      setPasswordMessage({
+        type: 'error',
+        text: 'New password cannot be the same as current password.',
       });
       return;
     }
@@ -117,10 +135,12 @@ export default function SettingsPage() {
       await apiClient('/auth/password', {
         method: 'PUT',
         body: JSON.stringify({
-          password: newPassword,
+          currentPassword,
+          newPassword,
         }),
       });
 
+      setCurrentPassword('');
       setNewPassword('');
       setConfirmPassword('');
 
@@ -240,6 +260,19 @@ export default function SettingsPage() {
 
             <form onSubmit={handlePasswordChange}>
               <Flex direction="column" gap="3">
+                <Box>
+                  <Text as="div" size="2" mb="1" weight="medium">
+                    Current Password
+                  </Text>
+
+                  <TextField.Root
+                    type="password"
+                    placeholder="Enter current password"
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                  />
+                </Box>
+
                 <Box>
                   <Text as="div" size="2" mb="1" weight="medium">
                     New Password

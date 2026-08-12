@@ -144,14 +144,35 @@ export const me = async (req, res) => {
 
 export const changePassword = async (req, res) => {
   try {
-    const { password } = req.body;
+    const { currentPassword, newPassword } = req.body;
 
-    if (!password) {
+    if (!currentPassword || !newPassword) {
       return res.status(400).json({
-        error: 'New password is required'
+        error: 'Both current password and new password are required'
       });
     }
 
+    const email = req.user?.email;
+    if (!email) {
+      return res.status(401).json({
+        error: 'Unauthorized: Missing user email in token'
+      });
+    }
+
+    // 1. Verify the current password by attempting a token login
+    const verifyResponse = await fetch(`${config.authUrl}/token?grant_type=password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password: currentPassword }),
+    });
+
+    if (!verifyResponse.ok) {
+      return res.status(400).json({
+        error: 'Incorrect current password'
+      });
+    }
+
+    // 2. Update to the new password
     const response = await fetch(`${config.authUrl}/user`, {
       method: 'PUT',
       headers: {
@@ -159,7 +180,7 @@ export const changePassword = async (req, res) => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        password
+        password: newPassword
       })
     });
 
