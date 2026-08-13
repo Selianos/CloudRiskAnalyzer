@@ -95,9 +95,6 @@ export default function AppLayout() {
     <SidebarProvider>
       <Sidebar>
         <SidebarHeader className="p-4 flex flex-row items-center gap-3">
-          <div className="p-2 bg-[var(--primary-color)] rounded-md text-white flex items-center justify-center">
-            <Activity size={24} />
-          </div>
           <span className="font-bold text-lg text-gray-900 dark:text-white">Sahaba</span>
         </SidebarHeader>
 

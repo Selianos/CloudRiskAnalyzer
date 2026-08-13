@@ -40,14 +40,14 @@ function FindingCard({ finding }) {
           </Text>
         )}
 
-        <Text size="1" color="gray" style={{ lineHeight: 1.5, fontFamily: 'monospace' }}>
+        <Text size="1" color="gray" style={{ lineHeight: 1.5, fontFamily: 'monospace', whiteSpace: 'pre-wrap' }}>
           {finding.rules?.description}
         </Text>
 
         {isFail && finding.rules?.recommendation && (
-          <Box mt="2" p="2" style={{ backgroundColor: 'var(--gray-3)', borderRadius: '4px', borderLeft: '3px solid var(--blue-8)' }}>
-            <Text size="1" style={{ color: 'var(--gray-11)', fontFamily: 'monospace' }}>
-              <span style={{ fontWeight: 'bold', color: 'var(--blue-11)' }}>REMEDIATION:</span> {finding.rules.recommendation}
+          <Box mt="2">
+            <Text size="1" style={{ color: 'var(--gray-11)', fontFamily: 'monospace', whiteSpace: 'pre-wrap' }}>
+              <span style={{ fontWeight: 'bold', color: 'var(--green-11)' }}>REMEDIATION:</span> {finding.rules.recommendation}
             </Text>
           </Box>
         )}
@@ -114,24 +114,24 @@ export default function NodeDetailsPanel({ selectedNode, onClose }) {
         {/* Meta info */}
         <Flex direction="column" gap="2">
           {data.region && (
-            <Flex align="center" gap="2">
-              <MapPin size={13} color="var(--gray-9)" />
-              <Text size="2" color="gray">Region:</Text>
-              <Text size="2" style={{ fontFamily: 'monospace' }}>{data.region}</Text>
+            <Flex align="start" gap="2">
+              <MapPin size={13} color="var(--gray-9)" style={{ marginTop: '2px', flexShrink: 0 }} />
+              <Text size="2" color="gray" style={{ flexShrink: 0, width: '90px' }}>Region:</Text>
+              <Text size="2" style={{ fontFamily: 'monospace', wordBreak: 'break-all' }}>{data.region}</Text>
             </Flex>
           )}
           {data.providerResourceId && (
-            <Flex align="center" gap="2">
-              <Tag size={13} color="var(--gray-9)" />
-              <Text size="2" color="gray">Resource ID:</Text>
+            <Flex align="start" gap="2">
+              <Tag size={13} color="var(--gray-9)" style={{ marginTop: '2px', flexShrink: 0 }} />
+              <Text size="2" color="gray" style={{ flexShrink: 0, width: '90px' }}>Resource ID:</Text>
               <Text size="2" style={{ fontFamily: 'monospace', wordBreak: 'break-all' }}>{data.providerResourceId}</Text>
             </Flex>
           )}
           {data.details?.ip && (
-            <Flex align="center" gap="2">
-              <Info size={13} color="var(--gray-9)" />
-              <Text size="2" color="gray">IP / Endpoint:</Text>
-              <Text size="2" style={{ fontFamily: 'monospace' }}>{data.details.ip}</Text>
+            <Flex align="start" gap="2">
+              <Info size={13} color="var(--gray-9)" style={{ marginTop: '2px', flexShrink: 0 }} />
+              <Text size="2" color="gray" style={{ flexShrink: 0, width: '90px' }}>IP / Endpoint:</Text>
+              <Text size="2" style={{ fontFamily: 'monospace', wordBreak: 'break-all' }}>{data.details.ip}</Text>
             </Flex>
           )}
         </Flex>
@@ -165,7 +165,7 @@ export default function NodeDetailsPanel({ selectedNode, onClose }) {
           <Text size="2" weight="bold" color="gray" style={{ textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '10px' }}>
             Findings ({findings.length})
           </Text>
-          <ScrollArea style={{ maxHeight: '360px' }}>
+          <ScrollArea style={{ maxHeight: '700px' }}>
             {findings.length === 0 ? (
               <Text size="2" color="gray" style={{ fontStyle: 'italic' }}>No findings recorded.</Text>
             ) : (

@@ -134,7 +134,7 @@ RULES = [
         "name": "Public Database Access",
         "severity": "Critical",
         "description": "Security Group allows database ports (3306, 5432, etc.) open to the internet.",
-        "recommendation": "Restrict database access to internal subnets or trusted static IPs.",
+        "recommendation": "RISK: Exposing database ports (e.g., 3306, 5432) to the internet (0.0.0.0/0) allows attackers to perform brute-force credential attacks, exploit unpatched database engine vulnerabilities, and potentially exfiltrate sensitive data. Automated scanners actively hunt for these open ports.\n\nACTION STEPS:\n1. Open the AWS EC2 Management Console and navigate to 'Security Groups'.\n2. Select the offending Security Group and go to the 'Inbound rules' tab.\n3. Click 'Edit inbound rules' and locate the rule(s) permitting traffic on database ports from '0.0.0.0/0' or '::/0'.\n4. Delete the rule entirely, or change the Source to a trusted internal subnet, your corporate VPN CIDR, or a specific Application Security Group.\n5. Click 'Save rules' to immediately apply the restriction.",
         "check": lambda config: check_db_ports(config.get("raw_data", {})),
     },
     {

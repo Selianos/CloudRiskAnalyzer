@@ -224,12 +224,9 @@ export default function HeroSection() {
                     backgroundColor: 'var(--gray-3)',
                 }}
             >
-                <video
-                    src="https://storage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4"
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
+                <img
+                    src="/previewTemp.jpg"
+                    alt="Platform Preview"
                     style={{
                         width: '100%',
                         height: '100%',
