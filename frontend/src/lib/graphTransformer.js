@@ -15,26 +15,26 @@
 // ── Resource-type → icon URL map ─────────────────────────────────────────────
 const ICON_MAP = {
   // AWS
-  'aws_ec2_instance':        '/assets/aws/ec2.png',
-  'aws_s3_bucket':           '/assets/aws/s3.png',
-  'aws_iam_user':            '/assets/aws/iam.png',
-  'aws_iam_role':            '/assets/aws/iam.png',
-  'aws_rds_instance':        '/assets/aws/rds.png',
-  'aws_elb':                 '/assets/aws/elb.png',
-  'aws_waf':                 '/assets/aws/waf.png',
+  'aws_ec2_instance':        '/src/assets/aws/ec2.png',
+  'aws_s3_bucket':           '/src/assets/aws/s3.png',
+  'aws_iam_user':            '/src/assets/aws/iam.png',
+  'aws_iam_role':            '/src/assets/aws/iam.png',
+  'aws_rds_instance':        '/src/assets/aws/rds.png',
+  'aws_elb':                 '/src/assets/aws/elb.png',
+  'aws_waf':                 '/src/assets/aws/waf.png',
   // OCI
-  'oci_compute_instance':    '/assets/oci/compute.png',
-  'oci_vcn':                 '/assets/oci/vcn.png',
-  'oci_security_list':       '/assets/oci/security-list.png',
-  'oci_object_storage':      '/assets/oci/storage.png',
-  'oci_iam_user':            '/assets/oci/iam.png',
-  'oci_autonomous_db':       '/assets/oci/adw.png',
+  'Compute':                 '/src/assets/oci/compute.png',
+  'Subnet':                  '/src/assets/oci/vcn.png',
+  'SecurityList':            '/src/assets/oci/security-list.png',
+  'ObjectStorage':           '/src/assets/oci/storage.png',
+  'IAM_Users':               '/src/assets/oci/iam.png',
+  'IAM_Policies':            '/src/assets/oci/iam.png',
   // GCP
-  'gcp_compute_instance':    '/assets/gcp/compute.png',
-  'gcp_storage_bucket':      '/assets/gcp/storage.png',
-  'gcp_iam_binding':         '/assets/gcp/iam.png',
-  'gcp_firewall_rule':       '/assets/gcp/firewall.png',
-  'gcp_sql_instance':        '/assets/gcp/sql.png',
+  'gcp_compute_instance':    '/src/assets/gcp/compute.png',
+  'gcp_storage_bucket':      '/src/assets/gcp/storage.png',
+  'gcp_iam_binding':         '/src/assets/gcp/iam.png',
+  'gcp_firewall_rule':       '/src/assets/gcp/firewall.png',
+  'gcp_sql_instance':        '/src/assets/gcp/sql.png',
 };
 
 const FALLBACK_ICON = 'https://api.dicebear.com/9.x/icons/svg?icon=server&seed=resource';
@@ -123,7 +123,14 @@ export function transformFindingsToGraph(findings) {
 
     const severity = hasFail ? worstSeverity(failFindings) : 'LOW';
     const riskLabel = SEVERITY_RISK_LABEL[severity] || 'Low';
-    const iconUrl = ICON_MAP[resource.resource_type] || FALLBACK_ICON;
+    let iconUrl = ICON_MAP[resource.resource_type];
+    if (!iconUrl) {
+      if (resource.provider_resource_id?.startsWith('ocid1.')) {
+        iconUrl = '/src/assets/providers/oci_small.png';
+      } else {
+        iconUrl = FALLBACK_ICON;
+      }
+    }
 
     // Build a details description from the worst failing rule
     const worstFinding = failFindings.find(f => f.rules?.severity === severity) || failFindings[0];
