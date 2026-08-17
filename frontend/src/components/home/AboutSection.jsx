@@ -1,40 +1,81 @@
 import React from 'react';
-import { Box, Flex, Heading, Text, Container, Card } from '@radix-ui/themes';
+import { Box, Flex, Heading, Text, Container } from '@radix-ui/themes';
 
-const Arrow = () => (
-    <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent-9)' }}>
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-            <polyline points="12 5 19 12 12 19"></polyline>
-        </svg>
-    </Box>
-);
+const steps = [
+    { id: 1, title: 'Create', desc: 'Connect your AWS, GCP, or OCI cloud account in seconds.' },
+    { id: 2, title: 'Scan', desc: 'We scan every resource against NCA CCC rules and flag what is at risk.' },
+    { id: 3, title: 'Fix', desc: 'Follow clear, step-by-step remediation guidance to close every gap.' },
+];
 
 export default function AboutSection() {
     return (
         <Box style={{ paddingTop: '100px', paddingBottom: '100px', backgroundColor: 'var(--gray-2)' }}>
             <Container size="4">
                 <Heading size="7" align="center" mb="8">How It Works</Heading>
-                <Flex align="center" justify="center" gap="4" wrap="wrap" direction={{ initial: 'column', md: 'row' }}>
-                    <Card size="3" style={{ flex: '1', minWidth: '250px', textAlign: 'center', padding: 'var(--space-6)' }}>
-                        <Heading size="5" mb="2">1. Create Connection</Heading>
-                        <Text color="gray">Link your cloud environments securely and easily.</Text>
-                    </Card>
-                    <Box display={{ initial: 'none', md: 'block' }}>
-                        <Arrow />
-                    </Box>
-                    <Card size="3" style={{ flex: '1', minWidth: '250px', textAlign: 'center', padding: 'var(--space-6)' }}>
-                        <Heading size="5" mb="2">2. Scan</Heading>
-                        <Text color="gray">Automatically detect misconfigurations and risks.</Text>
-                    </Card>
-                    <Box display={{ initial: 'none', md: 'block' }}>
-                        <Arrow />
-                    </Box>
-                    <Card size="3" style={{ flex: '1', minWidth: '250px', textAlign: 'center', padding: 'var(--space-6)' }}>
-                        <Heading size="5" mb="2">3. Fix</Heading>
-                        <Text color="gray">Apply remediation steps instantly and safely.</Text>
-                    </Card>
-                </Flex>
+                <Box style={{ backgroundColor: '#f5f0e8', padding: '40px', border: '3px solid #000' }}>
+                    <Flex direction="column" gap="0">
+                        {steps.map((step, idx) => (
+                            <Box
+                                key={step.id}
+                                style={{
+                                    backgroundColor: '#ffffff',
+                                    border: '3px solid #000',
+                                    borderBottom: idx < steps.length - 1 ? 'none' : '3px solid #000',
+                                    padding: '32px 40px',
+                                    position: 'relative',
+                                }}
+                            >
+                                {/* Offset hard shadow block */}
+                                <Box style={{
+                                    position: 'absolute',
+                                    top: '6px',
+                                    left: '6px',
+                                    right: '-6px',
+                                    bottom: '-6px',
+                                    backgroundColor: '#000',
+                                    zIndex: -1,
+                                }} />
+
+                                <Flex align="flex-start" gap="6">
+                                    <Text style={{
+                                        fontSize: '80px',
+                                        fontWeight: '900',
+                                        lineHeight: 1,
+                                        color: '#000',
+                                        flexShrink: 0,
+                                        fontFamily: 'monospace',
+                                        opacity: 0.1,
+                                        userSelect: 'none',
+                                    }}>
+                                        {String(step.id).padStart(2, '0')}
+                                    </Text>
+
+                                    <Flex direction="column" gap="1" style={{ flex: 1 }}>
+                                        <Text size="1" weight="bold" style={{
+                                            textTransform: 'uppercase',
+                                            letterSpacing: '0.15em',
+                                            color: '#000',
+                                            opacity: 0.45,
+                                        }}>
+                                            Step {step.id}
+                                        </Text>
+                                        <Heading size="7" style={{
+                                            color: '#000',
+                                            fontWeight: '900',
+                                            letterSpacing: '-0.02em',
+                                            lineHeight: 1.1,
+                                        }}>
+                                            {step.title}
+                                        </Heading>
+                                        <Text size="3" style={{ color: '#000', opacity: 0.65, lineHeight: 1.6, marginTop: '6px' }}>
+                                            {step.desc}
+                                        </Text>
+                                    </Flex>
+                                </Flex>
+                            </Box>
+                        ))}
+                    </Flex>
+                </Box>
             </Container>
         </Box>
     );

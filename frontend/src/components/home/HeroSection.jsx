@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Box, Flex, Heading, Text, Container, Button } from '@radix-ui/themes';
 import { useNavigate } from 'react-router';
 import Globe from 'react-globe.gl';
+import previewImage from '../../assets/preview.png';
 
 export default function HeroSection() {
     const navigate = useNavigate();
@@ -208,29 +209,15 @@ export default function HeroSection() {
             </Container>
 
             {/* Video overlapping next section */}
-            <Box
-                style={{
-                    position: 'absolute',
-                    bottom: '-25vh',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    width: '80%',
-                    maxWidth: '1200px',
-                    height: '50vh',
-                    zIndex: 2,
-                    borderRadius: 'var(--radius-4)',
-                    overflow: 'hidden',
-                    boxShadow: '0 20px 40px rgba(0,0,0,0.3)',
-                    backgroundColor: 'var(--gray-3)',
-                }}
-            >
+            <Box className="hero-preview">
                 <img
-                    src="/previewTemp.jpg"
+                    src={previewImage}
                     alt="Platform Preview"
                     style={{
                         width: '100%',
                         height: '100%',
                         objectFit: 'cover',
+                        objectPosition: 'top',
                     }}
                 />
             </Box>

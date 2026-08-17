@@ -6,6 +6,7 @@ import FeaturesSection from '../components/home/FeaturesSection';
 import AboutSection from '../components/home/AboutSection';
 import ProvidersSection from '../components/home/ProvidersSection';
 import SponsorsSection from '../components/home/SponsorsSection';
+import FaqSection from '../components/home/FaqSection';
 import Footer from '../components/common/Footer';
 
 export default function Home() {
@@ -19,6 +20,8 @@ export default function Home() {
             <Box style={{ backgroundColor: 'var(--gray-2)', padding: '60px 0' }}>
                 <SponsorsSection />
             </Box>
+
+            <FaqSection />
 
             <Footer />
         </Box>
