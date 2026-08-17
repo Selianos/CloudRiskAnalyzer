@@ -2,7 +2,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -64,7 +63,9 @@
 }
 
 /* Global Theme Variables */
-:root {
+:root, .radix-themes {
+  --default-font-family: 'Space Grotesk', sans-serif;
+  --heading-font-family: 'Space Grotesk', sans-serif;
   --primary-color: #2e2532;
   --primary-color-hover: #403446;
   --primary-color-soft: rgba(46, 37, 50, 0.15);
@@ -127,7 +128,7 @@
 
 @theme inline {
   --font-heading: var(--font-sans);
-  --font-sans: 'Geist Variable', sans-serif;
+  --font-sans: 'Space Grotesk', sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -207,7 +208,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
   }
   html {
     @apply font-sans;
