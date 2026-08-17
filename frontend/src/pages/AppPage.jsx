@@ -145,9 +145,14 @@ function EmptyState({ reason, navigate }) {
           ? 'Select a scan from the dropdown above or start a new one to see your cloud security graph.'
           : 'This scan has not completed yet, or returned no findings. Check back after the scan finishes.'}
       </Text>
-      <Button variant="solid" onClick={() => navigate('/app/scans/new')} style={{ cursor: 'pointer', marginTop: '8px' }}>
-        + New Scan
-      </Button>
+      <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
+        <Button variant="solid" onClick={() => navigate('/app/scans/new')} style={{ cursor: 'pointer' }}>
+          + New Scan
+        </Button>
+        <Button variant="soft" color="gray" onClick={() => navigate('/demo')} style={{ cursor: 'pointer' }}>
+          Try Demo Scan
+        </Button>
+      </div>
     </Flex>
   );
 }

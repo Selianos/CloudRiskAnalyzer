@@ -27,20 +27,14 @@ function FindingCard({ finding }) {
       <Flex direction="column" gap="2">
         <Flex justify="between" align="center">
           <Code color={isFail ? color : 'green'} variant="soft" style={{ fontWeight: 'bold' }}>
-            {finding.rule_id || 'UNKNOWN_RULE'}
+            {finding.rules?.name || finding.rule_id || 'UNKNOWN_RULE'}
           </Code>
           <Badge color={isFail ? color : 'green'} size="1" variant="solid" style={{ letterSpacing: '0.5px' }}>
             {isFail ? severity : 'PASS'}
           </Badge>
         </Flex>
 
-        {finding.rules?.name && (
-          <Text size="2" weight="bold" style={{ color: `var(--${color}-11)` }}>
-            {finding.rules.name}
-          </Text>
-        )}
-
-        <Text size="1" color="gray" style={{ lineHeight: 1.5, fontFamily: 'monospace', whiteSpace: 'pre-wrap' }}>
+        <Text size="1" color="gray" style={{ lineHeight: 1.5, fontFamily: 'monospace', whiteSpace: 'pre-wrap', marginTop: '8px' }}>
           {finding.rules?.description}
         </Text>
 

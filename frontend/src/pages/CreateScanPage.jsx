@@ -265,6 +265,11 @@ export default function CreateScanPage() {
                   {loading ? <Spinner size="1" /> : 'Save & Start Scan'}
                 </Button>
               </div>
+              <Flex justify="center" mt="4">
+                <Button variant="ghost" color="gray" onClick={() => navigate('/demo')} style={{ cursor: 'pointer' }}>
+                  Or try a Mock Demo Scan
+                </Button>
+              </Flex>
             </Box>
 
           </Flex>

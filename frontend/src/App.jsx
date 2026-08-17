@@ -12,6 +12,9 @@ import AppPage from './pages/AppPage'
 import CreateScanPage from './pages/CreateScanPage'
 import SettingsPage from './pages/SettingsPage'
 import ConnectionsPage from './pages/ConnectionsPage'
+import DemoCreateScanPage from './pages/DemoCreateScanPage'
+import DemoAppPage from './pages/DemoAppPage'
+import DemoLayout from './layouts/DemoLayout'
 import AppLayout from './layouts/AppLayout'
 export default function App() {
   return (
@@ -25,6 +28,12 @@ export default function App() {
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<Signup />} />
           </Route>
+        </Route>
+
+        {/* Demo Routes WITHOUT Auth */}
+        <Route path="demo" element={<DemoLayout />}>
+          <Route index element={<DemoCreateScanPage />} />
+          <Route path="results" element={<DemoAppPage />} />
         </Route>
 
         {/* Protected Dashboard Routes WITHOUT Global Header */}
