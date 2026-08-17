@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router';
 import { Flex, Box, Text, Button, DropdownMenu, Avatar, Badge, Spinner } from '@radix-ui/themes';
 import { useAuth } from '../contexts/AuthContext';
-import { LayoutDashboard, Settings, LogOut, Activity, Link2 } from 'lucide-react';
+import { LayoutDashboard, Settings, LogOut, Activity, Link2, Home } from 'lucide-react';
 import { getScans } from '../api/scan';
 
 import {
@@ -119,6 +119,19 @@ export default function AppLayout() {
                     </SidebarMenuItem>
                   )
                 })}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+
+          <SidebarGroup className="mt-auto">
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton onClick={() => navigate('/')} className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">
+                    <Home size={18} />
+                    <span>Back to Home</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
