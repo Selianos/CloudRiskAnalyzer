@@ -12,7 +12,7 @@ const Arrow = () => (
 
 export default function AboutSection() {
     return (
-        <Box style={{ paddingTop: '35vh', paddingBottom: '100px', backgroundColor: 'var(--gray-2)' }}>
+        <Box style={{ paddingTop: '100px', paddingBottom: '100px', backgroundColor: 'var(--gray-2)' }}>
             <Container size="4">
                 <Heading size="7" align="center" mb="8">How It Works</Heading>
                 <Flex align="center" justify="center" gap="4" wrap="wrap" direction={{ initial: 'column', md: 'row' }}>

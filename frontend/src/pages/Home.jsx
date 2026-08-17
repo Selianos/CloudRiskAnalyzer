@@ -2,6 +2,7 @@ import React from 'react';
 import { Box } from '@radix-ui/themes';
 
 import HeroSection from '../components/home/HeroSection';
+import FeaturesSection from '../components/home/FeaturesSection';
 import AboutSection from '../components/home/AboutSection';
 import ProvidersSection from '../components/home/ProvidersSection';
 import SponsorsSection from '../components/home/SponsorsSection';
@@ -11,6 +12,7 @@ export default function Home() {
     return (
         <Box>
             <HeroSection />
+            <FeaturesSection />
             <AboutSection />
             <ProvidersSection />
             
