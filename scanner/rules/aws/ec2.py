@@ -100,6 +100,7 @@ RULES = [
     {
         "id": "SEC-001",
         "name": "Public SSH (IPv4) Access",
+        "finding_type": "ssh_open_to_internet",
         "severity": "Critical",
         "description": "Security Group allows SSH (22) from 0.0.0.0/0.",
         "recommendation": "Restrict inbound SSH access to trusted IP addresses.",
@@ -108,6 +109,7 @@ RULES = [
     {
         "id": "SEC-002",
         "name": "Public SSH (IPv6) Access",
+        "finding_type": "ssh_open_to_internet",
         "severity": "Critical",
         "description": "Security Group allows SSH (22) from ::/0.",
         "recommendation": "Restrict inbound SSH access to trusted IP addresses.",
@@ -116,6 +118,7 @@ RULES = [
     {
         "id": "SEC-003",
         "name": "Public RDP (IPv4) Access",
+        "finding_type": "rdp_open_to_internet",
         "severity": "Critical",
         "description": "Security Group allows RDP (3389) from 0.0.0.0/0.",
         "recommendation": "Restrict inbound RDP access to trusted IP addresses.",
@@ -124,6 +127,7 @@ RULES = [
     {
         "id": "SEC-004",
         "name": "Public RDP (IPv6) Access",
+        "finding_type": "rdp_open_to_internet",
         "severity": "Critical",
         "description": "Security Group allows RDP (3389) from ::/0.",
         "recommendation": "Restrict inbound RDP access to trusted IP addresses.",
@@ -132,6 +136,7 @@ RULES = [
     {
         "id": "SEC-005",
         "name": "Public Database Access",
+        "finding_type": "security_group_allow_all_inbound",
         "severity": "Critical",
         "description": "Security Group allows database ports (3306, 5432, etc.) open to the internet.",
         "recommendation": "RISK: Exposing database ports (e.g., 3306, 5432) to the internet (0.0.0.0/0) allows attackers to perform brute-force credential attacks, exploit unpatched database engine vulnerabilities, and potentially exfiltrate sensitive data. Automated scanners actively hunt for these open ports.\n\nACTION STEPS:\n1. Open the AWS EC2 Management Console and navigate to 'Security Groups'.\n2. Select the offending Security Group and go to the 'Inbound rules' tab.\n3. Click 'Edit inbound rules' and locate the rule(s) permitting traffic on database ports from '0.0.0.0/0' or '::/0'.\n4. Delete the rule entirely, or change the Source to a trusted internal subnet, your corporate VPN CIDR, or a specific Application Security Group.\n5. Click 'Save rules' to immediately apply the restriction.",
@@ -140,6 +145,7 @@ RULES = [
     {
         "id": "SEC-006",
         "name": "All TCP Ports Open to Internet",
+        "finding_type": "security_group_allow_all_inbound",
         "severity": "Critical",
         "description": "Security Group allows all TCP ports (0-65535) open to the internet.",
         "recommendation": "Explicitly define allowed ports instead of allowing all TCP ports.",
@@ -148,6 +154,7 @@ RULES = [
     {
         "id": "SEC-007",
         "name": "All Protocols Open to Internet",
+        "finding_type": "security_group_allow_all_inbound",
         "severity": "Critical",
         "description": "Security Group allows all protocols (any port/traffic) open to the internet.",
         "recommendation": "Restrict traffic to specific required protocols and ports.",
@@ -156,6 +163,7 @@ RULES = [
     {
         "id": "SEC-008",
         "name": "Public HTTP Access",
+        "finding_type": "security_group_allow_all_inbound",
         "severity": "Info",
         "description": "Security Group allows inbound HTTP (80) traffic from the internet.",
         "recommendation": "None. Verify this server is intended to serve public web traffic.",
@@ -164,6 +172,7 @@ RULES = [
     {
         "id": "SEC-009",
         "name": "Public HTTPS Access",
+        "finding_type": "security_group_allow_all_inbound",
         "severity": "Info",
         "description": "Security Group allows inbound HTTPS (443) traffic from the internet.",
         "recommendation": "None. Verify this server is intended to serve public web traffic.",
@@ -172,6 +181,7 @@ RULES = [
     {
         "id": "SEC-010",
         "name": "Public Sensitive Ports Access",
+        "finding_type": "security_group_allow_all_inbound",
         "severity": "High",
         "description": "Security Group allows sensitive management ports (e.g. FTP, Telnet, SMB) open to the internet.",
         "recommendation": "Block sensitive ports from the public internet.",
@@ -180,6 +190,7 @@ RULES = [
     {
         "id": "SEC-011",
         "name": "Too Many Inbound Rules",
+        "finding_type": "security_group_allow_all_inbound",
         "severity": "Medium",
         "description": "Security Group has more than 20 inbound rules configured.",
         "recommendation": "Consolidate your security group rules to keep policies clean and auditable.",
@@ -188,6 +199,7 @@ RULES = [
     {
         "id": "SEC-012",
         "name": "All Outbound Traffic Allowed",
+        "finding_type": "security_group_allow_all_inbound",
         "severity": "Warning",
         "description": "Security Group allows unrestricted outbound traffic to the internet.",
         "recommendation": "Restricting outbound traffic to only required ports and destinations is a good defense-in-depth practice.",
@@ -196,6 +208,7 @@ RULES = [
     {
         "id": "SEC-013",
         "name": "Unattached Security Group",
+        "finding_type": "security_group_allow_all_inbound",
         "severity": "Info",
         "description": "Security Group is not associated with any active network interfaces.",
         "recommendation": "Consider deleting unused security groups to simplify management.",

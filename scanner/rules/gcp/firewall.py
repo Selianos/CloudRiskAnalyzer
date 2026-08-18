@@ -44,6 +44,7 @@ class SensitivePortsExposedToInternet(BaseRule):
     title = "Sensitive Ports Exposed to the Internet"
     severity = "HIGH"
     resource_type = _RESOURCE_TYPE
+    finding_type = "ssh_open_to_internet"
     description = (
         "The firewall rule allows inbound traffic from the internet (0.0.0.0/0) "
         "on sensitive ports such as SSH (22) or RDP (3389)."
@@ -67,6 +68,7 @@ class AllowAllFirewallRule(BaseRule):
     title = "Allow-All Firewall Rule"
     severity = "CRITICAL"
     resource_type = _RESOURCE_TYPE
+    finding_type = "security_group_allow_all_inbound"
     description = "The firewall rule allows all ports and/or all protocols from the internet (0.0.0.0/0)."
     recommendation = "Replace the rule with explicit allow entries limited to the required protocols, ports, and sources."
 

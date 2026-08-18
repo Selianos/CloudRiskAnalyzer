@@ -288,14 +288,16 @@ model users {
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model connections {
-  id          String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user_id     String      @db.Uuid
-  name        String
-  provider    String
-  credentials Json
-  created_at  DateTime    @default(now()) @db.Timestamptz(6)
-  users       users       @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  scan_jobs   scan_jobs[]
+  id                        String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id                   String      @db.Uuid
+  name                      String
+  provider                  String
+  credentials               Json
+  ccc_applicability         String?
+  data_classification_level String?
+  created_at                DateTime    @default(now()) @db.Timestamptz(6)
+  users                     users       @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  scan_jobs                 scan_jobs[]
 
   @@index([user_id], map: "idx_connections_user")
   @@schema("public")
@@ -304,16 +306,16 @@ model connections {
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model findings {
-  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  scan_job_id String    @db.Uuid
-  resource_id String    @db.Uuid
-  rule_id     String
-  status      String
-  details     Json?
-  created_at  DateTime  @default(now()) @db.Timestamptz(6)
-  resources   resources @relation(fields: [resource_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  rules       rules     @relation(fields: [rule_id], references: [id], onDelete: NoAction)
-  scan_jobs   scan_jobs @relation(fields: [scan_job_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  scan_job_id  String    @db.Uuid
+  resource_id  String    @db.Uuid
+  rule_id      String
+  status       String
+  details      Json?
+  created_at   DateTime  @default(now()) @db.Timestamptz(6)
+  resources    resources @relation(fields: [resource_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  rules        rules     @relation(fields: [rule_id], references: [id], onDelete: NoAction)
+  scan_jobs    scan_jobs @relation(fields: [scan_job_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([resource_id], map: "idx_findings_resource")
   @@index([scan_job_id], map: "idx_findings_scan")
@@ -343,6 +345,7 @@ model rules {
   id             String     @id
   provider       String
   name           String
+  finding_type   String?
   severity       String
   description    String
   recommendation String

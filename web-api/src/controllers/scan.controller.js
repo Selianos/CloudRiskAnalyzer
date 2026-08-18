@@ -1,5 +1,6 @@
 import { prisma } from '../prisma.js';
 import { createClient } from 'redis';
+import { getControlsForFinding } from '../utils/cccResolver.js';
 
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -139,6 +140,11 @@ export const getScanResults = async (req, res) => {
       where: {
         id: scan_id,
         user_id: userId
+      },
+      include: {
+        connections: {
+          select: { ccc_applicability: true, data_classification_level: true }
+        }
       }
     });
 
@@ -157,7 +163,19 @@ export const getScanResults = async (req, res) => {
       }
     });
 
-    res.json(results);
+    const applicability = scanJob.connections?.ccc_applicability;
+    const classificationLevel = scanJob.connections?.data_classification_level;
+    
+    const enrichedResults = results.map(finding => {
+      const findingType = finding.rules?.finding_type;
+      const ccc_metadata = getControlsForFinding(findingType, applicability, classificationLevel);
+      return {
+        ...finding,
+        ccc_metadata
+      };
+    });
+
+    res.json(enrichedResults);
   } catch (error) {
     console.error('Error fetching scan results:', error);
     res.status(500).json({ error: 'Internal server error while retrieving scan results' });

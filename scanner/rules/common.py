@@ -79,6 +79,7 @@ class BaseRule:
     severity: str = "MEDIUM"
     resource_type: str = ""
     resource_subtype: Optional[str] = None
+    finding_type: str = ""
     description: str = ""
     recommendation: str = ""
 

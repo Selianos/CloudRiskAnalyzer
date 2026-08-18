@@ -56,6 +56,8 @@ class Connection(Base):
     name:        Mapped[str]       = mapped_column(String)
     provider:    Mapped[str]       = mapped_column(String)
     credentials: Mapped[dict]      = mapped_column(JSONB)   # Fetched as dict from JSONB column
+    ccc_applicability: Mapped[str | None] = mapped_column(String, nullable=True)
+    data_classification_level: Mapped[str | None] = mapped_column(String, nullable=True)
 
     scan_jobs: Mapped[list["ScanJob"]] = relationship(back_populates="connection")
 
@@ -93,6 +95,7 @@ class Rule(Base):
     id:             Mapped[str] = mapped_column(String, primary_key=True)
     provider:       Mapped[str] = mapped_column(String)
     name:           Mapped[str] = mapped_column(String)
+    finding_type:   Mapped[str | None] = mapped_column(String, nullable=True)
     severity:       Mapped[str] = mapped_column(String)
     description:    Mapped[str] = mapped_column(String)
     recommendation: Mapped[str] = mapped_column(String)
@@ -108,7 +111,6 @@ class Finding(Base):
     rule_id:     Mapped[str]       = mapped_column(ForeignKey("rules.id"))
     status:      Mapped[str]       = mapped_column(String)
     details:     Mapped[dict | None] = mapped_column(JSONB, nullable=True)
-
 
 # ──────────────────────────────────────────────
 # Query layer
@@ -194,6 +196,12 @@ class ScanDatabase:
     def save_scan_results(job_id: str, result: dict) -> None:
         with get_session() as db:
             resource_map = {}
+            job = db.get(ScanJob, uuid.UUID(job_id))
+
+            # Fetch rules to get finding_type
+            rule_ids = list(set(f.get("rule_id") for f in result.get("findings", []) if f.get("rule_id")))
+            rules = db.execute(select(Rule).where(Rule.id.in_(rule_ids))).scalars().all() if rule_ids else []
+            rule_map = {r.id: r.finding_type for r in rules}
             
             # 1. Insert Resources and map their client-provided IDs to valid DB UUIDs
             for res in result.get("resources", []):
@@ -224,11 +232,11 @@ class ScanDatabase:
                     raise ValueError(f"Finding references unknown resource_id: {client_resource_id}")
 
                 db.add(Finding(
-                    scan_job_id= uuid.UUID(job_id),
-                    resource_id= mapped_id,
-                    rule_id=     finding.get("rule_id"),
-                    status=      finding.get("status"),
-                    details=     finding.get("details"),
+                    scan_job_id=  uuid.UUID(job_id),
+                    resource_id=  mapped_id,
+                    rule_id=      finding.get("rule_id"),
+                    status=       finding.get("status"),
+                    details=      finding.get("details"),
                 ))
 
             # 3. Mark the job as COMPLETED
@@ -257,6 +265,7 @@ def sync_rules_catalog(db: Session, rules: list[dict]):
             constraint="rules_pkey",
             set_={
                 "name": stmt.excluded.name,
+                "finding_type": stmt.excluded.finding_type,
                 "severity": stmt.excluded.severity,
                 "description": stmt.excluded.description,
                 "recommendation": stmt.excluded.recommendation

@@ -100,6 +100,7 @@ services:
       ENCRYPTION_KEY: ${ENCRYPTION_KEY}
     volumes:
       - ./web-api:/app:Z
+      - ./ccc_integration:/ccc_integration:Z
       - /app/node_modules
     command: npm run dev
     depends_on:
@@ -125,6 +126,7 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
     volumes:
       - ./internal-backend:/app:Z
+      - ./ccc_integration:/ccc_integration:Z
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     depends_on:
       db:

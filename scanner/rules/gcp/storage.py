@@ -21,6 +21,7 @@ class PublicBucket(BaseRule):
     title = "Public Bucket"
     severity = "CRITICAL"
     resource_type = _RESOURCE_TYPE
+    finding_type = "storage_bucket_public_read"
     description = "The bucket's IAM policy grants access to 'allUsers' or 'allAuthenticatedUsers'."
     recommendation = "Remove public members from the bucket's IAM policy and enable Public Access Prevention."
 
@@ -38,6 +39,7 @@ class PublicAccessPreventionDisabled(BaseRule):
     title = "Public Access Prevention Disabled"
     severity = "HIGH"
     resource_type = _RESOURCE_TYPE
+    finding_type = "storage_bucket_public_read"
     description = "Public Access Prevention is not set to 'enforced' on the bucket."
     recommendation = "Set the bucket's public access prevention setting to 'enforced'."
 
@@ -55,6 +57,7 @@ class UniformBucketLevelAccessDisabled(BaseRule):
     title = "Uniform Bucket-Level Access Disabled"
     severity = "MEDIUM"
     resource_type = _RESOURCE_TYPE
+    finding_type = "overly_permissive_iam_policy"
     description = "Uniform bucket-level access is disabled, allowing legacy per-object ACLs to grant access."
     recommendation = "Enable uniform bucket-level access to enforce IAM-only access control on the bucket."
 
@@ -72,6 +75,7 @@ class VersioningDisabled(BaseRule):
     title = "Versioning Disabled"
     severity = "LOW"
     resource_type = _RESOURCE_TYPE
+    finding_type = "backup_not_configured"
     description = "Object versioning is disabled, so overwritten or deleted objects cannot be recovered."
     recommendation = "Enable object versioning to protect against accidental or malicious data loss."
 
@@ -89,6 +93,7 @@ class BucketLoggingDisabled(BaseRule):
     title = "Bucket Logging Disabled"
     severity = "LOW"
     resource_type = _RESOURCE_TYPE
+    finding_type = "no_logging_enabled"
     description = "Access logging is disabled, limiting visibility into who accessed the bucket's contents."
     recommendation = "Enable bucket logging and route logs to a dedicated, access-restricted logging bucket."
 

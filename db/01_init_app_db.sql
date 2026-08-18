@@ -12,6 +12,8 @@ CREATE TABLE IF NOT EXISTS public.connections (
     name TEXT NOT NULL,
     provider TEXT NOT NULL CHECK (provider IN ('aws', 'gcp', 'oci')),
     credentials JSONB NOT NULL,
+    ccc_applicability TEXT,
+    data_classification_level TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL
 );
 
@@ -48,6 +50,7 @@ CREATE TABLE IF NOT EXISTS public.rules (
     id TEXT PRIMARY KEY,
     provider TEXT NOT NULL CHECK (provider IN ('aws', 'gcp', 'oci')),
     name TEXT NOT NULL,
+    finding_type TEXT,
     severity TEXT NOT NULL CHECK (
         severity IN ('CRITICAL', 'HIGH', 'WARNING', 'MEDIUM', 'INFO')
     ),
@@ -64,6 +67,7 @@ CREATE TABLE IF NOT EXISTS public.findings (
     rule_id TEXT NOT NULL REFERENCES public.rules(id) ON UPDATE CASCADE,
     status TEXT NOT NULL CHECK (status IN ('PASS', 'FAIL')),
     details JSONB,
+    ccc_metadata JSONB,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL
 );
 

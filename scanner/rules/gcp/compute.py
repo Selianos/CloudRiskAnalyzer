@@ -21,6 +21,7 @@ class ExternalIpAssigned(BaseRule):
     title = "External IP Assigned"
     severity = "MEDIUM"
     resource_type = _RESOURCE_TYPE
+    finding_type = "security_group_allow_all_inbound"
     description = "The instance has an external IP address, making it directly reachable from the internet."
     recommendation = "Remove the external IP and access the instance via Cloud NAT, IAP, or a bastion host instead."
 
@@ -38,6 +39,7 @@ class ShieldedVmSecureBootDisabled(BaseRule):
     title = "Shielded VM Secure Boot Disabled"
     severity = "MEDIUM"
     resource_type = _RESOURCE_TYPE
+    finding_type = "unpatched_vulnerability"
     description = "Secure Boot is disabled, reducing protection against boot-level and firmware rootkits."
     recommendation = "Enable Shielded VM Secure Boot on the instance."
 
@@ -56,6 +58,7 @@ class SerialPortEnabled(BaseRule):
     title = "Serial Port Enabled"
     severity = "HIGH"
     resource_type = _RESOURCE_TYPE
+    finding_type = "remote_access_not_terminable"
     description = "Interactive serial port access is enabled, exposing an additional remote access surface."
     recommendation = "Disable serial port access by setting the 'serial-port-enable' metadata key to 'false'."
 
@@ -73,6 +76,7 @@ class IpForwardingEnabled(BaseRule):
     title = "IP Forwarding Enabled"
     severity = "MEDIUM"
     resource_type = _RESOURCE_TYPE
+    finding_type = "security_group_allow_all_inbound"
     description = "IP forwarding is enabled, allowing the instance to route traffic on behalf of other hosts."
     recommendation = "Disable IP forwarding unless the instance is an intentional router, NAT gateway, or VPN endpoint."
 

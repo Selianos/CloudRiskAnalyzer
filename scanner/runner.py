@@ -38,6 +38,28 @@ RULE_MAPPING = {
 
 class ScanRunner:
     @staticmethod
+    def sanitize_configuration(config: dict) -> dict:
+        import copy
+        if not isinstance(config, dict):
+            return config
+        sanitized = copy.deepcopy(config)
+        sensitive_keys = ['password', 'secret', 'api_key', 'token', 'user_data', 'user-data']
+        
+        def recurse(data):
+            if isinstance(data, dict):
+                for k, v in data.items():
+                    if any(s in k.lower() for s in sensitive_keys):
+                        data[k] = "[REDACTED]"
+                    else:
+                        recurse(v)
+            elif isinstance(data, list):
+                for item in data:
+                    recurse(item)
+                    
+        recurse(sanitized)
+        return sanitized
+
+    @staticmethod
     def execute_scan(provider_name: str, credentials: dict) -> dict:
         """
         Executes a headless cloud scan for the given provider and credentials.
@@ -77,6 +99,9 @@ class ScanRunner:
                 # Collect configuration details
                 configuration = provider.get_configuration(raw_res)
 
+                # Evaluate security rules against the configuration
+                evaluations = evaluate_rules(raw_res, configuration, rules)
+
                 # Append resource to resources payload
                 resources_payload.append({
                     "id": client_res_id,
@@ -84,11 +109,8 @@ class ScanRunner:
                     "resource_type": raw_res["type"],
                     "name": raw_res["name"],
                     "region": raw_res.get("region") or "us-east-1",
-                    "configuration": configuration
+                    "configuration": ScanRunner.sanitize_configuration(configuration)
                 })
-
-                # Evaluate security rules against the configuration
-                evaluations = evaluate_rules(raw_res, configuration, rules)
                 
                 for eval_res in evaluations:
                     # We only create a finding if the rule evaluation status is not SAFE (meaning the check failed)
@@ -96,7 +118,7 @@ class ScanRunner:
                         local_rule_id = eval_res["rule_id"]
                         
                         # Map rule ID to database seeded rule key
-                        mapped_rule_id = RULE_MAPPING.get(local_rule_id)
+                        mapped_rule_id = RULE_MAPPING.get(local_rule_id, local_rule_id)
                         if not mapped_rule_id:
                             logging.warning(f"Skipping rule finding '{local_rule_id}' because it is not seeded in database rules table")
                             continue
@@ -132,16 +154,32 @@ class ScanRunner:
             try:
                 rules = get_rules_for_provider(provider_name)
                 for r in rules:
+                    if isinstance(r, dict):
+                        local_id = r.get("id")
+                        name = r.get("name")
+                        severity = r.get("severity")
+                        description = r.get("description")
+                        recommendation = r.get("recommendation")
+                        finding_type = r.get("finding_type")
+                    else:
+                        local_id = getattr(r, "id", None) or getattr(r, "rule_id", None)
+                        name = getattr(r, "name", None) or getattr(r, "title", None)
+                        severity = getattr(r, "severity", None)
+                        description = getattr(r, "description", None)
+                        recommendation = getattr(r, "recommendation", None)
+                        finding_type = getattr(r, "finding_type", None)
+
                     # Resolve database mapped ID
-                    mapped_id = RULE_MAPPING.get(r["id"], r["id"])
+                    mapped_id = RULE_MAPPING.get(local_id, local_id)
                     
                     metadata_list.append({
                         "id": mapped_id,
                         "provider": provider_name,
-                        "name": r["name"],
-                        "severity": r["severity"],
-                        "description": r["description"],
-                        "recommendation": r["recommendation"]
+                        "name": name,
+                        "finding_type": finding_type,
+                        "severity": severity,
+                        "description": description,
+                        "recommendation": recommendation
                     })
             except Exception as e:
                 logging.warning(f"Could not load rules metadata for provider {provider_name}: {e}")

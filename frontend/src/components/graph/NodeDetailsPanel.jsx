@@ -1,5 +1,6 @@
 import { Box, Flex, Heading, IconButton, Text, Badge, Card, ScrollArea, Code } from '@radix-ui/themes';
 import { ShieldAlert, ShieldCheck, Info, MapPin, Tag } from 'lucide-react';
+import ncaLogo from '../../assets/sponsors/nca-small.png';
 
 const SEVERITY_COLOR = {
   CRITICAL: 'red',
@@ -37,6 +38,26 @@ function FindingCard({ finding }) {
         <Text size="1" color="gray" style={{ lineHeight: 1.5, fontFamily: 'monospace', whiteSpace: 'pre-wrap', marginTop: '8px' }}>
           {finding.rules?.description}
         </Text>
+
+        {finding.ccc_metadata && finding.ccc_metadata.length > 0 && (
+          <Flex mt="2" p="2" style={{ backgroundColor: 'var(--gray-3)', borderRadius: '4px' }} align="stretch" gap="3">
+            <Box style={{ width: '32px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <img src={ncaLogo} alt="NCA Logo" style={{ width: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+            </Box>
+            <Box style={{ flexGrow: 1 }}>
+              <Text size="1" weight="bold" color="gray" style={{ display: 'block', marginBottom: '4px' }}>
+                NCA CCC-2:2024 Controls:
+              </Text>
+              {finding.ccc_metadata.map((c, idx) => (
+                <Box key={idx} mb="1">
+                  <Text size="1" style={{ color: 'var(--gray-11)' }}>
+                    <span style={{ fontWeight: 'bold', color: 'var(--gray-12)' }}>{c.id}</span>: {c.text}
+                  </Text>
+                </Box>
+              ))}
+            </Box>
+          </Flex>
+        )}
 
         {isFail && finding.rules?.recommendation && (
           <Box mt="2">

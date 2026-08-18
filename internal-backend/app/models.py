@@ -27,6 +27,7 @@ class RuleSync(BaseModel):
     id: str
     provider: str
     name: str
+    finding_type: str | None = None
     severity: str
     description: str
     recommendation: str

@@ -30,6 +30,7 @@ class PrimitiveIamRolesAssigned(BaseRule):
     severity = "MEDIUM"
     resource_type = _RESOURCE_TYPE
     resource_subtype = "project_iam_policy"
+    finding_type = "overly_permissive_iam_policy"
     description = "Owner, Editor or Viewer roles were detected on the project IAM policy."
     recommendation = "Replace primitive roles with least-privilege predefined or custom roles."
 
@@ -48,6 +49,7 @@ class PublicIamBindings(BaseRule):
     severity = "CRITICAL"
     resource_type = _RESOURCE_TYPE
     resource_subtype = "project_iam_policy"
+    finding_type = "overly_permissive_iam_policy"
     description = (
         "One or more IAM bindings grant access to 'allUsers' or "
         "'allAuthenticatedUsers', exposing the project publicly."
@@ -69,6 +71,7 @@ class UserManagedServiceAccountKeysExist(BaseRule):
     severity = "MEDIUM"
     resource_type = _RESOURCE_TYPE
     resource_subtype = "service_account"
+    finding_type = "weak_password_policy"
     description = (
         "The service account has one or more user-managed keys, which do not "
         "expire automatically and increase the risk of credential leakage."

@@ -8,6 +8,9 @@ vi.mock('redis', () => {
     })
   };
 });
+vi.mock('../src/utils/cccResolver.js', () => ({
+  getControlsForFinding: vi.fn().mockReturnValue([{ id: '1-1', text: 'Mock Control' }])
+}));
 import { prisma } from '../src/prisma.js';
 import {
   getScans,
@@ -44,7 +47,10 @@ describe('Scan Controller', () => {
       expect(prismaSpy).toHaveBeenCalledTimes(1);
       expect(prismaSpy).toHaveBeenCalledWith({
         where: { user_id: MOCK_USER_ID },
-        orderBy: { created_at: 'desc' }
+        orderBy: { created_at: 'desc' },
+        include: {
+          connections: { select: { id: true, name: true, provider: true } }
+        }
       });
       expect(res.statusCode).toBe(200);
       expect(res.jsonData).toEqual(mockScans);
@@ -208,14 +214,17 @@ describe('Scan Controller', () => {
       await getScanResults(req, res);
 
       expect(scanSpy).toHaveBeenCalledWith({
-        where: { id: MOCK_SCAN_ID, user_id: MOCK_USER_ID }
+        where: { id: MOCK_SCAN_ID, user_id: MOCK_USER_ID },
+        include: {
+          connections: { select: { ccc_applicability: true, data_classification_level: true } }
+        }
       });
       expect(findingsSpy).toHaveBeenCalledWith({
         where: { scan_job_id: MOCK_SCAN_ID },
         include: { resources: true, rules: true }
       });
       expect(res.statusCode).toBe(200);
-      expect(res.jsonData).toEqual(mockFindings);
+      expect(res.jsonData).toEqual([{ ...MOCK_FINDING, ccc_metadata: [{ id: '1-1', text: 'Mock Control' }] }]);
     });
 
     it('should return 404 if the scan job results requested are not found or unauthorized', async () => {

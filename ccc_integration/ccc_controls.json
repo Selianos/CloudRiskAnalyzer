@@ -1,0 +1,862 @@
+{
+  "standard": "Cloud Cybersecurity Controls (CCC-2:2024)",
+  "issuer": "Saudi National Cybersecurity Authority (NCA)",
+  "extends": "Essential Cybersecurity Controls (ECC-1:2018) — CCC controls are additive to ECC, not a replacement",
+  "source_note": "Transcribed from the public TLP:White CCC-2:2024 PDF. The level_mandatory flags below reflect the clear \u2714/\u2756 pattern per top-level control in Annex A (Tables 2 & 3). Several controls carry a footnoted exception where ONE SPECIFIC SUBCONTROL is optional/not-applicable at a specific level rather than the whole control — these are captured in 'level_exceptions' verbatim from the source footnotes, but the exact level column each footnote binds to was ambiguous in extraction. Verify level_exceptions against the original PDF Annex A or NCA's official CCC-2:2024 Assessment and Compliance Tool before using them to auto-fail a control in a formal compliance report.",
+  "domains": [
+    {
+      "id": "1",
+      "name": "Cybersecurity Governance",
+      "subdomains": [
+        {
+          "id": "1-1",
+          "name": "Cybersecurity Roles and Responsibilities",
+          "objective": "To ensure that the roles and responsibilities are defined for all parties participating in implementing the cloud cybersecurity controls, including the roles and responsibilities of the head of the CSP and CST or his/her delegate, referred to in these controls as the Authorizing Official.",
+          "controls": [
+            {
+              "id": "1-1-P-1",
+              "applies_to": "CSP",
+              "ecc_reference": "1-4-1",
+              "text": "In addition to the ECC control 1-4-1, the Authorizing Official shall also identify, document, and approve cybersecurity roles.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": [
+                {"id": "1-1-P-1-1", "text": "Cybersecurity roles and RACI assignment for all stakeholders of the cloud services including the Authorizing Official's roles and responsibilities."}
+              ]
+            },
+            {
+              "id": "1-1-T-1",
+              "applies_to": "CST",
+              "ecc_reference": "1-4-1",
+              "text": "In addition to the ECC control 1-4-1, the Authorizing Official shall also identify, document, and approve cybersecurity roles.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": [
+                {"id": "1-1-T-1-1", "text": "Cybersecurity roles and RACI assignment for all stakeholders of the cloud services including the Authorizing Official's roles and responsibilities."}
+              ]
+            }
+          ]
+        },
+        {
+          "id": "1-2",
+          "name": "Cybersecurity Risk Management",
+          "objective": "To ensure managing cybersecurity risks in a methodological approach in order to protect the CSP's and CST's information and technology assets as per entity-related policies and procedures, and related laws and regulations.",
+          "controls": [
+            {
+              "id": "1-2-P-1",
+              "applies_to": "CSP",
+              "ecc_reference": "1-5",
+              "text": "Cybersecurity risk management methodology mentioned in the ECC Subdomain 1-5 shall also include for the CSP, as a minimum, the following.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": [
+                {"id": "1-2-P-1-1", "text": "Defining acceptable risk levels for the cloud services and clarifying them to the CST if they are related to the CST."},
+                {"id": "1-2-P-1-2", "text": "Considering data and information classification in cybersecurity risk management methodology."},
+                {"id": "1-2-P-1-3", "text": "Developing cybersecurity risk register for cloud services and monitoring it periodically according to the risks."}
+              ]
+            },
+            {
+              "id": "1-2-T-1",
+              "applies_to": "CST",
+              "ecc_reference": "1-5",
+              "text": "Cybersecurity risk management methodology mentioned in the ECC Subdomain 1-5 shall also include for the CST, as a minimum, the following.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": [
+                {"id": "1-2-T-1-1", "text": "Defining acceptable risk levels for the cloud services."},
+                {"id": "1-2-T-1-2", "text": "Considering data and information classification accredited by CST in cybersecurity risk management methodology."},
+                {"id": "1-2-T-1-3", "text": "Developing cybersecurity risk register for cloud services and monitoring it periodically according to the risks."}
+              ]
+            }
+          ]
+        },
+        {
+          "id": "1-3",
+          "name": "Compliance with Cybersecurity Standards, Laws, and Regulations",
+          "objective": "To ensure that the CSPs' and CSTs' cybersecurity program is in compliance with related laws and regulations.",
+          "controls": [
+            {
+              "id": "1-3-P-1",
+              "applies_to": "CSP",
+              "ecc_reference": "1-7-1",
+              "text": "In addition to the ECC control 1-7-1, the CSP legislative and regulatory compliance should include as a minimum the following requirements.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": false},
+              "level_exceptions": null,
+              "subcontrols": [
+                {"id": "1-3-P-1-1", "text": "Continuous compliance with all laws, regulations, instructions, decisions, regulatory frameworks and controls, and mandates regarding cybersecurity in the Kingdom."}
+              ]
+            },
+            {
+              "id": "1-3-T-1",
+              "applies_to": "CST",
+              "ecc_reference": "1-7-1",
+              "text": "In addition to the ECC control 1-7-1, the CST legislative and regulatory compliance should include as a minimum the following requirements.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": [
+                {"id": "1-3-T-1-1", "text": "Continuous or real-time compliance monitoring of the CSP with relevant cybersecurity legislation and contract clauses."}
+              ]
+            }
+          ]
+        },
+        {
+          "id": "1-4",
+          "name": "Cybersecurity in Human Resources",
+          "objective": "To ensure that cybersecurity risks and requirements related to personnel (employees and contractors) are managed efficiently prior to employment, during employment and after termination/separation as per entity-related policies and procedures, and related laws and regulations.",
+          "controls": [
+            {
+              "id": "1-4-P-1",
+              "applies_to": "CSP",
+              "ecc_reference": "1-9-3, 1-9-4",
+              "text": "In addition to Subcontrols in the ECC controls 1-9-3 and 1-9-4, the following requirements should be covered prior and during the professional relationship of personnel with the CSP as a minimum.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": false},
+              "level_exceptions": null,
+              "subcontrols": [
+                {"id": "1-4-P-1-1", "text": "Positions of cybersecurity functions in CSP's data centers within the Kingdom must be filled with qualified and suitable Saudi nationals."},
+                {"id": "1-4-P-1-2", "text": "Screening or vetting candidates of personnel working inside the Kingdom who have access to Cloud Technology Stack, periodically."},
+                {"id": "1-4-P-1-3", "text": "Cybersecurity policies as a prerequisite to access to Cloud Technology Stack, signed and appropriately approved."}
+              ]
+            },
+            {
+              "id": "1-4-P-2",
+              "applies_to": "CSP",
+              "ecc_reference": "1-9-5",
+              "text": "In addition to Subcontrols in the ECC control 1-9-5, the following requirements should be in place, as a minimum, for the termination/completion of a human resource's professional relationship with the CSP.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": false},
+              "level_exceptions": null,
+              "subcontrols": [
+                {"id": "1-4-P-2-1", "text": "Assurance that assets owned by the entity (especially those with security exposure) are accounted for and returned upon termination."}
+              ]
+            },
+            {
+              "id": "1-4-T-1",
+              "applies_to": "CST",
+              "ecc_reference": "1-9-3",
+              "text": "In addition to Subcontrols in the ECC control 1-9-3, the following requirements should be covered prior the professional relationship of staff with the CST shall cover, at a minimum.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": false},
+              "level_exceptions": null,
+              "subcontrols": [
+                {"id": "1-4-T-1-1", "text": "Screening or vetting candidates of personnel with access to Cloud Service sensitive functions (Key Management, Service Administration, Access Control)."}
+              ]
+            }
+          ]
+        },
+        {
+          "id": "1-5",
+          "name": "Cybersecurity in Change Management",
+          "objective": "To ensure that cybersecurity requirements are included in change management methodology and procedures in order to protect the confidentiality, integrity and availability of information and technology assets as per CSPs policies and procedures, and related laws and regulations.",
+          "controls": [
+            {
+              "id": "1-5-P-1",
+              "applies_to": "CSP",
+              "ecc_reference": null,
+              "text": "Cybersecurity requirements for change management within the CSP shall be identified, documented, and approved.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": []
+            },
+            {
+              "id": "1-5-P-2",
+              "applies_to": "CSP",
+              "ecc_reference": null,
+              "text": "Cybersecurity requirements for change management within the CSP shall be applied.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": []
+            },
+            {
+              "id": "1-5-P-3",
+              "applies_to": "CSP",
+              "ecc_reference": null,
+              "text": "Cybersecurity for change management in the CSP shall cover, as a minimum, the following.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": [
+                {"id": "1-5-P-3-1", "text": "Processes and procedures to securely implement changes (planned works) in production systems, with priority given to cybersecurity observations."},
+                {"id": "1-5-P-3-2", "text": "Process for the implementation of cybersecurity exceptional changes (e.g. changes during incident restoration)."}
+              ]
+            },
+            {
+              "id": "1-5-P-4",
+              "applies_to": "CSP",
+              "ecc_reference": null,
+              "text": "Cybersecurity requirements for change management within the CSP shall be applied and reviewed periodically.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "name": "Cybersecurity Defense",
+      "subdomains": [
+        {
+          "id": "2-1",
+          "name": "Asset Management",
+          "objective": "To ensure that the CSP and CST has an accurate and detailed inventory of information and technology assets in order to support the entity cybersecurity and operational requirements to maintain the confidentiality, integrity and availability of information and technology assets.",
+          "controls": [
+            {
+              "id": "2-1-P-1",
+              "applies_to": "CSP",
+              "ecc_reference": "2-1",
+              "text": "In addition to controls in the ECC control 2-1, the CSP shall cover the following additional controls, as a minimum.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": [
+                {"id": "2-1-P-1-1", "text": "Inventory of all information and technology assets using suitable techniques such as Configuration Management Database (CMDB) or similar capability containing an inventory of all technical assets."},
+                {"id": "2-1-P-1-2", "text": "Identifying assets owners and involving them in the asset management lifecycle."}
+              ]
+            },
+            {
+              "id": "2-1-T-1",
+              "applies_to": "CST",
+              "ecc_reference": "2-1",
+              "text": "In addition to controls in the ECC control 2-1, the CST shall cover the following additional controls, as a minimum.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": [
+                {"id": "2-1-T-1-1", "text": "Inventory of all cloud services and information and technology assets related to the cloud services."}
+              ]
+            }
+          ]
+        },
+        {
+          "id": "2-2",
+          "name": "Identity and Access Management",
+          "objective": "To ensure the secure and restricted logical access to information and technology assets in order to prevent unauthorized access and allow only authorized access for users which are necessary to accomplish assigned tasks.",
+          "controls": [
+            {
+              "id": "2-2-P-1",
+              "applies_to": "CSP",
+              "ecc_reference": "2-2-3",
+              "text": "In addition to Subcontrols in the ECC control 2-2-3, the CSP shall cover the following additional Subcontrols, as a minimum.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": "Subcontrols 2-2-P-1-9 and 2-2-P-1-10 are marked optional at one of the classification levels per Annex A (source table attribution unclear — verify).",
+              "subcontrols": [
+                {"id": "2-2-P-1-1", "text": "Identity and access management of generic accounts credentials for accountability cannot be assigned for a specific individual."},
+                {"id": "2-2-P-1-2", "text": "Secure session management, including session authenticity, session lockout, and session timeout termination."},
+                {"id": "2-2-P-1-3", "text": "Multi-factor authentication for privileged users, and candidates of personnel with access to Cloud Technology Stack."},
+                {"id": "2-2-P-1-4", "text": "Formal process to detect and prevent unauthorized access (e.g. unsuccessful login attempt threshold)."},
+                {"id": "2-2-P-1-5", "text": "Utilizing secure methods and algorithms for saving and processing passwords, such as: Secure Hashing functions."},
+                {"id": "2-2-P-1-6", "text": "Secure management of third-party personnel's accounts."},
+                {"id": "2-2-P-1-7", "text": "Access control enforced to management systems, administrative consoles."},
+                {"id": "2-2-P-1-8", "text": "Masking of displayed authentication inputs, especially passwords, to prevent shoulder surfing."},
+                {"id": "2-2-P-1-9", "text": "Getting CST's approval before accessing any CST-related asset by the CSP or CSP's third parties."},
+                {"id": "2-2-P-1-10", "text": "Capability to immediately interrupt a remote access session and prevent any future access for a user."},
+                {"id": "2-2-P-1-11", "text": "Provision to CSTs of multi-factor authentication services for privileged cloud users."},
+                {"id": "2-2-P-1-12", "text": "Assurance of restricted and controlled access to storage systems and means (such as Storage Area Network (SAN))."}
+              ]
+            },
+            {
+              "id": "2-2-T-1",
+              "applies_to": "CST",
+              "ecc_reference": "2-2-3",
+              "text": "In addition to Subcontrols in the ECC control 2-2-3, the CST shall cover the following additional Subcontrols, as a minimum.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": [
+                {"id": "2-2-T-1-1", "text": "Identity and access management for all cloud credentials along their full lifecycle."},
+                {"id": "2-2-T-1-2", "text": "Confidentiality of cloud user identification, cloud credential and cloud access rights information, including the requirement on users to keep them private (for employed, third party and CST personnel)."},
+                {"id": "2-2-T-1-3", "text": "Secure session management, including session authenticity, session lockout, and session timeout termination on the cloud."},
+                {"id": "2-2-T-1-4", "text": "Multi-factor authentication for privileged cloud users."},
+                {"id": "2-2-T-1-5", "text": "Formal process to detect and prevent unauthorized access to cloud (such as a threshold of unsuccessful login attempts)."}
+              ]
+            }
+          ]
+        },
+        {
+          "id": "2-3",
+          "name": "Information System and Information Processing Facilities Protection",
+          "objective": "To ensure the protection of information systems and information processing facilities (including workstations and infrastructures) against cyber risks.",
+          "controls": [
+            {
+              "id": "2-3-P-1",
+              "applies_to": "CSP",
+              "ecc_reference": "2-3-3",
+              "text": "In addition to Subcontrols in the ECC control 2-3-3, the CSP shall cover the following additional Subcontrols, as a minimum.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": "Subcontrol 2-3-P-1-4 is optional and subcontrol 2-3-P-1-9 is not applicable at one of the classification levels (likely Level 4) per Annex A — verify.",
+              "subcontrols": [
+                {"id": "2-3-P-1-1", "text": "Ensuring that all configurations are applied in accordance with CSP's cybersecurity standards."},
+                {"id": "2-3-P-1-2", "text": "Assurance of separation and isolation of data, environments, and information systems across CSTs, to prevent data commingling."},
+                {"id": "2-3-P-1-3", "text": "Adopting cybersecurity principles for technical system configurations adhering to the minimum functionality principle."},
+                {"id": "2-3-P-1-4", "text": "Ability of the Cloud Technology Stacks to securely handle input validation, exceptions and failure."},
+                {"id": "2-3-P-1-5", "text": "Full isolation of security functions and applications from other functions and applications in the Cloud Technology Stack."},
+                {"id": "2-3-P-1-6", "text": "Notification to CSTs with cybersecurity requirements provided by the CSP that are useable by the CST."},
+                {"id": "2-3-P-1-7", "text": "Detection and prevention of unauthorized changes to software programs, and systems."},
+                {"id": "2-3-P-1-8", "text": "Complete isolation and protection of multiple guest environments."},
+                {"id": "2-3-P-1-9", "text": "The community cloud services provided to CSTs (government entities and CNI entities) shall be isolated from any other cloud computing provided to entities outside the scope of work."},
+                {"id": "2-3-P-1-10", "text": "Modern technologies, such as Endpoint Detection and Response (EDR) technologies, to ensure that the information servers and devices of CSP's information processing systems and devices are ready for rapid response to incidents."}
+              ]
+            },
+            {
+              "id": "2-3-T-1",
+              "applies_to": "CST",
+              "ecc_reference": "2-3-3",
+              "text": "In addition to Subcontrols in the ECC control 2-3-3, the CST shall cover the following additional Subcontrols, as a minimum.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": "Subcontrol 2-3-T-1-1 is marked not applicable at one of the classification levels per Annex A — verify.",
+              "subcontrols": [
+                {"id": "2-3-T-1-1", "text": "Verifying that the CSP isolates the community cloud services provided to CSTs (government entities and CNI entities) from any other cloud computing provided to entities outside the scope of work."}
+              ]
+            }
+          ]
+        },
+        {
+          "id": "2-4",
+          "name": "Networks Security Management",
+          "objective": "To ensure the protection of CSP's and CST's network from cyber risks.",
+          "controls": [
+            {
+              "id": "2-4-P-1",
+              "applies_to": "CSP",
+              "ecc_reference": "2-5-3",
+              "text": "In addition to Subcontrols in the ECC control 2-5-3, the CSP shall cover the following additional Subcontrols, as a minimum.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": [
+                {"id": "2-4-P-1-1", "text": "Monitoring of traffic across the external and internal networks to detect anomalies."},
+                {"id": "2-4-P-1-2", "text": "Network isolation and protection of Cloud Technology Stack network from other internal and external networks."},
+                {"id": "2-4-P-1-3", "text": "Protection from denial-of-service attacks (including Distributed Denial of Service (DDoS))."},
+                {"id": "2-4-P-1-4", "text": "Protection of data transmitted through the network; from and to the Cloud Technology Stack network using cryptography primitives; for management and administrative access."},
+                {"id": "2-4-P-1-5", "text": "Access control between different network segments."},
+                {"id": "2-4-P-1-6", "text": "Isolation between cloud service delivery network, cloud management network and CSP enterprise network."}
+              ]
+            },
+            {
+              "id": "2-4-T-1",
+              "applies_to": "CST",
+              "ecc_reference": "2-5-3",
+              "text": "In addition to Subcontrols in the ECC control 2-5-3, the CST shall cover the following additional Subcontrols, as a minimum.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": [
+                {"id": "2-4-T-1-1", "text": "Protecting the connection channel with CSP."}
+              ]
+            }
+          ]
+        },
+        {
+          "id": "2-5",
+          "name": "Mobile Devices Security",
+          "objective": "To ensure the protection of mobile devices (including laptops, smartphones, and tablets) from cyber risks and to ensure the secure handling of the CSPs' and CSTs' information (including sensitive information) while utilizing mobile devices.",
+          "controls": [
+            {
+              "id": "2-5-P-1",
+              "applies_to": "CSP",
+              "ecc_reference": "2-6-3",
+              "text": "In addition to Subcontrols in the ECC control 2-6-3, the CSP shall cover the following additional Subcontrols, as a minimum.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": "Subcontrol 2-5-P-1-2 is marked optional at one of the classification levels per Annex A — verify.",
+              "subcontrols": [
+                {"id": "2-5-P-1-1", "text": "Inventory of all end user and mobile devices."},
+                {"id": "2-5-P-1-2", "text": "Centralized mobile device security management."},
+                {"id": "2-5-P-1-3", "text": "Screen locking for end user devices."},
+                {"id": "2-5-P-1-4", "text": "Data sanitation and secure disposal for end-user devices, especially for those with exposure to the Cloud Technology Stack."}
+              ]
+            },
+            {
+              "id": "2-5-T-1",
+              "applies_to": "CST",
+              "ecc_reference": "2-6-3",
+              "text": "In addition to Subcontrols in the ECC control 2-6-3, the CST shall cover the following additional Subcontrols, as a minimum.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": false},
+              "level_exceptions": null,
+              "subcontrols": [
+                {"id": "2-5-T-1-1", "text": "Data sanitation and secure disposal for end-user devices with access to the cloud services."}
+              ]
+            }
+          ]
+        },
+        {
+          "id": "2-6",
+          "name": "Data and Information Protection",
+          "objective": "To ensure the confidentiality, integrity and availability of CSPs' and CSTs' data and information as per entity-related policies and procedures, and related laws and regulations.",
+          "controls": [
+            {
+              "id": "2-6-P-1",
+              "applies_to": "CSP",
+              "ecc_reference": "2-7-3",
+              "text": "In addition to Subcontrols in the ECC control 2-7-3, the CSP shall cover the following additional Subcontrols, as a minimum.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": [
+                {"id": "2-6-P-1-1", "text": "Prohibiting the use of Cloud Technology Stack's data in any environment other than production environment, except after applying strict controls for protecting that data, such as data masking or data scrambling techniques."},
+                {"id": "2-6-P-1-2", "text": "Provision to CSTs of securely data storage processes, procedures, and technologies to comply with related legal and regulatory requirements."},
+                {"id": "2-6-P-1-3", "text": "Disposal of CST's data should be performed in a secure manner on termination or expiry of the contract with the CSP."},
+                {"id": "2-6-P-1-4", "text": "Commitment to maintain the confidentiality of the CST's data and information, according to related legal and regulatory requirements."},
+                {"id": "2-6-P-1-5", "text": "Providing CSTs with secure means to export and transfer data and virtual infrastructure."}
+              ]
+            },
+            {
+              "id": "2-6-T-1",
+              "applies_to": "CST",
+              "ecc_reference": "2-7-3",
+              "text": "In addition to Subcontrols in the ECC control 2-7-3, the CST shall cover the following additional Subcontrols, as a minimum.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": false},
+              "level_exceptions": null,
+              "subcontrols": [
+                {"id": "2-6-T-1-1", "text": "Exit Strategy to ensure means for secure disposal of data on termination or expiry of the contract with the CSP."},
+                {"id": "2-6-T-1-2", "text": "Using secure means to export and transfer data and virtual infrastructure."}
+              ]
+            }
+          ]
+        },
+        {
+          "id": "2-7",
+          "name": "Cryptography",
+          "objective": "To ensure the proper and efficient use of cryptography to protect information assets as per policies, procedures, and related laws and regulations.",
+          "controls": [
+            {
+              "id": "2-7-P-1",
+              "applies_to": "CSP",
+              "ecc_reference": "2-8-3",
+              "text": "In addition to Subcontrols in the ECC control 2-8-3, the CSP shall cover the following additional Subcontrols, as a minimum.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": "Subcontrol 2-7-P-1-1 is marked optional at one of the classification levels per Annex A — verify.",
+              "subcontrols": [
+                {"id": "2-7-P-1-1", "text": "Technical mechanisms and cryptographic primitives for strong encryption, according to the advanced level in the National Cryptographic Standards (NCS-1:2020)."},
+                {"id": "2-7-P-1-2", "text": "Certification authority and issuance capability in a secure manner, or usage of certificates from a trusted certification authority."}
+              ]
+            },
+            {
+              "id": "2-7-T-1",
+              "applies_to": "CST",
+              "ecc_reference": "2-8-3",
+              "text": "In addition to subcontrols in the ECC control 2-8-3, the CST shall cover the following additional subcontrols, as a minimum.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": "Subcontrol 2-7-T-1-1 is marked optional at one of the classification levels per Annex A — verify.",
+              "subcontrols": [
+                {"id": "2-7-T-1-1", "text": "Technical mechanisms and cryptographic primitives for strong encryption, according to the advanced level in the National Cryptographic Standards (NCS-1:2020)."},
+                {"id": "2-7-T-1-2", "text": "Encryption of data and information transferred to or transferred out of the cloud according to the relevant law and regulatory requirements."}
+              ]
+            }
+          ]
+        },
+        {
+          "id": "2-8",
+          "name": "Backup and Recovery Management",
+          "objective": "To ensure the protection of CSPs' data and information including information systems and software configurations from cyber risks as per entity-related policies and procedures, and related laws and regulations.",
+          "controls": [
+            {
+              "id": "2-8-P-1",
+              "applies_to": "CSP",
+              "ecc_reference": "2-9-3",
+              "text": "In addition to subcontrols in the ECC control 2-9-3, the CSP shall cover the following additional subcontrols, as a minimum.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": [
+                {"id": "2-8-P-1-1", "text": "Securing access, storage and transfer of CST's data backups and its mediums, and protecting it against damage, amendment, or unauthorized access."},
+                {"id": "2-8-P-1-2", "text": "Securing access, storage and transfer of Cloud Technology Stack backups and its mediums, and protecting it against damage, amendment, or unauthorized access."}
+              ]
+            }
+          ]
+        },
+        {
+          "id": "2-9",
+          "name": "Vulnerabilities Management",
+          "objective": "To ensure timely detection and effective remediation of technical vulnerabilities to prevent or minimize the probability of exploiting these vulnerabilities to launch cyber attacks against the CSP and CST.",
+          "controls": [
+            {
+              "id": "2-9-P-1",
+              "applies_to": "CSP",
+              "ecc_reference": "2-10-3",
+              "text": "In addition to subcontrols in the ECC control 2-10-3, the CSP shall cover the following additional subcontrols, as a minimum.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": [
+                {"id": "2-9-P-1-1", "text": "Assessing and remediating vulnerabilities on external components of Cloud Technology Stack at least once every month, and at least once every three months for internal components of Cloud Technology Stack."},
+                {"id": "2-9-P-1-2", "text": "Notification to CSTs of identified vulnerabilities that may affect them, and safeguards in place."}
+              ]
+            },
+            {
+              "id": "2-9-T-1",
+              "applies_to": "CST",
+              "ecc_reference": "2-10-3",
+              "text": "In addition to subcontrols in the ECC control 2-10-3, the CST shall cover the following additional subcontrols, as a minimum.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": [
+                {"id": "2-9-T-1-1", "text": "Assessing and remediating vulnerabilities on cloud services at least once every three months."},
+                {"id": "2-9-T-1-2", "text": "Management of CSP-notified vulnerabilities safeguards in place."}
+              ]
+            }
+          ]
+        },
+        {
+          "id": "2-10",
+          "name": "Penetration Testing",
+          "objective": "To assess and evaluate the efficiency of the CSP's cybersecurity defense capabilities through simulated cyber-attacks to discover unknown weaknesses within the technical infrastructure that may lead to a cyber breach.",
+          "controls": [
+            {
+              "id": "2-10-P-1",
+              "applies_to": "CSP",
+              "ecc_reference": "2-11-3",
+              "text": "In addition to subcontrols in the ECC control 2-11-3, the CSP shall cover the following additional subcontrols, as a minimum.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": [
+                {"id": "2-10-P-1-1", "text": "Scope of penetration tests must cover Cloud Technology Stack and must be conducted at least once every six months."}
+              ]
+            }
+          ]
+        },
+        {
+          "id": "2-11",
+          "name": "Cybersecurity Event Logs and Monitoring Management",
+          "objective": "Ensure timely collection, analysis, and monitoring of cybersecurity event logs for the proactive detection and effective management of cyber-attacks to prevent or minimize the impact on the CSPs' and CSTs' business.",
+          "controls": [
+            {
+              "id": "2-11-P-1",
+              "applies_to": "CSP",
+              "ecc_reference": "2-12-3",
+              "text": "In addition to subcontrols in the ECC control 2-12-3, the CSP shall cover the following additional subcontrols, as a minimum.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": false},
+              "level_exceptions": null,
+              "subcontrols": [
+                {"id": "2-11-P-1-1", "text": "Activating and protecting event logs and audit trails of Cloud Technology Stack."},
+                {"id": "2-11-P-1-2", "text": "Activating and collecting login attempts history."},
+                {"id": "2-11-P-1-3", "text": "Activating and protecting all event logs of activities and operations performed by the CSP at the tenant level in order to support forensic analysis."},
+                {"id": "2-11-P-1-4", "text": "Protecting cybersecurity event logs from alteration, disclosure, destruction and unauthorized access and unauthorized release, in accordance with regulatory, or law requirements."},
+                {"id": "2-11-P-1-5", "text": "Continuous cybersecurity events monitoring using SIEM technique covering the full Cloud Technology Stack."},
+                {"id": "2-11-P-1-6", "text": "Reviewing cybersecurity event logs and audit trails periodically, covering CSP events in the Cloud Technology Stack."},
+                {"id": "2-11-P-1-7", "text": "Automated monitoring and logging of remote access sessions event logs."},
+                {"id": "2-11-P-1-8", "text": "Secure handling of user-related data found in the audit trails and the cybersecurity event logs."}
+              ]
+            },
+            {
+              "id": "2-11-T-1",
+              "applies_to": "CST",
+              "ecc_reference": "2-12-3",
+              "text": "In addition to subcontrols in the ECC control 2-12-3, the CST shall cover the following additional subcontrols, as a minimum.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": false},
+              "level_exceptions": null,
+              "subcontrols": [
+                {"id": "2-11-T-1-1", "text": "Activating and collecting of login event logs, and cybersecurity event logs on assets related to cloud services."},
+                {"id": "2-11-T-1-2", "text": "Monitoring shall include all activated cybersecurity logs on the cloud services of the CST."}
+              ]
+            }
+          ]
+        },
+        {
+          "id": "2-12",
+          "name": "Cybersecurity Incident and Threat Management",
+          "objective": "Ensure timely identification and detection of cybersecurity incidents and their effective management and proactive response to cybersecurity threats to prevent or minimize the impact of the impacts resulting on the business of the CSPs.",
+          "controls": [
+            {
+              "id": "2-12-P-1",
+              "applies_to": "CSP",
+              "ecc_reference": "2-13-3",
+              "text": "In addition to subcontrols in the ECC control 2-13-3, the CSP shall cover the following additional subcontrols, as a minimum.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": "Subcontrols 2-12-P-1-2, 2-12-P-1-3, and 2-12-P-1-8 are marked optional at one of the classification levels per Annex A — verify.",
+              "subcontrols": [
+                {"id": "2-12-P-1-1", "text": "Subscribing in authorized and specialized entities and groups to stay up-to-date on Cybersecurity threats, common practices, and key know-how."},
+                {"id": "2-12-P-1-2", "text": "Training for employees and third-party personnel to respond to cybersecurity incidents, in line with their roles and responsibilities."},
+                {"id": "2-12-P-1-3", "text": "Periodically testing the incident response capability."},
+                {"id": "2-12-P-1-4", "text": "Root Cause Analysis of cybersecurity incidents and developing plans to address them."},
+                {"id": "2-12-P-1-5", "text": "Support the CST in cases of legal proceedings and forensics, protecting the chain of custody that falls under the management and responsibility of the CSP, in accordance with the related law and regulatory requirements."},
+                {"id": "2-12-P-1-6", "text": "Real-time reporting to the CST of incidents that may affect CST; if the incident is discovered."},
+                {"id": "2-12-P-1-7", "text": "Support for CSTs to handle security incidents according to the agreement between the CSP and CST."},
+                {"id": "2-12-P-1-8", "text": "Measuring and monitoring cybersecurity incident metrics and monitor compliance with contracts and legislative requirements."}
+              ]
+            }
+          ]
+        },
+        {
+          "id": "2-13",
+          "name": "Physical Security",
+          "objective": "To ensure the protection of CSPs' information and technology assets from unauthorized physical access, loss, theft, and damage.",
+          "controls": [
+            {
+              "id": "2-13-P-1",
+              "applies_to": "CSP",
+              "ecc_reference": "2-14-3",
+              "text": "In addition to subcontrols in the ECC control 2-14-3, the CSP shall cover the following additional subcontrols, as a minimum.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": [
+                {"id": "2-13-P-1-1", "text": "Continual monitoring of access to CSP's sites and buildings."},
+                {"id": "2-13-P-1-2", "text": "Preventing unauthorized access to devices in the Cloud Technology Stack."},
+                {"id": "2-13-P-1-3", "text": "Disposal of cloud infrastructure hardware, in particular storage equipment (external or internal), by adopting relevant legislation and best practices."}
+              ]
+            }
+          ]
+        },
+        {
+          "id": "2-14",
+          "name": "Web Application Security",
+          "objective": "Ensure the protection of external web applications of the CSP from cyber risks.",
+          "controls": [
+            {
+              "id": "2-14-P-1",
+              "applies_to": "CSP",
+              "ecc_reference": "2-15-3",
+              "text": "In addition to subcontrols in the ECC control 2-15-3, the CSP shall cover the following additional subcontrols, as a minimum.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": [
+                {"id": "2-14-P-1-1", "text": "Protecting information involved in application service transactions against possible risks (e.g. incomplete transmission, mis-routing, unauthorized message alteration, unauthorized disclosure)."}
+              ]
+            }
+          ]
+        },
+        {
+          "id": "2-15",
+          "name": "Key Management",
+          "objective": "Ensure secure management of CSPs' and CSTs' cryptographic keys to protect confidentiality, integrity and availability of information and technical assets.",
+          "controls": [
+            {
+              "id": "2-15-P-1",
+              "applies_to": "CSP",
+              "ecc_reference": null,
+              "text": "Cybersecurity requirements for key management process within the CSP shall be identified, documented, and approved.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": []
+            },
+            {
+              "id": "2-15-P-2",
+              "applies_to": "CSP",
+              "ecc_reference": null,
+              "text": "Cybersecurity requirements for key management process within the CSP shall be applied.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": []
+            },
+            {
+              "id": "2-15-P-3",
+              "applies_to": "CSP",
+              "ecc_reference": "2-8-3-2",
+              "text": "In addition to the ECC Subcontrol 2-8-3-2, cybersecurity requirements for key management within the CSP shall cover, at minimum, the following.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": "Subcontrol 2-15-P-3-1 is marked optional at one of the classification levels per Annex A — verify.",
+              "subcontrols": [
+                {"id": "2-15-P-3-1", "text": "Ensure well-defined ownership for cryptographic keys."},
+                {"id": "2-15-P-3-2", "text": "A secure cryptographic key retrieval mechanism in case of cryptographic key lost (such as backup of keys and enforcement of trusted key storage, strictly external to cloud)."},
+                {"id": "2-15-P-3-3", "text": "Activating and monitoring of all audit trails of keys."}
+              ]
+            },
+            {
+              "id": "2-15-P-4",
+              "applies_to": "CSP",
+              "ecc_reference": null,
+              "text": "Cybersecurity requirements for key management within the CSP shall be applied and reviewed periodically.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": []
+            },
+            {
+              "id": "2-15-T-1",
+              "applies_to": "CST",
+              "ecc_reference": null,
+              "text": "Cybersecurity requirements for key management within the CST shall be identified, documented, and approved.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": []
+            },
+            {
+              "id": "2-15-T-2",
+              "applies_to": "CST",
+              "ecc_reference": null,
+              "text": "Cybersecurity requirements for key management within the CST shall be applied.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": []
+            },
+            {
+              "id": "2-15-T-3",
+              "applies_to": "CST",
+              "ecc_reference": "2-8-3-2",
+              "text": "In addition to the ECC Subcontrol 2-8-3-2, cybersecurity requirements for key management within the CST shall cover, at minimum, the following.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": [
+                {"id": "2-15-T-3-1", "text": "Ensure well-defined ownership for cryptographic keys."},
+                {"id": "2-15-T-3-2", "text": "A secure data retrieval mechanism in case of cryptographic encryption key lost (such as backup of keys and enforcement of trusted key storage, strictly external to cloud)."}
+              ]
+            },
+            {
+              "id": "2-15-T-4",
+              "applies_to": "CST",
+              "ecc_reference": null,
+              "text": "Cybersecurity requirements for key management within the CST shall be applied and reviewed periodically.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": []
+            }
+          ]
+        },
+        {
+          "id": "2-16",
+          "name": "System Development Security",
+          "objective": "Ensure CSPs' systems are developed, integrated, and deployed in a secure manner.",
+          "controls": [
+            {
+              "id": "2-16-P-1",
+              "applies_to": "CSP",
+              "ecc_reference": null,
+              "text": "Cybersecurity requirements for system development within the CSP shall be identified, documented, and approved.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": []
+            },
+            {
+              "id": "2-16-P-2",
+              "applies_to": "CSP",
+              "ecc_reference": null,
+              "text": "Cybersecurity requirements for system development within the CSP shall be applied.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": []
+            },
+            {
+              "id": "2-16-P-3",
+              "applies_to": "CSP",
+              "ecc_reference": null,
+              "text": "Cybersecurity requirements for system development within the CSP shall include as a minimum the following controls along the development lifecycle.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": [
+                {"id": "2-16-P-3-1", "text": "Considering cybersecurity requirements of the Cloud Technology Stack and relevant systems in the design and implementation of the cloud computing services."},
+                {"id": "2-16-P-3-2", "text": "Protecting system development environments, testing environments (including data used in testing environment), and integration platforms."}
+              ]
+            },
+            {
+              "id": "2-16-P-4",
+              "applies_to": "CSP",
+              "ecc_reference": null,
+              "text": "Cybersecurity requirements for system development within the CSP shall be applied and reviewed periodically.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": []
+            }
+          ]
+        },
+        {
+          "id": "2-17",
+          "name": "Storage Media Security",
+          "objective": "Ensure CSPs' secure handling of information and data on physical media.",
+          "controls": [
+            {
+              "id": "2-17-P-1",
+              "applies_to": "CSP",
+              "ecc_reference": null,
+              "text": "Cybersecurity requirements for usage of information and data media within the CSP shall be identified, documented, and approved.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": []
+            },
+            {
+              "id": "2-17-P-2",
+              "applies_to": "CSP",
+              "ecc_reference": null,
+              "text": "Cybersecurity requirements for usage of information and data media within the CSP shall be applied.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": []
+            },
+            {
+              "id": "2-17-P-3",
+              "applies_to": "CSP",
+              "ecc_reference": null,
+              "text": "Cybersecurity requirements for usage of information and data media within the CSP shall cover, at minimum, the following.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": [
+                {"id": "2-17-P-3-1", "text": "Enforcement of sanitization of media, prior to disposal or reuse."},
+                {"id": "2-17-P-3-2", "text": "Using secure means when disposing of media."},
+                {"id": "2-17-P-3-3", "text": "Provision to maintain confidentiality and integrity of data on removable media."},
+                {"id": "2-17-P-3-4", "text": "Human readable labelling of media, to explain its classification and the sensitivity of the information it contains."},
+                {"id": "2-17-P-3-5", "text": "Controlled and physically secure storage of removable media."},
+                {"id": "2-17-P-3-6", "text": "Restriction and control of usage of portable media inside the Cloud Technology Stack."}
+              ]
+            },
+            {
+              "id": "2-17-P-4",
+              "applies_to": "CSP",
+              "ecc_reference": null,
+              "text": "Cybersecurity requirements for usage of information and data media within the CSP shall be applied and reviewed periodically.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "name": "Cybersecurity Resilience",
+      "subdomains": [
+        {
+          "id": "3-1",
+          "name": "Cybersecurity Resilience Aspects of Business Continuity Management (BCM)",
+          "objective": "To ensure the inclusion of the cybersecurity resiliency requirements within the CSPs' and CSTs' business continuity management and to remediate and minimize the impacts on systems, information processing facilities and critical e-services from disasters caused by cybersecurity incidents.",
+          "controls": [
+            {
+              "id": "3-1-P-1",
+              "applies_to": "CSP",
+              "ecc_reference": "3-1-3",
+              "text": "In addition to subcontrols in the ECC control 3-1-3, the CSP shall cover the following additional subcontrols, as a minimum.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": [
+                {"id": "3-1-P-1-1", "text": "Developing and implementing disaster recovery and business continuity procedures in a secure manner."},
+                {"id": "3-1-P-1-2", "text": "Developing and implementing procedures to ensure resilience and continuity of cybersecurity systems dedicated to the protection of Cloud Technology Stack."}
+              ]
+            },
+            {
+              "id": "3-1-T-1",
+              "applies_to": "CST",
+              "ecc_reference": "3-1-3",
+              "text": "In addition to subcontrols in the ECC control 3-1-3, the CST shall cover the following additional subcontrols, as a minimum.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": null,
+              "subcontrols": [
+                {"id": "3-1-T-1-1", "text": "Developing and implementing disaster recovery and business continuity procedures related to cloud computing, in a secure manner."}
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "name": "Third-Party Cybersecurity",
+      "subdomains": [
+        {
+          "id": "4-1",
+          "name": "Supply Chain and Third-Party Cybersecurity",
+          "objective": "To ensure the protection of assets against the cybersecurity risks related to third-parties including outsourcing and managed services as per policies and procedures, and related laws and regulations.",
+          "controls": [
+            {
+              "id": "4-1-P-1",
+              "applies_to": "CSP",
+              "ecc_reference": "4-1-2, 4-1-3",
+              "text": "In addition to implementing the ECC controls 4-1-2 and 4-1-3, the CSP shall cover the following additional subcontrols, as a minimum.",
+              "level_mandatory": {"level_1": true, "level_2": true, "level_3": true, "level_4": true},
+              "level_exceptions": "Subcontrol 4-1-P-1-1 is marked optional at one of the classification levels per Annex A — verify.",
+              "subcontrols": [
+                {"id": "4-1-P-1-1", "text": "Ensure that the CSP fulfills NCA's requests to remove software or services, provided by third-party providers that may be considered a cybersecurity threat to national entities, from the marketplace provided to CSTs."},
+                {"id": "4-1-P-1-2", "text": "Requirement to provide security documentation for any equipment or services from suppliers and third-party providers."},
+                {"id": "4-1-P-1-3", "text": "Third-party providers compliant with law and regulatory requirements relevant to their scope."},
+                {"id": "4-1-P-1-4", "text": "Risk management and security governance on third-party providers as part of general cybersecurity risk management and governance."}
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "classification_levels": {
+    "level_1": "Top Secret",
+    "level_2": "Secret",
+    "level_3": "Confidential",
+    "level_4": "Public",
+    "note": "When a data set mixes classification levels, the highest level present governs. Level applies to CST's/CSP's declared data classification per Annex A."
+  }
+}

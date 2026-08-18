@@ -1,0 +1,214 @@
+{
+  "description": "Starter mapping between common cloud scanner (CSPM-style) finding types and CCC-2:2024 control IDs. This is a best-effort starting ruleset, not an NCA-endorsed mapping — review each entry against ccc_controls.json and your own finding taxonomy, then adjust. control_ids reference the 'id' field in ccc_controls.json domains[].subdomains[].controls[].",
+  "how_to_use": "Tag each finding your scanner emits with a finding_type matching one of the keys below. Your rules engine looks up ccc_controls_csp / ccc_controls_cst depending on whether the scanned target is CSP-owned infrastructure or a CST's cloud account, then attaches those control IDs (and pulls the human-readable text from ccc_controls.json) to the finding for reporting.",
+  "findings": [
+    {
+      "finding_type": "ssh_open_to_internet",
+      "title": "SSH (22/tcp) open to 0.0.0.0/0",
+      "domain": "2-4 Networks Security Management",
+      "ccc_controls_csp": ["2-4-P-1-1", "2-4-P-1-2"],
+      "ccc_controls_cst": ["2-4-T-1-1"],
+      "default_severity": "high"
+    },
+    {
+      "finding_type": "rdp_open_to_internet",
+      "title": "RDP (3389/tcp) open to 0.0.0.0/0",
+      "domain": "2-4 Networks Security Management",
+      "ccc_controls_csp": ["2-4-P-1-1", "2-4-P-1-2"],
+      "ccc_controls_cst": ["2-4-T-1-1"],
+      "default_severity": "high"
+    },
+    {
+      "finding_type": "security_group_allow_all_inbound",
+      "title": "Security group / NSG allows unrestricted inbound traffic",
+      "domain": "2-4 Networks Security Management",
+      "ccc_controls_csp": ["2-4-P-1-2", "2-4-P-1-5"],
+      "ccc_controls_cst": ["2-4-T-1-1"],
+      "default_severity": "high"
+    },
+    {
+      "finding_type": "storage_bucket_public_read",
+      "title": "Object storage bucket is publicly readable",
+      "domain": "2-6 Data and Information Protection / 2-2 Identity and Access Management",
+      "ccc_controls_csp": ["2-3-P-1-2", "2-6-P-1-4"],
+      "ccc_controls_cst": ["2-2-T-1-1"],
+      "default_severity": "critical",
+      "notes": "No CCC subcontrol names 'public bucket' directly — this is a best-effort mapping to the closest access-control and confidentiality controls; refine to your own risk taxonomy."
+    },
+    {
+      "finding_type": "storage_bucket_public_write",
+      "title": "Object storage bucket is publicly writable",
+      "domain": "2-6 Data and Information Protection / 2-2 Identity and Access Management",
+      "ccc_controls_csp": ["2-3-P-1-2", "2-6-P-1-4"],
+      "ccc_controls_cst": ["2-2-T-1-1"],
+      "default_severity": "critical",
+      "notes": "Same caveat as storage_bucket_public_read."
+    },
+    {
+      "finding_type": "storage_unencrypted_at_rest",
+      "title": "Object/block storage without encryption at rest",
+      "domain": "2-7 Cryptography",
+      "ccc_controls_csp": ["2-7-P-1-1"],
+      "ccc_controls_cst": ["2-7-T-1-1"],
+      "default_severity": "high"
+    },
+    {
+      "finding_type": "data_in_transit_unencrypted",
+      "title": "Data transmitted without TLS/encryption",
+      "domain": "2-4 Networks Security Management / 2-7 Cryptography",
+      "ccc_controls_csp": ["2-4-P-1-4", "2-7-P-1-1"],
+      "ccc_controls_cst": ["2-7-T-1-2"],
+      "default_severity": "high"
+    },
+    {
+      "finding_type": "no_mfa_privileged_account",
+      "title": "No MFA enforced on privileged/admin account",
+      "domain": "2-2 Identity and Access Management",
+      "ccc_controls_csp": ["2-2-P-1-3", "2-2-P-1-11"],
+      "ccc_controls_cst": ["2-2-T-1-4"],
+      "default_severity": "critical"
+    },
+    {
+      "finding_type": "root_account_used_directly",
+      "title": "Root/master account used for routine operations instead of scoped IAM roles",
+      "domain": "2-2 Identity and Access Management",
+      "ccc_controls_csp": ["2-2-P-1-1", "2-2-P-1-7"],
+      "ccc_controls_cst": ["2-2-T-1-1"],
+      "default_severity": "high"
+    },
+    {
+      "finding_type": "weak_password_policy",
+      "title": "Password policy does not meet complexity/rotation baseline",
+      "domain": "2-2 Identity and Access Management",
+      "ccc_controls_csp": ["2-2-P-1-5"],
+      "ccc_controls_cst": ["2-2-T-1-1"],
+      "default_severity": "medium",
+      "notes": "CCC largely defers detailed password rules to ECC 2-2; this finding is also relevant to your ECC ruleset if you maintain one."
+    },
+    {
+      "finding_type": "overly_permissive_iam_policy",
+      "title": "IAM policy grants wildcard (*) resource/action permissions",
+      "domain": "2-2 Identity and Access Management",
+      "ccc_controls_csp": ["2-2-P-1-7"],
+      "ccc_controls_cst": ["2-2-T-1-1"],
+      "default_severity": "high"
+    },
+    {
+      "finding_type": "no_logging_enabled",
+      "title": "Audit/activity logging disabled on a resource or account",
+      "domain": "2-11 Cybersecurity Event Logs and Monitoring Management",
+      "ccc_controls_csp": ["2-11-P-1-1", "2-11-P-1-3"],
+      "ccc_controls_cst": ["2-11-T-1-1"],
+      "default_severity": "high"
+    },
+    {
+      "finding_type": "no_siem_integration",
+      "title": "No centralized monitoring/SIEM ingestion configured",
+      "domain": "2-11 Cybersecurity Event Logs and Monitoring Management",
+      "ccc_controls_csp": ["2-11-P-1-5"],
+      "ccc_controls_cst": ["2-11-T-1-2"],
+      "default_severity": "medium"
+    },
+    {
+      "finding_type": "backup_not_configured",
+      "title": "No backup configured for a critical resource",
+      "domain": "2-8 Backup and Recovery Management",
+      "ccc_controls_csp": ["2-8-P-1-1", "2-8-P-1-2"],
+      "ccc_controls_cst": [],
+      "default_severity": "high",
+      "notes": "CCC only defines backup subcontrols on the CSP side. For CST-owned resources, treat this as an ECC backup-domain finding rather than CCC-CST."
+    },
+    {
+      "finding_type": "backup_unencrypted_or_unrestricted",
+      "title": "Backup exists but is unencrypted or not access-restricted",
+      "domain": "2-8 Backup and Recovery Management",
+      "ccc_controls_csp": ["2-8-P-1-1", "2-8-P-1-2"],
+      "ccc_controls_cst": [],
+      "default_severity": "high",
+      "notes": "Same caveat as backup_not_configured."
+    },
+    {
+      "finding_type": "key_no_rotation",
+      "title": "Cryptographic key without a rotation policy",
+      "domain": "2-15 Key Management",
+      "ccc_controls_csp": ["2-15-P-3-1", "2-15-P-3-2"],
+      "ccc_controls_cst": ["2-15-T-3-1", "2-15-T-3-2"],
+      "default_severity": "medium"
+    },
+    {
+      "finding_type": "hardcoded_credentials",
+      "title": "Hardcoded secrets/keys found in code or configuration",
+      "domain": "2-2 Identity and Access Management / 2-16 System Development Security",
+      "ccc_controls_csp": ["2-2-P-1-5", "2-16-P-3-1"],
+      "ccc_controls_cst": ["2-2-T-1-2"],
+      "default_severity": "critical"
+    },
+    {
+      "finding_type": "unpatched_vulnerability",
+      "title": "Known CVE / missing patch on a cloud workload or image",
+      "domain": "2-9 Vulnerabilities Management",
+      "ccc_controls_csp": ["2-9-P-1-1"],
+      "ccc_controls_cst": ["2-9-T-1-1"],
+      "default_severity": "high"
+    },
+    {
+      "finding_type": "no_vulnerability_scanning",
+      "title": "No recurring vulnerability scanning configured",
+      "domain": "2-9 Vulnerabilities Management",
+      "ccc_controls_csp": ["2-9-P-1-1"],
+      "ccc_controls_cst": ["2-9-T-1-1", "2-9-T-1-2"],
+      "default_severity": "medium"
+    },
+    {
+      "finding_type": "no_waf_on_public_app",
+      "title": "Public-facing web application without WAF / transaction protection",
+      "domain": "2-14 Web Application Security",
+      "ccc_controls_csp": ["2-14-P-1-1"],
+      "ccc_controls_cst": [],
+      "default_severity": "medium",
+      "notes": "Web application security is CSP-only in CCC's scope; for a CST-built app on top of IaaS, also map to ECC's web application security domain."
+    },
+    {
+      "finding_type": "no_dr_bcp_plan",
+      "title": "No documented disaster recovery / business continuity plan for a critical service",
+      "domain": "3-1 Cybersecurity Resilience Aspects of BCM",
+      "ccc_controls_csp": ["3-1-P-1-1", "3-1-P-1-2"],
+      "ccc_controls_cst": ["3-1-T-1-1"],
+      "default_severity": "medium"
+    },
+    {
+      "finding_type": "third_party_no_security_review",
+      "title": "Third-party/marketplace service used without security documentation or review",
+      "domain": "4-1 Supply Chain and Third-Party Cybersecurity",
+      "ccc_controls_csp": ["4-1-P-1-2", "4-1-P-1-3", "4-1-P-1-4"],
+      "ccc_controls_cst": [],
+      "default_severity": "medium",
+      "notes": "CCC only defines a third-party subdomain on the CSP side; for CST-side vendor risk, fall back to ECC's third-party cybersecurity domain."
+    },
+    {
+      "finding_type": "media_sanitization_missing",
+      "title": "Storage media disposed of or reused without a sanitization process",
+      "domain": "2-17 Storage Media Security",
+      "ccc_controls_csp": ["2-17-P-3-1", "2-17-P-3-2"],
+      "ccc_controls_cst": [],
+      "default_severity": "medium",
+      "notes": "Physical media handling is CSP-only in CCC. Related CST finding: end-user device sanitization maps to 2-5-T-1-1."
+    },
+    {
+      "finding_type": "session_timeout_not_enforced",
+      "title": "No session timeout / lockout enforced on a management console",
+      "domain": "2-2 Identity and Access Management",
+      "ccc_controls_csp": ["2-2-P-1-2"],
+      "ccc_controls_cst": ["2-2-T-1-3"],
+      "default_severity": "low"
+    },
+    {
+      "finding_type": "remote_access_not_terminable",
+      "title": "No capability to forcibly terminate an active remote/admin session",
+      "domain": "2-2 Identity and Access Management",
+      "ccc_controls_csp": ["2-2-P-1-10"],
+      "ccc_controls_cst": [],
+      "default_severity": "low"
+    }
+  ]
+}

@@ -210,6 +210,7 @@ RULES = [
     {
         "id": "IAM-001",
         "name": "Root Account Access Keys Active",
+        "finding_type": "root_account_used_directly",
         "severity": "Critical",
         "description": "Root account has active access keys. Root keys are dangerous and cannot be restricted by IAM policies.",
         "recommendation": "Delete the root account access keys immediately and use IAM users/roles instead.",
@@ -218,6 +219,7 @@ RULES = [
     {
         "id": "IAM-002",
         "name": "Root Account MFA Disabled",
+        "finding_type": "no_mfa_privileged_account",
         "severity": "Critical",
         "description": "Root account does not have Multi-Factor Authentication (MFA) enabled.",
         "recommendation": "Enable MFA on the root account immediately.",
@@ -226,6 +228,7 @@ RULES = [
     {
         "id": "IAM-003",
         "name": "User Direct Administrator Access",
+        "finding_type": "overly_permissive_iam_policy",
         "severity": "Critical",
         "description": "IAM User has AdministratorAccess policy directly attached.",
         "recommendation": "Remove direct AdministratorAccess policy attachment and assign privileges via IAM Groups or Roles.",
@@ -234,6 +237,7 @@ RULES = [
     {
         "id": "IAM-004",
         "name": "Role has AdministratorAccess",
+        "finding_type": "overly_permissive_iam_policy",
         "severity": "Critical",
         "description": "IAM Role has AdministratorAccess policy attached.",
         "recommendation": "Review this role's permissions and enforce least privilege restrictions.",
@@ -242,6 +246,7 @@ RULES = [
     {
         "id": "IAM-005",
         "name": "IAM Policy Allows Full Admin Wildcards",
+        "finding_type": "overly_permissive_iam_policy",
         "severity": "Critical",
         "description": "IAM policy allows Action:* and Resource:* (full admin rights).",
         "recommendation": "Specify explicit allowed actions and target resource ARNs.",
@@ -250,6 +255,7 @@ RULES = [
     {
         "id": "IAM-006",
         "name": "IAM Policy Allows Privilege Escalation",
+        "finding_type": "overly_permissive_iam_policy",
         "severity": "Critical",
         "description": "IAM policy grants permissions that allow privilege escalation (e.g. PassRole, AttachRolePolicy).",
         "recommendation": "Restrict iam:PassRole and policy attachment actions to authorized admins only.",
@@ -258,6 +264,7 @@ RULES = [
     {
         "id": "IAM-007",
         "name": "IAM User Console Login without MFA",
+        "finding_type": "no_mfa_privileged_account",
         "severity": "High",
         "description": "IAM User has console login password active but Multi-Factor Authentication (MFA) is disabled.",
         "recommendation": "Enable MFA immediately for this user.",
@@ -266,6 +273,7 @@ RULES = [
     {
         "id": "IAM-008",
         "name": "IAM Access Key Older than 90 Days",
+        "finding_type": "weak_password_policy",
         "severity": "Warning",
         "description": "Active access key was created or rotated more than 90 days ago.",
         "recommendation": "Rotate your active access keys regularly (every 90 days).",
@@ -274,6 +282,7 @@ RULES = [
     {
         "id": "IAM-009",
         "name": "Unused IAM Access Key",
+        "finding_type": "weak_password_policy",
         "severity": "Warning",
         "description": "Active access key has not been used to make API calls in the last 90 days.",
         "recommendation": "Deactivate or delete unused access keys to reduce the attack surface.",
@@ -282,6 +291,7 @@ RULES = [
     {
         "id": "IAM-010",
         "name": "Inactive IAM User",
+        "finding_type": "weak_password_policy",
         "severity": "Warning",
         "description": "IAM user has not used their password or access keys in the last 90 days.",
         "recommendation": "Deactivate and clean up inactive IAM users.",
@@ -290,6 +300,7 @@ RULES = [
     {
         "id": "IAM-011",
         "name": "IAM Password Never Rotated",
+        "finding_type": "weak_password_policy",
         "severity": "Warning",
         "description": "IAM user password has never been rotated.",
         "recommendation": "Set a password rotation policy or rotate the password regularly.",
@@ -298,6 +309,7 @@ RULES = [
     {
         "id": "IAM-012",
         "name": "Programmatic User Has Console Login",
+        "finding_type": "weak_password_policy",
         "severity": "High",
         "description": "User has both active Access Keys and a Console Password.",
         "recommendation": "Do not grant console login access to programmatic service accounts/users.",
@@ -306,6 +318,7 @@ RULES = [
     {
         "id": "IAM-013",
         "name": "IAM Policy Wildcard Service Permissions",
+        "finding_type": "overly_permissive_iam_policy",
         "severity": "High",
         "description": "IAM policy allows service-wide wildcards (e.g. ec2:* or s3:*).",
         "recommendation": "Refine policy actions to only the required API endpoints (e.g. s3:GetObject).",
@@ -314,6 +327,7 @@ RULES = [
     {
         "id": "IAM-014",
         "name": "Wildcard Principal in Role Trust",
+        "finding_type": "overly_permissive_iam_policy",
         "severity": "Critical",
         "description": "IAM Role allows wildcard Principal (*) to assume it, making it publicly accessible.",
         "recommendation": "Restrict the Trust Relationship principal to specific trusted ARNs.",
@@ -322,6 +336,7 @@ RULES = [
     {
         "id": "IAM-015",
         "name": "IAM Role Trusts External AWS Account",
+        "finding_type": "overly_permissive_iam_policy",
         "severity": "High",
         "description": "IAM Role trust relationship allows access from an external AWS account ID.",
         "recommendation": "Verify that this external account trust is authorized and uses an External ID.",
@@ -330,6 +345,7 @@ RULES = [
     {
         "id": "IAM-016",
         "name": "IAM User Inline Policy Attached",
+        "finding_type": "overly_permissive_iam_policy",
         "severity": "Medium",
         "description": "IAM user has inline policies attached directly to their profile.",
         "recommendation": "Convert inline policies to IAM managed policies for better auditing and reuse.",
@@ -338,6 +354,7 @@ RULES = [
     {
         "id": "IAM-017",
         "name": "Multiple Active Access Keys",
+        "finding_type": "weak_password_policy",
         "severity": "Warning",
         "description": "IAM User has two active access keys.",
         "recommendation": "Limit users to one active key to reduce credential exposure.",

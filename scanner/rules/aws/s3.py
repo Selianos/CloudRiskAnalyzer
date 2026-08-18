@@ -2,6 +2,7 @@ RULES = [
     {
         "id": "S3-001",
         "name": "Public Bucket",
+        "finding_type": "storage_bucket_public_read",
         "severity": "High",
         "description": "S3 bucket allows public access.",
         "recommendation": "Disable public access and review the bucket policy.",
@@ -10,6 +11,7 @@ RULES = [
     {
         "id": "S3-002",
         "name": "Encryption Disabled",
+        "finding_type": "storage_unencrypted_at_rest",
         "severity": "Medium",
         "description": "S3 bucket encryption is disabled.",
         "recommendation": "Enable server-side encryption.",
