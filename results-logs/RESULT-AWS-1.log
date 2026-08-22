@@ -1,0 +1,347 @@
+--- Step 1: Discovering Resources ---
+[AWS] Starting resource discovery...
+[AWS] Discovered 5 resources.
+
+[Scanner] Discovered 5 resources:
+ - Type: EC2 | ID: i-09e8287ac3e0e549f | Name: learning
+ - Type: Security Groups | ID: sg-02bbe829a9e042bd9 | Name: launch-wizard-1
+ - Type: Security Groups | ID: sg-0762fb11542e9472c | Name: default
+ - Type: Security Groups | ID: sg-0172447dfe1c9ad4c | Name: launch-wizard-2
+ - Type: IAM | ID: AIDAVNQVX32OYBIWEOABR | Name: scanner-dev
+
+--- Step 2 & 3: Scanning Resources ---
+
+[1/5] Scanning resource: [EC2] learning (i-09e8287ac3e0e549f)...
+[AWS] Collecting configuration for EC2 (i-09e8287ac3e0e549f)...
+Configuration collected:
+{ 'public_ssh': False,
+  'raw_data': { 'AmiLaunchIndex': 0,
+                'Architecture': 'x86_64',
+                'BlockDeviceMappings': [ { 'DeviceName': '/dev/xvda',
+                                           'Ebs': { 'AttachTime': datetime.datetime(2026, 5, 2, 20, 29, 38, tzinfo=tzutc()),
+                                                    'DeleteOnTermination': True,
+                                                    'EbsCardIndex': 0,
+                                                    'Status': 'attached',
+                                                    'VolumeId': 'vol-0850b2f5ce36a8aac'}}],
+                'BootMode': 'uefi-preferred',
+                'CapacityReservationSpecification': { 'CapacityReservationPreference': 'open'},
+                'ClientToken': '9c1f0287-dc33-4eaf-b1ad-83f7cbba2477',
+                'CpuOptions': {'CoreCount': 1, 'ThreadsPerCore': 2},
+                'CurrentInstanceBootMode': 'uefi',
+                'EbsOptimized': True,
+                'EnaSupport': True,
+                'EnclaveOptions': {'Enabled': False},
+                'HibernationOptions': {'Configured': False},
+                'Hypervisor': 'xen',
+                'ImageId': 'ami-09e320d375d7b8d3e',
+                'InstanceId': 'i-09e8287ac3e0e549f',
+                'InstanceType': 't3.micro',
+                'KeyName': 'aws_learning',
+                'LaunchTime': '2026-05-02T20:29:37+00:00',
+                'MaintenanceOptions': { 'AutoRecovery': 'default',
+                                        'RebootMigration': 'default'},
+                'MetadataOptions': { 'HttpEndpoint': 'enabled',
+                                     'HttpProtocolIpv6': 'disabled',
+                                     'HttpPutResponseHopLimit': 2,
+                                     'HttpTokens': 'required',
+                                     'InstanceMetadataTags': 'disabled',
+                                     'State': 'applied'},
+                'Monitoring': {'State': 'disabled'},
+                'NetworkInterfaces': [ { 'Association': { 'IpOwnerId': 'amazon',
+                                                          'PublicDnsName': 'ec2-13-60-78-168.eu-north-1.compute.amazonaws.com',
+                                                          'PublicIp': '13.60.78.168'},
+                                         'Attachment': { 'AttachTime': datetime.datetime(2026, 5, 2, 20, 29, 37, tzinfo=tzutc()),
+                                                         'AttachmentId': 'eni-attach-00caea7a6593b5fdb',
+                                                         'DeleteOnTermination': True,
+                                                         'DeviceIndex': 0,
+                                                         'NetworkCardIndex': 0,
+                                                         'Status': 'attached'},
+                                         'Description': '',
+                                         'Groups': [ { 'GroupId': 'sg-02bbe829a9e042bd9',
+                                                       'GroupName': 'launch-wizard-1'}],
+                                         'InterfaceType': 'interface',
+                                         'Ipv6Addresses': [],
+                                         'MacAddress': '0a:60:d1:ec:9b:2d',
+                                         'NetworkInterfaceId': 'eni-048bc1b625df6a96b',
+                                         'Operator': {'Managed': False},
+                                         'OwnerId': '372634017437',
+                                         'PrivateDnsName': 'ip-172-31-35-46.eu-north-1.compute.internal',
+                                         'PrivateIpAddress': '172.31.35.46',
+                                         'PrivateIpAddresses': [ { 'Association': { 'IpOwnerId': 'amazon',
+                                                                                    'PublicDnsName': 'ec2-13-60-78-168.eu-north-1.compute.amazonaws.com',
+                                                                                    'PublicIp': '13.60.78.168'},
+                                                                   'Primary': True,
+                                                                   'PrivateDnsName': 'ip-172-31-35-46.eu-north-1.compute.internal',
+                                                                   'PrivateIpAddress': '172.31.35.46'}],
+                                         'SourceDestCheck': True,
+                                         'Status': 'in-use',
+                                         'SubnetId': 'subnet-0758e96932ab52614',
+                                         'VpcId': 'vpc-07ea8c56e8c89a590'}],
+                'NetworkPerformanceOptions': {'BandwidthWeighting': 'default'},
+                'Operator': {'HiddenByDefault': False, 'Managed': False},
+                'Placement': { 'AvailabilityZone': 'eu-north-1b',
+                               'AvailabilityZoneId': 'eun1-az2',
+                               'GroupName': '',
+                               'Tenancy': 'default'},
+                'PlatformDetails': 'Linux/UNIX',
+                'PrivateDnsName': 'ip-172-31-35-46.eu-north-1.compute.internal',
+                'PrivateDnsNameOptions': { 'EnableResourceNameDnsAAAARecord': False,
+                                           'EnableResourceNameDnsARecord': True,
+                                           'HostnameType': 'ip-name'},
+                'PrivateIpAddress': '172.31.35.46',
+                'ProductCodes': [],
+                'PublicDnsName': 'ec2-13-60-78-168.eu-north-1.compute.amazonaws.com',
+                'PublicIpAddress': '13.60.78.168',
+                'RootDeviceName': '/dev/xvda',
+                'RootDeviceType': 'ebs',
+                'SecurityGroups': [ { 'GroupId': 'sg-02bbe829a9e042bd9',
+                                      'GroupName': 'launch-wizard-1'}],
+                'SourceDestCheck': True,
+                'State': {'Code': 16, 'Name': 'running'},
+                'StateTransitionReason': '',
+                'SubnetId': 'subnet-0758e96932ab52614',
+                'Tags': [ {'Key': 'Name', 'Value': 'learning'},
+                          {'Key': 'service', 'Value': 'example'}],
+                'UsageOperation': 'RunInstances',
+                'UsageOperationUpdateTime': datetime.datetime(2026, 5, 2, 20, 29, 37, tzinfo=tzutc()),
+                'VirtualizationType': 'hvm',
+                'VpcId': 'vpc-07ea8c56e8c89a590'},
+  'security_groups': [ { 'Description': 'launch-wizard-1 created '
+                                        '2026-05-02T20:22:42.192Z',
+                         'GroupId': 'sg-02bbe829a9e042bd9',
+                         'GroupName': 'launch-wizard-1',
+                         'IpPermissions': [ { 'FromPort': 80,
+                                              'IpProtocol': 'tcp',
+                                              'IpRanges': [ { 'CidrIp': '0.0.0.0/0'}],
+                                              'Ipv6Ranges': [],
+                                              'PrefixListIds': [],
+                                              'ToPort': 80,
+                                              'UserIdGroupPairs': []},
+                                            { 'FromPort': 22,
+                                              'IpProtocol': 'tcp',
+                                              'IpRanges': [ { 'CidrIp': '46.251.157.127/32'}],
+                                              'Ipv6Ranges': [],
+                                              'PrefixListIds': [],
+                                              'ToPort': 22,
+                                              'UserIdGroupPairs': []}],
+                         'IpPermissionsEgress': [ { 'IpProtocol': '-1',
+                                                    'IpRanges': [ { 'CidrIp': '0.0.0.0/0'}],
+                                                    'Ipv6Ranges': [],
+                                                    'PrefixListIds': [],
+                                                    'UserIdGroupPairs': []}],
+                         'OwnerId': '372634017437',
+                         'SecurityGroupArn': 'arn:aws:ec2:eu-north-1:372634017437:security-group/sg-02bbe829a9e042bd9',
+                         'VpcId': 'vpc-07ea8c56e8c89a590'}]}
+Rule Evaluations (Checks: 0):
+
+[2/5] Scanning resource: [Security Groups] launch-wizard-1 (sg-02bbe829a9e042bd9)...
+[AWS] Collecting configuration for Security Groups (sg-02bbe829a9e042bd9)...
+Configuration collected:
+{ 'attached_resources_count': 1,
+  'public_ssh': False,
+  'raw_data': { 'Description': 'launch-wizard-1 created '
+                               '2026-05-02T20:22:42.192Z',
+                'GroupId': 'sg-02bbe829a9e042bd9',
+                'GroupName': 'launch-wizard-1',
+                'IpPermissions': [ { 'FromPort': 80,
+                                     'IpProtocol': 'tcp',
+                                     'IpRanges': [{'CidrIp': '0.0.0.0/0'}],
+                                     'Ipv6Ranges': [],
+                                     'PrefixListIds': [],
+                                     'ToPort': 80,
+                                     'UserIdGroupPairs': []},
+                                   { 'FromPort': 22,
+                                     'IpProtocol': 'tcp',
+                                     'IpRanges': [ { 'CidrIp': '46.251.157.127/32'}],
+                                     'Ipv6Ranges': [],
+                                     'PrefixListIds': [],
+                                     'ToPort': 22,
+                                     'UserIdGroupPairs': []}],
+                'IpPermissionsEgress': [ { 'IpProtocol': '-1',
+                                           'IpRanges': [ { 'CidrIp': '0.0.0.0/0'}],
+                                           'Ipv6Ranges': [],
+                                           'PrefixListIds': [],
+                                           'UserIdGroupPairs': []}],
+                'OwnerId': '372634017437',
+                'SecurityGroupArn': 'arn:aws:ec2:eu-north-1:372634017437:security-group/sg-02bbe829a9e042bd9',
+                'VpcId': 'vpc-07ea8c56e8c89a590'}}
+Rule Evaluations (Checks: 13):
+  - [SAFE] Rule: Public SSH (IPv4) Access (SEC-001)
+    Description:    Security Group allows SSH (22) from 0.0.0.0/0.
+  - [SAFE] Rule: Public SSH (IPv6) Access (SEC-002)
+    Description:    Security Group allows SSH (22) from ::/0.
+  - [SAFE] Rule: Public RDP (IPv4) Access (SEC-003)
+    Description:    Security Group allows RDP (3389) from 0.0.0.0/0.
+  - [SAFE] Rule: Public RDP (IPv6) Access (SEC-004)
+    Description:    Security Group allows RDP (3389) from ::/0.
+  - [SAFE] Rule: Public Database Access (SEC-005)
+    Description:    Security Group allows database ports (3306, 5432, etc.) open to the internet.
+  - [SAFE] Rule: All TCP Ports Open to Internet (SEC-006)
+    Description:    Security Group allows all TCP ports (0-65535) open to the internet.
+  - [SAFE] Rule: All Protocols Open to Internet (SEC-007)
+    Description:    Security Group allows all protocols (any port/traffic) open to the internet.
+  - [INFO] Rule: Public HTTP Access (SEC-008)
+    Description:    Security Group allows inbound HTTP (80) traffic from the internet.
+    Recommendation: None. Verify this server is intended to serve public web traffic.
+  - [SAFE] Rule: Public HTTPS Access (SEC-009)
+    Description:    Security Group allows inbound HTTPS (443) traffic from the internet.
+  - [SAFE] Rule: Public Sensitive Ports Access (SEC-010)
+    Description:    Security Group allows sensitive management ports (e.g. FTP, Telnet, SMB) open to the internet.
+  - [SAFE] Rule: Too Many Inbound Rules (SEC-011)
+    Description:    Security Group has more than 20 inbound rules configured.
+  - [WARNING] Rule: All Outbound Traffic Allowed (SEC-012)
+    Description:    Security Group allows unrestricted outbound traffic to the internet.
+    Recommendation: Restricting outbound traffic to only required ports and destinations is a good defense-in-depth practice.
+  - [SAFE] Rule: Unattached Security Group (SEC-013)
+    Description:    Security Group is not associated with any active network interfaces.
+
+[3/5] Scanning resource: [Security Groups] default (sg-0762fb11542e9472c)...
+[AWS] Collecting configuration for Security Groups (sg-0762fb11542e9472c)...
+Configuration collected:
+{ 'attached_resources_count': 0,
+  'public_ssh': False,
+  'raw_data': { 'Description': 'default VPC security group',
+                'GroupId': 'sg-0762fb11542e9472c',
+                'GroupName': 'default',
+                'IpPermissions': [ { 'IpProtocol': '-1',
+                                     'IpRanges': [],
+                                     'Ipv6Ranges': [],
+                                     'PrefixListIds': [],
+                                     'UserIdGroupPairs': [ { 'GroupId': 'sg-0762fb11542e9472c',
+                                                             'UserId': '372634017437'}]}],
+                'IpPermissionsEgress': [ { 'IpProtocol': '-1',
+                                           'IpRanges': [ { 'CidrIp': '0.0.0.0/0'}],
+                                           'Ipv6Ranges': [],
+                                           'PrefixListIds': [],
+                                           'UserIdGroupPairs': []}],
+                'OwnerId': '372634017437',
+                'SecurityGroupArn': 'arn:aws:ec2:eu-north-1:372634017437:security-group/sg-0762fb11542e9472c',
+                'VpcId': 'vpc-07ea8c56e8c89a590'}}
+Rule Evaluations (Checks: 13):
+  - [SAFE] Rule: Public SSH (IPv4) Access (SEC-001)
+    Description:    Security Group allows SSH (22) from 0.0.0.0/0.
+  - [SAFE] Rule: Public SSH (IPv6) Access (SEC-002)
+    Description:    Security Group allows SSH (22) from ::/0.
+  - [SAFE] Rule: Public RDP (IPv4) Access (SEC-003)
+    Description:    Security Group allows RDP (3389) from 0.0.0.0/0.
+  - [SAFE] Rule: Public RDP (IPv6) Access (SEC-004)
+    Description:    Security Group allows RDP (3389) from ::/0.
+  - [SAFE] Rule: Public Database Access (SEC-005)
+    Description:    Security Group allows database ports (3306, 5432, etc.) open to the internet.
+  - [SAFE] Rule: All TCP Ports Open to Internet (SEC-006)
+    Description:    Security Group allows all TCP ports (0-65535) open to the internet.
+  - [SAFE] Rule: All Protocols Open to Internet (SEC-007)
+    Description:    Security Group allows all protocols (any port/traffic) open to the internet.
+  - [SAFE] Rule: Public HTTP Access (SEC-008)
+    Description:    Security Group allows inbound HTTP (80) traffic from the internet.
+  - [SAFE] Rule: Public HTTPS Access (SEC-009)
+    Description:    Security Group allows inbound HTTPS (443) traffic from the internet.
+  - [SAFE] Rule: Public Sensitive Ports Access (SEC-010)
+    Description:    Security Group allows sensitive management ports (e.g. FTP, Telnet, SMB) open to the internet.
+  - [SAFE] Rule: Too Many Inbound Rules (SEC-011)
+    Description:    Security Group has more than 20 inbound rules configured.
+  - [WARNING] Rule: All Outbound Traffic Allowed (SEC-012)
+    Description:    Security Group allows unrestricted outbound traffic to the internet.
+    Recommendation: Restricting outbound traffic to only required ports and destinations is a good defense-in-depth practice.
+  - [INFO] Rule: Unattached Security Group (SEC-013)
+    Description:    Security Group is not associated with any active network interfaces.
+    Recommendation: Consider deleting unused security groups to simplify management.
+
+[4/5] Scanning resource: [Security Groups] launch-wizard-2 (sg-0172447dfe1c9ad4c)...
+[AWS] Collecting configuration for Security Groups (sg-0172447dfe1c9ad4c)...
+Configuration collected:
+{ 'attached_resources_count': 0,
+  'public_ssh': True,
+  'raw_data': { 'Description': 'launch-wizard-2 created '
+                               '2026-05-12T17:12:12.010Z',
+                'GroupId': 'sg-0172447dfe1c9ad4c',
+                'GroupName': 'launch-wizard-2',
+                'IpPermissions': [ { 'FromPort': 80,
+                                     'IpProtocol': 'tcp',
+                                     'IpRanges': [{'CidrIp': '0.0.0.0/0'}],
+                                     'Ipv6Ranges': [],
+                                     'PrefixListIds': [],
+                                     'ToPort': 80,
+                                     'UserIdGroupPairs': []},
+                                   { 'FromPort': 22,
+                                     'IpProtocol': 'tcp',
+                                     'IpRanges': [{'CidrIp': '0.0.0.0/0'}],
+                                     'Ipv6Ranges': [],
+                                     'PrefixListIds': [],
+                                     'ToPort': 22,
+                                     'UserIdGroupPairs': []},
+                                   { 'FromPort': 443,
+                                     'IpProtocol': 'tcp',
+                                     'IpRanges': [{'CidrIp': '0.0.0.0/0'}],
+                                     'Ipv6Ranges': [],
+                                     'PrefixListIds': [],
+                                     'ToPort': 443,
+                                     'UserIdGroupPairs': []}],
+                'IpPermissionsEgress': [ { 'IpProtocol': '-1',
+                                           'IpRanges': [ { 'CidrIp': '0.0.0.0/0'}],
+                                           'Ipv6Ranges': [],
+                                           'PrefixListIds': [],
+                                           'UserIdGroupPairs': []}],
+                'OwnerId': '372634017437',
+                'SecurityGroupArn': 'arn:aws:ec2:eu-north-1:372634017437:security-group/sg-0172447dfe1c9ad4c',
+                'VpcId': 'vpc-07ea8c56e8c89a590'}}
+Rule Evaluations (Checks: 13):
+  - [CRITICAL] Rule: Public SSH (IPv4) Access (SEC-001)
+    Description:    Security Group allows SSH (22) from 0.0.0.0/0.
+    Recommendation: Restrict inbound SSH access to trusted IP addresses.
+  - [SAFE] Rule: Public SSH (IPv6) Access (SEC-002)
+    Description:    Security Group allows SSH (22) from ::/0.
+  - [SAFE] Rule: Public RDP (IPv4) Access (SEC-003)
+    Description:    Security Group allows RDP (3389) from 0.0.0.0/0.
+  - [SAFE] Rule: Public RDP (IPv6) Access (SEC-004)
+    Description:    Security Group allows RDP (3389) from ::/0.
+  - [SAFE] Rule: Public Database Access (SEC-005)
+    Description:    Security Group allows database ports (3306, 5432, etc.) open to the internet.
+  - [SAFE] Rule: All TCP Ports Open to Internet (SEC-006)
+    Description:    Security Group allows all TCP ports (0-65535) open to the internet.
+  - [SAFE] Rule: All Protocols Open to Internet (SEC-007)
+    Description:    Security Group allows all protocols (any port/traffic) open to the internet.
+  - [INFO] Rule: Public HTTP Access (SEC-008)
+    Description:    Security Group allows inbound HTTP (80) traffic from the internet.
+    Recommendation: None. Verify this server is intended to serve public web traffic.
+  - [INFO] Rule: Public HTTPS Access (SEC-009)
+    Description:    Security Group allows inbound HTTPS (443) traffic from the internet.
+    Recommendation: None. Verify this server is intended to serve public web traffic.
+  - [SAFE] Rule: Public Sensitive Ports Access (SEC-010)
+    Description:    Security Group allows sensitive management ports (e.g. FTP, Telnet, SMB) open to the internet.
+  - [SAFE] Rule: Too Many Inbound Rules (SEC-011)
+    Description:    Security Group has more than 20 inbound rules configured.
+  - [WARNING] Rule: All Outbound Traffic Allowed (SEC-012)
+    Description:    Security Group allows unrestricted outbound traffic to the internet.
+    Recommendation: Restricting outbound traffic to only required ports and destinations is a good defense-in-depth practice.
+  - [INFO] Rule: Unattached Security Group (SEC-013)
+    Description:    Security Group is not associated with any active network interfaces.
+    Recommendation: Consider deleting unused security groups to simplify management.
+
+[5/5] Scanning resource: [IAM] scanner-dev (AIDAVNQVX32OYBIWEOABR)...
+[AWS] Collecting configuration for IAM (AIDAVNQVX32OYBIWEOABR)...
+Configuration collected:
+{ 'attached_policies': [ { 'PolicyArn': 'arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess',
+                           'PolicyName': 'AmazonEC2ReadOnlyAccess'},
+                         { 'PolicyArn': 'arn:aws:iam::aws:policy/IAMReadOnlyAccess',
+                           'PolicyName': 'IAMReadOnlyAccess'},
+                         { 'PolicyArn': 'arn:aws:iam::aws:policy/AmazonVPCReadOnlyAccess',
+                           'PolicyName': 'AmazonVPCReadOnlyAccess'},
+                         { 'PolicyArn': 'arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess',
+                           'PolicyName': 'AmazonS3ReadOnlyAccess'}],
+  'groups': [],
+  'inline_policies': [],
+  'mfa_devices': [],
+  'raw_data': { 'Arn': 'arn:aws:iam::372634017437:user/scanner-dev',
+                'CreateDate': '2026-07-06T17:13:58+00:00',
+                'Path': '/',
+                'UserId': 'AIDAVNQVX32OYBIWEOABR',
+                'UserName': 'scanner-dev'}}
+Rule Evaluations (Checks: 3):
+  - [SAFE] Rule: Console Access without MFA (IAM-001)
+    Description:    IAM user has console access but MFA is disabled.
+  - [SAFE] Rule: Direct Administrator Access (IAM-002)
+    Description:    IAM user has AdministratorAccess policy directly attached.
+  - [SAFE] Rule: User Direct Inline Policies (IAM-003)
+    Description:    IAM user has inline policies attached directly to their profile.
+[AWS] Disconnected.

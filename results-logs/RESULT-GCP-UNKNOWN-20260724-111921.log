@@ -1,0 +1,61 @@
+--- Step 1: Discovering Resources ---
+
+[Scanner] Discovered 2 resources:
+ - Type: Cloud Storage | ID: very_important_data | Name: very_important_data
+ - Type: IAM | ID: projects/cloudriskanalyzer-lab/iamPolicy | Name: cloudriskanalyzer-lab - Project IAM Policy
+
+--- Step 2 & 3: Scanning Resources ---
+
+[1/2] Scanning resource: [Cloud Storage] very_important_data (very_important_data)...
+Configuration collected:
+{ 'error': '403 GET '
+           'https://storage.googleapis.com/storage/v1/b/very_important_data/iam?optionsRequestedPolicyVersion=3&prettyPrint=false: '
+           'Provided scope(s) are not authorized',
+  'name': 'very_important_data',
+  'type': 'Cloud Storage'}
+Rule Evaluations (Checks: 5):
+  - [SAFE] Rule: Public Bucket (GCP-STORAGE-001)
+    Description:    The bucket's IAM policy grants access to 'allUsers' or 'allAuthenticatedUsers'.
+  - [HIGH] Rule: Public Access Prevention Disabled (GCP-STORAGE-002)
+    Description:    Public Access Prevention is not set to 'enforced' on the bucket.
+    Recommendation: Set the bucket's public access prevention setting to 'enforced'.
+  - [MEDIUM] Rule: Uniform Bucket-Level Access Disabled (GCP-STORAGE-003)
+    Description:    Uniform bucket-level access is disabled, allowing legacy per-object ACLs to grant access.
+    Recommendation: Enable uniform bucket-level access to enforce IAM-only access control on the bucket.
+  - [LOW] Rule: Versioning Disabled (GCP-STORAGE-004)
+    Description:    Object versioning is disabled, so overwritten or deleted objects cannot be recovered.
+    Recommendation: Enable object versioning to protect against accidental or malicious data loss.
+  - [LOW] Rule: Bucket Logging Disabled (GCP-STORAGE-005)
+    Description:    Access logging is disabled, limiting visibility into who accessed the bucket's contents.
+    Recommendation: Enable bucket logging and route logs to a dedicated, access-restricted logging bucket.
+
+[2/2] Scanning resource: [IAM] cloudriskanalyzer-lab - Project IAM Policy (projects/cloudriskanalyzer-lab/iamPolicy)...
+Configuration collected:
+{ 'binding_count': 7,
+  'bindings': [ { 'members': [ 'serviceAccount:cloudrisk-scanner@cloudriskanalyzer-lab.iam.gserviceaccount.com'],
+                  'role': 'roles/browser'},
+                { 'members': [ 'serviceAccount:22383850619@cloudservices.gserviceaccount.com'],
+                  'role': 'roles/compute.instanceGroupManagerServiceAgent'},
+                { 'members': [ 'serviceAccount:service-22383850619@compute-system.iam.gserviceaccount.com'],
+                  'role': 'roles/compute.serviceAgent'},
+                { 'members': [ 'serviceAccount:22383850619-compute@developer.gserviceaccount.com'],
+                  'role': 'roles/editor'},
+                { 'members': [ 'serviceAccount:cloudrisk-scanner@cloudriskanalyzer-lab.iam.gserviceaccount.com'],
+                  'role': 'roles/iam.securityAuditor'},
+                { 'members': [ 'serviceAccount:cloudrisk-scanner@cloudriskanalyzer-lab.iam.gserviceaccount.com',
+                               'user:amreabod@gmail.com'],
+                  'role': 'roles/owner'},
+                { 'members': [ 'serviceAccount:cloudrisk-scanner@cloudriskanalyzer-lab.iam.gserviceaccount.com'],
+                  'role': 'roles/viewer'}],
+  'has_primitive_role_binding': True,
+  'has_public_binding': False,
+  'id': 'projects/cloudriskanalyzer-lab/iamPolicy',
+  'name': 'cloudriskanalyzer-lab - Project IAM Policy',
+  'subtype': 'project_iam_policy',
+  'type': 'IAM'}
+Rule Evaluations (Checks: 2):
+  - [MEDIUM] Rule: Primitive IAM Roles Assigned (GCP-IAM-001)
+    Description:    Owner, Editor or Viewer roles were detected on the project IAM policy.
+    Recommendation: Replace primitive roles with least-privilege predefined or custom roles.
+  - [SAFE] Rule: Public IAM Bindings (GCP-IAM-002)
+    Description:    One or more IAM bindings grant access to 'allUsers' or 'allAuthenticatedUsers', exposing the project publicly.

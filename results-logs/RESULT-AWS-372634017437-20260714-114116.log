@@ -1,0 +1,872 @@
+--- Step 1: Discovering Resources ---
+[AWS] Starting resource discovery...
+[AWS] Discovered 9 resources.
+
+[Scanner] Discovered 9 resources:
+ - Type: EC2 | ID: i-09e8287ac3e0e549f | Name: learning
+ - Type: Security Groups | ID: sg-02bbe829a9e042bd9 | Name: launch-wizard-1
+ - Type: Security Groups | ID: sg-0762fb11542e9472c | Name: default
+ - Type: Security Groups | ID: sg-0172447dfe1c9ad4c | Name: launch-wizard-2
+ - Type: IAM | ID: AIDAVNQVX32OYBIWEOABR | Name: scanner-dev
+ - Type: IAM | ID: <root_account> | Name: <root_account>
+ - Type: IAM Role | ID: AROAVNQVX32O54GL32GV6 | Name: ecsInfrastructureRoleForExpressServices
+ - Type: IAM Role | ID: AROAVNQVX32ORAZUXRTKM | Name: ecsTaskExecutionRole
+ - Type: IAM Role | ID: AROAVNQVX32OUUS4DU54F | Name: rds-monitoring-role
+
+--- Step 2 & 3: Scanning Resources ---
+
+[1/9] Scanning resource: [EC2] learning (i-09e8287ac3e0e549f)...
+[AWS] Collecting configuration for EC2 (i-09e8287ac3e0e549f)...
+Configuration collected:
+{ 'public_ssh': False,
+  'raw_data': { 'AmiLaunchIndex': 0,
+                'Architecture': 'x86_64',
+                'BlockDeviceMappings': [ { 'DeviceName': '/dev/xvda',
+                                           'Ebs': { 'AttachTime': datetime.datetime(2026, 5, 2, 20, 29, 38, tzinfo=tzutc()),
+                                                    'DeleteOnTermination': True,
+                                                    'EbsCardIndex': 0,
+                                                    'Status': 'attached',
+                                                    'VolumeId': 'vol-0850b2f5ce36a8aac'}}],
+                'BootMode': 'uefi-preferred',
+                'CapacityReservationSpecification': { 'CapacityReservationPreference': 'open'},
+                'ClientToken': '9c1f0287-dc33-4eaf-b1ad-83f7cbba2477',
+                'CpuOptions': {'CoreCount': 1, 'ThreadsPerCore': 2},
+                'CurrentInstanceBootMode': 'uefi',
+                'EbsOptimized': True,
+                'EnaSupport': True,
+                'EnclaveOptions': {'Enabled': False},
+                'HibernationOptions': {'Configured': False},
+                'Hypervisor': 'xen',
+                'ImageId': 'ami-09e320d375d7b8d3e',
+                'InstanceId': 'i-09e8287ac3e0e549f',
+                'InstanceType': 't3.micro',
+                'KeyName': 'aws_learning',
+                'LaunchTime': '2026-05-02T20:29:37+00:00',
+                'MaintenanceOptions': { 'AutoRecovery': 'default',
+                                        'RebootMigration': 'default'},
+                'MetadataOptions': { 'HttpEndpoint': 'enabled',
+                                     'HttpProtocolIpv6': 'disabled',
+                                     'HttpPutResponseHopLimit': 2,
+                                     'HttpTokens': 'required',
+                                     'InstanceMetadataTags': 'disabled',
+                                     'State': 'applied'},
+                'Monitoring': {'State': 'disabled'},
+                'NetworkInterfaces': [ { 'Association': { 'IpOwnerId': 'amazon',
+                                                          'PublicDnsName': 'ec2-13-60-78-168.eu-north-1.compute.amazonaws.com',
+                                                          'PublicIp': '13.60.78.168'},
+                                         'Attachment': { 'AttachTime': datetime.datetime(2026, 5, 2, 20, 29, 37, tzinfo=tzutc()),
+                                                         'AttachmentId': 'eni-attach-00caea7a6593b5fdb',
+                                                         'DeleteOnTermination': True,
+                                                         'DeviceIndex': 0,
+                                                         'NetworkCardIndex': 0,
+                                                         'Status': 'attached'},
+                                         'Description': '',
+                                         'Groups': [ { 'GroupId': 'sg-02bbe829a9e042bd9',
+                                                       'GroupName': 'launch-wizard-1'}],
+                                         'InterfaceType': 'interface',
+                                         'Ipv6Addresses': [],
+                                         'MacAddress': '0a:60:d1:ec:9b:2d',
+                                         'NetworkInterfaceId': 'eni-048bc1b625df6a96b',
+                                         'Operator': {'Managed': False},
+                                         'OwnerId': '372634017437',
+                                         'PrivateDnsName': 'ip-172-31-35-46.eu-north-1.compute.internal',
+                                         'PrivateIpAddress': '172.31.35.46',
+                                         'PrivateIpAddresses': [ { 'Association': { 'IpOwnerId': 'amazon',
+                                                                                    'PublicDnsName': 'ec2-13-60-78-168.eu-north-1.compute.amazonaws.com',
+                                                                                    'PublicIp': '13.60.78.168'},
+                                                                   'Primary': True,
+                                                                   'PrivateDnsName': 'ip-172-31-35-46.eu-north-1.compute.internal',
+                                                                   'PrivateIpAddress': '172.31.35.46'}],
+                                         'SourceDestCheck': True,
+                                         'Status': 'in-use',
+                                         'SubnetId': 'subnet-0758e96932ab52614',
+                                         'VpcId': 'vpc-07ea8c56e8c89a590'}],
+                'NetworkPerformanceOptions': {'BandwidthWeighting': 'default'},
+                'Operator': {'HiddenByDefault': False, 'Managed': False},
+                'Placement': { 'AvailabilityZone': 'eu-north-1b',
+                               'AvailabilityZoneId': 'eun1-az2',
+                               'GroupName': '',
+                               'Tenancy': 'default'},
+                'PlatformDetails': 'Linux/UNIX',
+                'PrivateDnsName': 'ip-172-31-35-46.eu-north-1.compute.internal',
+                'PrivateDnsNameOptions': { 'EnableResourceNameDnsAAAARecord': False,
+                                           'EnableResourceNameDnsARecord': True,
+                                           'HostnameType': 'ip-name'},
+                'PrivateIpAddress': '172.31.35.46',
+                'ProductCodes': [],
+                'PublicDnsName': 'ec2-13-60-78-168.eu-north-1.compute.amazonaws.com',
+                'PublicIpAddress': '13.60.78.168',
+                'RootDeviceName': '/dev/xvda',
+                'RootDeviceType': 'ebs',
+                'SecurityGroups': [ { 'GroupId': 'sg-02bbe829a9e042bd9',
+                                      'GroupName': 'launch-wizard-1'}],
+                'SourceDestCheck': True,
+                'State': {'Code': 16, 'Name': 'running'},
+                'StateTransitionReason': '',
+                'SubnetId': 'subnet-0758e96932ab52614',
+                'Tags': [ {'Key': 'Name', 'Value': 'learning'},
+                          {'Key': 'service', 'Value': 'example'}],
+                'UsageOperation': 'RunInstances',
+                'UsageOperationUpdateTime': datetime.datetime(2026, 5, 2, 20, 29, 37, tzinfo=tzutc()),
+                'VirtualizationType': 'hvm',
+                'VpcId': 'vpc-07ea8c56e8c89a590'},
+  'security_groups': [ { 'Description': 'launch-wizard-1 created '
+                                        '2026-05-02T20:22:42.192Z',
+                         'GroupId': 'sg-02bbe829a9e042bd9',
+                         'GroupName': 'launch-wizard-1',
+                         'IpPermissions': [ { 'FromPort': 80,
+                                              'IpProtocol': 'tcp',
+                                              'IpRanges': [ { 'CidrIp': '0.0.0.0/0'}],
+                                              'Ipv6Ranges': [],
+                                              'PrefixListIds': [],
+                                              'ToPort': 80,
+                                              'UserIdGroupPairs': []},
+                                            { 'FromPort': 22,
+                                              'IpProtocol': 'tcp',
+                                              'IpRanges': [ { 'CidrIp': '46.251.157.127/32'}],
+                                              'Ipv6Ranges': [],
+                                              'PrefixListIds': [],
+                                              'ToPort': 22,
+                                              'UserIdGroupPairs': []}],
+                         'IpPermissionsEgress': [ { 'IpProtocol': '-1',
+                                                    'IpRanges': [ { 'CidrIp': '0.0.0.0/0'}],
+                                                    'Ipv6Ranges': [],
+                                                    'PrefixListIds': [],
+                                                    'UserIdGroupPairs': []}],
+                         'OwnerId': '372634017437',
+                         'SecurityGroupArn': 'arn:aws:ec2:eu-north-1:372634017437:security-group/sg-02bbe829a9e042bd9',
+                         'VpcId': 'vpc-07ea8c56e8c89a590'}]}
+Rule Evaluations (Checks: 0):
+
+[2/9] Scanning resource: [Security Groups] launch-wizard-1 (sg-02bbe829a9e042bd9)...
+[AWS] Collecting configuration for Security Groups (sg-02bbe829a9e042bd9)...
+Configuration collected:
+{ 'attached_resources_count': 1,
+  'public_ssh': False,
+  'raw_data': { 'Description': 'launch-wizard-1 created '
+                               '2026-05-02T20:22:42.192Z',
+                'GroupId': 'sg-02bbe829a9e042bd9',
+                'GroupName': 'launch-wizard-1',
+                'IpPermissions': [ { 'FromPort': 80,
+                                     'IpProtocol': 'tcp',
+                                     'IpRanges': [{'CidrIp': '0.0.0.0/0'}],
+                                     'Ipv6Ranges': [],
+                                     'PrefixListIds': [],
+                                     'ToPort': 80,
+                                     'UserIdGroupPairs': []},
+                                   { 'FromPort': 22,
+                                     'IpProtocol': 'tcp',
+                                     'IpRanges': [ { 'CidrIp': '46.251.157.127/32'}],
+                                     'Ipv6Ranges': [],
+                                     'PrefixListIds': [],
+                                     'ToPort': 22,
+                                     'UserIdGroupPairs': []}],
+                'IpPermissionsEgress': [ { 'IpProtocol': '-1',
+                                           'IpRanges': [ { 'CidrIp': '0.0.0.0/0'}],
+                                           'Ipv6Ranges': [],
+                                           'PrefixListIds': [],
+                                           'UserIdGroupPairs': []}],
+                'OwnerId': '372634017437',
+                'SecurityGroupArn': 'arn:aws:ec2:eu-north-1:372634017437:security-group/sg-02bbe829a9e042bd9',
+                'VpcId': 'vpc-07ea8c56e8c89a590'}}
+Rule Evaluations (Checks: 13):
+  - [SAFE] Rule: Public SSH (IPv4) Access (SEC-001)
+    Description:    Security Group allows SSH (22) from 0.0.0.0/0.
+  - [SAFE] Rule: Public SSH (IPv6) Access (SEC-002)
+    Description:    Security Group allows SSH (22) from ::/0.
+  - [SAFE] Rule: Public RDP (IPv4) Access (SEC-003)
+    Description:    Security Group allows RDP (3389) from 0.0.0.0/0.
+  - [SAFE] Rule: Public RDP (IPv6) Access (SEC-004)
+    Description:    Security Group allows RDP (3389) from ::/0.
+  - [SAFE] Rule: Public Database Access (SEC-005)
+    Description:    Security Group allows database ports (3306, 5432, etc.) open to the internet.
+  - [SAFE] Rule: All TCP Ports Open to Internet (SEC-006)
+    Description:    Security Group allows all TCP ports (0-65535) open to the internet.
+  - [SAFE] Rule: All Protocols Open to Internet (SEC-007)
+    Description:    Security Group allows all protocols (any port/traffic) open to the internet.
+  - [INFO] Rule: Public HTTP Access (SEC-008)
+    Description:    Security Group allows inbound HTTP (80) traffic from the internet.
+    Recommendation: None. Verify this server is intended to serve public web traffic.
+  - [SAFE] Rule: Public HTTPS Access (SEC-009)
+    Description:    Security Group allows inbound HTTPS (443) traffic from the internet.
+  - [SAFE] Rule: Public Sensitive Ports Access (SEC-010)
+    Description:    Security Group allows sensitive management ports (e.g. FTP, Telnet, SMB) open to the internet.
+  - [SAFE] Rule: Too Many Inbound Rules (SEC-011)
+    Description:    Security Group has more than 20 inbound rules configured.
+  - [WARNING] Rule: All Outbound Traffic Allowed (SEC-012)
+    Description:    Security Group allows unrestricted outbound traffic to the internet.
+    Recommendation: Restricting outbound traffic to only required ports and destinations is a good defense-in-depth practice.
+  - [SAFE] Rule: Unattached Security Group (SEC-013)
+    Description:    Security Group is not associated with any active network interfaces.
+
+[3/9] Scanning resource: [Security Groups] default (sg-0762fb11542e9472c)...
+[AWS] Collecting configuration for Security Groups (sg-0762fb11542e9472c)...
+Configuration collected:
+{ 'attached_resources_count': 0,
+  'public_ssh': False,
+  'raw_data': { 'Description': 'default VPC security group',
+                'GroupId': 'sg-0762fb11542e9472c',
+                'GroupName': 'default',
+                'IpPermissions': [ { 'IpProtocol': '-1',
+                                     'IpRanges': [],
+                                     'Ipv6Ranges': [],
+                                     'PrefixListIds': [],
+                                     'UserIdGroupPairs': [ { 'GroupId': 'sg-0762fb11542e9472c',
+                                                             'UserId': '372634017437'}]}],
+                'IpPermissionsEgress': [ { 'IpProtocol': '-1',
+                                           'IpRanges': [ { 'CidrIp': '0.0.0.0/0'}],
+                                           'Ipv6Ranges': [],
+                                           'PrefixListIds': [],
+                                           'UserIdGroupPairs': []}],
+                'OwnerId': '372634017437',
+                'SecurityGroupArn': 'arn:aws:ec2:eu-north-1:372634017437:security-group/sg-0762fb11542e9472c',
+                'VpcId': 'vpc-07ea8c56e8c89a590'}}
+Rule Evaluations (Checks: 13):
+  - [SAFE] Rule: Public SSH (IPv4) Access (SEC-001)
+    Description:    Security Group allows SSH (22) from 0.0.0.0/0.
+  - [SAFE] Rule: Public SSH (IPv6) Access (SEC-002)
+    Description:    Security Group allows SSH (22) from ::/0.
+  - [SAFE] Rule: Public RDP (IPv4) Access (SEC-003)
+    Description:    Security Group allows RDP (3389) from 0.0.0.0/0.
+  - [SAFE] Rule: Public RDP (IPv6) Access (SEC-004)
+    Description:    Security Group allows RDP (3389) from ::/0.
+  - [SAFE] Rule: Public Database Access (SEC-005)
+    Description:    Security Group allows database ports (3306, 5432, etc.) open to the internet.
+  - [SAFE] Rule: All TCP Ports Open to Internet (SEC-006)
+    Description:    Security Group allows all TCP ports (0-65535) open to the internet.
+  - [SAFE] Rule: All Protocols Open to Internet (SEC-007)
+    Description:    Security Group allows all protocols (any port/traffic) open to the internet.
+  - [SAFE] Rule: Public HTTP Access (SEC-008)
+    Description:    Security Group allows inbound HTTP (80) traffic from the internet.
+  - [SAFE] Rule: Public HTTPS Access (SEC-009)
+    Description:    Security Group allows inbound HTTPS (443) traffic from the internet.
+  - [SAFE] Rule: Public Sensitive Ports Access (SEC-010)
+    Description:    Security Group allows sensitive management ports (e.g. FTP, Telnet, SMB) open to the internet.
+  - [SAFE] Rule: Too Many Inbound Rules (SEC-011)
+    Description:    Security Group has more than 20 inbound rules configured.
+  - [WARNING] Rule: All Outbound Traffic Allowed (SEC-012)
+    Description:    Security Group allows unrestricted outbound traffic to the internet.
+    Recommendation: Restricting outbound traffic to only required ports and destinations is a good defense-in-depth practice.
+  - [INFO] Rule: Unattached Security Group (SEC-013)
+    Description:    Security Group is not associated with any active network interfaces.
+    Recommendation: Consider deleting unused security groups to simplify management.
+
+[4/9] Scanning resource: [Security Groups] launch-wizard-2 (sg-0172447dfe1c9ad4c)...
+[AWS] Collecting configuration for Security Groups (sg-0172447dfe1c9ad4c)...
+Configuration collected:
+{ 'attached_resources_count': 0,
+  'public_ssh': True,
+  'raw_data': { 'Description': 'launch-wizard-2 created '
+                               '2026-05-12T17:12:12.010Z',
+                'GroupId': 'sg-0172447dfe1c9ad4c',
+                'GroupName': 'launch-wizard-2',
+                'IpPermissions': [ { 'FromPort': 80,
+                                     'IpProtocol': 'tcp',
+                                     'IpRanges': [{'CidrIp': '0.0.0.0/0'}],
+                                     'Ipv6Ranges': [],
+                                     'PrefixListIds': [],
+                                     'ToPort': 80,
+                                     'UserIdGroupPairs': []},
+                                   { 'FromPort': 22,
+                                     'IpProtocol': 'tcp',
+                                     'IpRanges': [{'CidrIp': '0.0.0.0/0'}],
+                                     'Ipv6Ranges': [],
+                                     'PrefixListIds': [],
+                                     'ToPort': 22,
+                                     'UserIdGroupPairs': []},
+                                   { 'FromPort': 443,
+                                     'IpProtocol': 'tcp',
+                                     'IpRanges': [{'CidrIp': '0.0.0.0/0'}],
+                                     'Ipv6Ranges': [],
+                                     'PrefixListIds': [],
+                                     'ToPort': 443,
+                                     'UserIdGroupPairs': []}],
+                'IpPermissionsEgress': [ { 'IpProtocol': '-1',
+                                           'IpRanges': [ { 'CidrIp': '0.0.0.0/0'}],
+                                           'Ipv6Ranges': [],
+                                           'PrefixListIds': [],
+                                           'UserIdGroupPairs': []}],
+                'OwnerId': '372634017437',
+                'SecurityGroupArn': 'arn:aws:ec2:eu-north-1:372634017437:security-group/sg-0172447dfe1c9ad4c',
+                'VpcId': 'vpc-07ea8c56e8c89a590'}}
+Rule Evaluations (Checks: 13):
+  - [CRITICAL] Rule: Public SSH (IPv4) Access (SEC-001)
+    Description:    Security Group allows SSH (22) from 0.0.0.0/0.
+    Recommendation: Restrict inbound SSH access to trusted IP addresses.
+  - [SAFE] Rule: Public SSH (IPv6) Access (SEC-002)
+    Description:    Security Group allows SSH (22) from ::/0.
+  - [SAFE] Rule: Public RDP (IPv4) Access (SEC-003)
+    Description:    Security Group allows RDP (3389) from 0.0.0.0/0.
+  - [SAFE] Rule: Public RDP (IPv6) Access (SEC-004)
+    Description:    Security Group allows RDP (3389) from ::/0.
+  - [SAFE] Rule: Public Database Access (SEC-005)
+    Description:    Security Group allows database ports (3306, 5432, etc.) open to the internet.
+  - [SAFE] Rule: All TCP Ports Open to Internet (SEC-006)
+    Description:    Security Group allows all TCP ports (0-65535) open to the internet.
+  - [SAFE] Rule: All Protocols Open to Internet (SEC-007)
+    Description:    Security Group allows all protocols (any port/traffic) open to the internet.
+  - [INFO] Rule: Public HTTP Access (SEC-008)
+    Description:    Security Group allows inbound HTTP (80) traffic from the internet.
+    Recommendation: None. Verify this server is intended to serve public web traffic.
+  - [INFO] Rule: Public HTTPS Access (SEC-009)
+    Description:    Security Group allows inbound HTTPS (443) traffic from the internet.
+    Recommendation: None. Verify this server is intended to serve public web traffic.
+  - [SAFE] Rule: Public Sensitive Ports Access (SEC-010)
+    Description:    Security Group allows sensitive management ports (e.g. FTP, Telnet, SMB) open to the internet.
+  - [SAFE] Rule: Too Many Inbound Rules (SEC-011)
+    Description:    Security Group has more than 20 inbound rules configured.
+  - [WARNING] Rule: All Outbound Traffic Allowed (SEC-012)
+    Description:    Security Group allows unrestricted outbound traffic to the internet.
+    Recommendation: Restricting outbound traffic to only required ports and destinations is a good defense-in-depth practice.
+  - [INFO] Rule: Unattached Security Group (SEC-013)
+    Description:    Security Group is not associated with any active network interfaces.
+    Recommendation: Consider deleting unused security groups to simplify management.
+
+[5/9] Scanning resource: [IAM] scanner-dev (AIDAVNQVX32OYBIWEOABR)...
+[AWS] Collecting configuration for IAM (AIDAVNQVX32OYBIWEOABR)...
+Configuration collected:
+{ 'attached_policies': [ { 'PolicyArn': 'arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess',
+                           'PolicyDocument': { 'Statement': [ { 'Action': [ 'ec2:Describe*',
+                                                                            'ec2:GetSecurityGroupsForVpc'],
+                                                                'Effect': 'Allow',
+                                                                'Resource': '*'},
+                                                              { 'Action': 'elasticloadbalancing:Describe*',
+                                                                'Effect': 'Allow',
+                                                                'Resource': '*'},
+                                                              { 'Action': [ 'cloudwatch:ListMetrics',
+                                                                            'cloudwatch:GetMetricStatistics',
+                                                                            'cloudwatch:Describe*'],
+                                                                'Effect': 'Allow',
+                                                                'Resource': '*'},
+                                                              { 'Action': 'autoscaling:Describe*',
+                                                                'Effect': 'Allow',
+                                                                'Resource': '*'}],
+                                               'Version': '2012-10-17'},
+                           'PolicyName': 'AmazonEC2ReadOnlyAccess'},
+                         { 'PolicyArn': 'arn:aws:iam::aws:policy/IAMReadOnlyAccess',
+                           'PolicyDocument': { 'Statement': [ { 'Action': [ 'iam:GenerateCredentialReport',
+                                                                            'iam:GenerateServiceLastAccessedDetails',
+                                                                            'iam:Get*',
+                                                                            'iam:List*',
+                                                                            'iam:SimulateCustomPolicy',
+                                                                            'iam:SimulatePrincipalPolicy'],
+                                                                'Effect': 'Allow',
+                                                                'Resource': '*'}],
+                                               'Version': '2012-10-17'},
+                           'PolicyName': 'IAMReadOnlyAccess'},
+                         { 'PolicyArn': 'arn:aws:iam::aws:policy/AmazonVPCReadOnlyAccess',
+                           'PolicyDocument': { 'Statement': [ { 'Action': [ 'ec2:DescribeAccountAttributes',
+                                                                            'ec2:DescribeAddresses',
+                                                                            'ec2:DescribeCarrierGateways',
+                                                                            'ec2:DescribeClassicLinkInstances',
+                                                                            'ec2:DescribeCustomerGateways',
+                                                                            'ec2:DescribeDhcpOptions',
+                                                                            'ec2:DescribeEgressOnlyInternetGateways',
+                                                                            'ec2:DescribeFlowLogs',
+                                                                            'ec2:DescribeInternetGateways',
+                                                                            'ec2:DescribeLocalGatewayRouteTables',
+                                                                            'ec2:DescribeLocalGatewayRouteTableVpcAssociations',
+                                                                            'ec2:DescribeMovingAddresses',
+                                                                            'ec2:DescribeNatGateways',
+                                                                            'ec2:DescribeNetworkAcls',
+                                                                            'ec2:DescribeNetworkInterfaceAttribute',
+                                                                            'ec2:DescribeNetworkInterfacePermissions',
+                                                                            'ec2:DescribeNetworkInterfaces',
+                                                                            'ec2:DescribePrefixLists',
+                                                                            'ec2:DescribeRouteTables',
+                                                                            'ec2:DescribeSecurityGroupReferences',
+                                                                            'ec2:DescribeSecurityGroupRules',
+                                                                            'ec2:DescribeSecurityGroups',
+                                                                            'ec2:DescribeSecurityGroupVpcAssociations',
+                                                                            'ec2:DescribeStaleSecurityGroups',
+                                                                            'ec2:DescribeSubnets',
+                                                                            'ec2:DescribeTags',
+                                                                            'ec2:DescribeVpcAttribute',
+                                                                            'ec2:DescribeVpcClassicLink',
+                                                                            'ec2:DescribeVpcClassicLinkDnsSupport',
+                                                                            'ec2:DescribeVpcEndpoints',
+                                                                            'ec2:DescribeVpcEndpointConnectionNotifications',
+                                                                            'ec2:DescribeVpcEndpointConnections',
+                                                                            'ec2:DescribeVpcEndpointServiceConfigurations',
+                                                                            'ec2:DescribeVpcEndpointServicePermissions',
+                                                                            'ec2:DescribeVpcEndpointServices',
+                                                                            'ec2:DescribeVpcPeeringConnections',
+                                                                            'ec2:DescribeVpcs',
+                                                                            'ec2:DescribeVpnConnections',
+                                                                            'ec2:DescribeVpnGateways',
+                                                                            'ec2:GetSecurityGroupsForVpc'],
+                                                                'Effect': 'Allow',
+                                                                'Resource': '*',
+                                                                'Sid': 'AmazonVPCReadOnlyAccess'}],
+                                               'Version': '2012-10-17'},
+                           'PolicyName': 'AmazonVPCReadOnlyAccess'},
+                         { 'PolicyArn': 'arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess',
+                           'PolicyDocument': { 'Statement': [ { 'Action': [ 's3:Get*',
+                                                                            's3:List*',
+                                                                            's3:Describe*',
+                                                                            's3-object-lambda:Get*',
+                                                                            's3-object-lambda:List*'],
+                                                                'Effect': 'Allow',
+                                                                'Resource': '*'}],
+                                               'Version': '2012-10-17'},
+                           'PolicyName': 'AmazonS3ReadOnlyAccess'}],
+  'credential_report_row': { 'access_key_1_active': 'true',
+                             'access_key_1_last_rotated': '2026-07-06T17:14:34Z',
+                             'access_key_1_last_used_date': '2026-07-14T08:03:00Z',
+                             'access_key_1_last_used_region': 'us-east-1',
+                             'access_key_1_last_used_service': 'iam',
+                             'access_key_2_active': 'false',
+                             'access_key_2_last_rotated': 'N/A',
+                             'access_key_2_last_used_date': 'N/A',
+                             'access_key_2_last_used_region': 'N/A',
+                             'access_key_2_last_used_service': 'N/A',
+                             'arn': 'arn:aws:iam::372634017437:user/scanner-dev',
+                             'cert_1_active': 'false',
+                             'cert_1_last_rotated': 'N/A',
+                             'cert_2_active': 'false',
+                             'cert_2_last_rotated': 'N/A',
+                             'mfa_active': 'false',
+                             'password_enabled': 'false',
+                             'password_last_changed': 'N/A',
+                             'password_last_used': 'N/A',
+                             'password_next_rotation': 'N/A',
+                             'user': 'scanner-dev',
+                             'user_creation_time': '2026-07-06T17:13:58Z'},
+  'groups': [],
+  'inline_policies': [],
+  'is_root': False,
+  'mfa_devices': [],
+  'raw_data': { 'Arn': 'arn:aws:iam::372634017437:user/scanner-dev',
+                'CreateDate': '2026-07-06T17:13:58+00:00',
+                'Path': '/',
+                'UserId': 'AIDAVNQVX32OYBIWEOABR',
+                'UserName': 'scanner-dev'}}
+Rule Evaluations (Checks: 17):
+  - [SAFE] Rule: Root Account Access Keys Active (IAM-001)
+    Description:    Root account has active access keys. Root keys are dangerous and cannot be restricted by IAM policies.
+  - [SAFE] Rule: Root Account MFA Disabled (IAM-002)
+    Description:    Root account does not have Multi-Factor Authentication (MFA) enabled.
+  - [SAFE] Rule: User Direct Administrator Access (IAM-003)
+    Description:    IAM User has AdministratorAccess policy directly attached.
+  - [SAFE] Rule: Role has AdministratorAccess (IAM-004)
+    Description:    IAM Role has AdministratorAccess policy attached.
+  - [SAFE] Rule: IAM Policy Allows Full Admin Wildcards (IAM-005)
+    Description:    IAM policy allows Action:* and Resource:* (full admin rights).
+  - [SAFE] Rule: IAM Policy Allows Privilege Escalation (IAM-006)
+    Description:    IAM policy grants permissions that allow privilege escalation (e.g. PassRole, AttachRolePolicy).
+  - [SAFE] Rule: IAM User Console Login without MFA (IAM-007)
+    Description:    IAM User has console login password active but Multi-Factor Authentication (MFA) is disabled.
+  - [SAFE] Rule: IAM Access Key Older than 90 Days (IAM-008)
+    Description:    Active access key was created or rotated more than 90 days ago.
+  - [SAFE] Rule: Unused IAM Access Key (IAM-009)
+    Description:    Active access key has not been used to make API calls in the last 90 days.
+  - [SAFE] Rule: Inactive IAM User (IAM-010)
+    Description:    IAM user has not used their password or access keys in the last 90 days.
+  - [SAFE] Rule: IAM Password Never Rotated (IAM-011)
+    Description:    IAM user password has never been rotated.
+  - [SAFE] Rule: Programmatic User Has Console Login (IAM-012)
+    Description:    User has both active Access Keys and a Console Password.
+  - [SAFE] Rule: IAM Policy Wildcard Service Permissions (IAM-013)
+    Description:    IAM policy allows service-wide wildcards (e.g. ec2:* or s3:*).
+  - [SAFE] Rule: Wildcard Principal in Role Trust (IAM-014)
+    Description:    IAM Role allows wildcard Principal (*) to assume it, making it publicly accessible.
+  - [SAFE] Rule: IAM Role Trusts External AWS Account (IAM-015)
+    Description:    IAM Role trust relationship allows access from an external AWS account ID.
+  - [SAFE] Rule: IAM User Inline Policy Attached (IAM-016)
+    Description:    IAM user has inline policies attached directly to their profile.
+  - [SAFE] Rule: Multiple Active Access Keys (IAM-017)
+    Description:    IAM User has two active access keys.
+
+[6/9] Scanning resource: [IAM] <root_account> (<root_account>)...
+[AWS] Collecting configuration for IAM (<root_account>)...
+Configuration collected:
+{ 'credential_report_row': { 'access_key_1_active': 'false',
+                             'access_key_1_last_rotated': 'N/A',
+                             'access_key_1_last_used_date': 'N/A',
+                             'access_key_1_last_used_region': 'N/A',
+                             'access_key_1_last_used_service': 'N/A',
+                             'access_key_2_active': 'false',
+                             'access_key_2_last_rotated': 'N/A',
+                             'access_key_2_last_used_date': 'N/A',
+                             'access_key_2_last_used_region': 'N/A',
+                             'access_key_2_last_used_service': 'N/A',
+                             'arn': 'arn:aws:iam::372634017437:root',
+                             'cert_1_active': 'false',
+                             'cert_1_last_rotated': 'N/A',
+                             'cert_2_active': 'false',
+                             'cert_2_last_rotated': 'N/A',
+                             'mfa_active': 'true',
+                             'password_enabled': 'true',
+                             'password_last_changed': '2026-05-02T20:09:33Z',
+                             'password_last_used': '2026-07-14T07:13:00Z',
+                             'password_next_rotation': 'not_supported',
+                             'user': '<root_account>',
+                             'user_creation_time': '2025-04-29T17:23:23Z'},
+  'is_root': True}
+Rule Evaluations (Checks: 17):
+  - [SAFE] Rule: Root Account Access Keys Active (IAM-001)
+    Description:    Root account has active access keys. Root keys are dangerous and cannot be restricted by IAM policies.
+  - [SAFE] Rule: Root Account MFA Disabled (IAM-002)
+    Description:    Root account does not have Multi-Factor Authentication (MFA) enabled.
+  - [SAFE] Rule: User Direct Administrator Access (IAM-003)
+    Description:    IAM User has AdministratorAccess policy directly attached.
+  - [SAFE] Rule: Role has AdministratorAccess (IAM-004)
+    Description:    IAM Role has AdministratorAccess policy attached.
+  - [SAFE] Rule: IAM Policy Allows Full Admin Wildcards (IAM-005)
+    Description:    IAM policy allows Action:* and Resource:* (full admin rights).
+  - [SAFE] Rule: IAM Policy Allows Privilege Escalation (IAM-006)
+    Description:    IAM policy grants permissions that allow privilege escalation (e.g. PassRole, AttachRolePolicy).
+  - [SAFE] Rule: IAM User Console Login without MFA (IAM-007)
+    Description:    IAM User has console login password active but Multi-Factor Authentication (MFA) is disabled.
+  - [SAFE] Rule: IAM Access Key Older than 90 Days (IAM-008)
+    Description:    Active access key was created or rotated more than 90 days ago.
+  - [SAFE] Rule: Unused IAM Access Key (IAM-009)
+    Description:    Active access key has not been used to make API calls in the last 90 days.
+  - [SAFE] Rule: Inactive IAM User (IAM-010)
+    Description:    IAM user has not used their password or access keys in the last 90 days.
+  - [SAFE] Rule: IAM Password Never Rotated (IAM-011)
+    Description:    IAM user password has never been rotated.
+  - [SAFE] Rule: Programmatic User Has Console Login (IAM-012)
+    Description:    User has both active Access Keys and a Console Password.
+  - [SAFE] Rule: IAM Policy Wildcard Service Permissions (IAM-013)
+    Description:    IAM policy allows service-wide wildcards (e.g. ec2:* or s3:*).
+  - [SAFE] Rule: Wildcard Principal in Role Trust (IAM-014)
+    Description:    IAM Role allows wildcard Principal (*) to assume it, making it publicly accessible.
+  - [SAFE] Rule: IAM Role Trusts External AWS Account (IAM-015)
+    Description:    IAM Role trust relationship allows access from an external AWS account ID.
+  - [SAFE] Rule: IAM User Inline Policy Attached (IAM-016)
+    Description:    IAM user has inline policies attached directly to their profile.
+  - [SAFE] Rule: Multiple Active Access Keys (IAM-017)
+    Description:    IAM User has two active access keys.
+
+[7/9] Scanning resource: [IAM Role] ecsInfrastructureRoleForExpressServices (AROAVNQVX32O54GL32GV6)...
+[AWS] Collecting configuration for IAM Role (AROAVNQVX32O54GL32GV6)...
+Configuration collected:
+{ 'attached_policies': [ { 'PolicyArn': 'arn:aws:iam::aws:policy/service-role/AmazonECSInfrastructureRoleforExpressGatewayServices',
+                           'PolicyDocument': { 'Statement': [ { 'Action': 'iam:CreateServiceLinkedRole',
+                                                                'Condition': { 'StringEquals': { 'iam:AWSServiceName': [ 'ecs.application-autoscaling.amazonaws.com',
+                                                                                                                         'elasticloadbalancing.amazonaws.com']}},
+                                                                'Effect': 'Allow',
+                                                                'Resource': '*',
+                                                                'Sid': 'ServiceLinkedRoleCreateOperations'},
+                                                              { 'Action': [ 'elasticloadbalancing:CreateListener',
+                                                                            'elasticloadbalancing:CreateLoadBalancer',
+                                                                            'elasticloadbalancing:CreateRule',
+                                                                            'elasticloadbalancing:CreateTargetGroup',
+                                                                            'elasticloadbalancing:ModifyListener',
+                                                                            'elasticloadbalancing:ModifyRule',
+                                                                            'elasticloadbalancing:AddListenerCertificates',
+                                                                            'elasticloadbalancing:RemoveListenerCertificates',
+                                                                            'elasticloadbalancing:RegisterTargets',
+                                                                            'elasticloadbalancing:DeregisterTargets',
+                                                                            'elasticloadbalancing:DeleteTargetGroup',
+                                                                            'elasticloadbalancing:DeleteLoadBalancer',
+                                                                            'elasticloadbalancing:DeleteRule',
+                                                                            'elasticloadbalancing:DeleteListener'],
+                                                                'Condition': { 'StringEquals': { 'aws:ResourceTag/AmazonECSManaged': 'true'}},
+                                                                'Effect': 'Allow',
+                                                                'Resource': [ 'arn:aws:elasticloadbalancing:*:*:loadbalancer/app/*/*',
+                                                                              'arn:aws:elasticloadbalancing:*:*:listener/app/*/*/*',
+                                                                              'arn:aws:elasticloadbalancing:*:*:listener-rule/app/*/*/*/*',
+                                                                              'arn:aws:elasticloadbalancing:*:*:targetgroup/*/*'],
+                                                                'Sid': 'ELBOperations'},
+                                                              { 'Action': 'elasticloadbalancing:AddTags',
+                                                                'Condition': { 'StringEquals': { 'elasticloadbalancing:CreateAction': [ 'CreateLoadBalancer',
+                                                                                                                                        'CreateListener',
+                                                                                                                                        'CreateRule',
+                                                                                                                                        'CreateTargetGroup']}},
+                                                                'Effect': 'Allow',
+                                                                'Resource': [ 'arn:aws:elasticloadbalancing:*:*:loadbalancer/app/*/*',
+                                                                              'arn:aws:elasticloadbalancing:*:*:listener/app/*/*/*',
+                                                                              'arn:aws:elasticloadbalancing:*:*:listener-rule/app/*/*/*/*',
+                                                                              'arn:aws:elasticloadbalancing:*:*:targetgroup/*/*'],
+                                                                'Sid': 'TagOnCreateELBResources'},
+                                                              { 'Action': 'ec2:CreateSecurityGroup',
+                                                                'Effect': 'Allow',
+                                                                'Resource': 'arn:aws:ec2:*:*:vpc/*',
+                                                                'Sid': 'BlanketAllowCreateSecurityGroupsInVPCs'},
+                                                              { 'Action': [ 'ec2:CreateSecurityGroup',
+                                                                            'ec2:AuthorizeSecurityGroupEgress',
+                                                                            'ec2:AuthorizeSecurityGroupIngress'],
+                                                                'Condition': { 'StringEquals': { 'aws:RequestTag/AmazonECSManaged': 'true'}},
+                                                                'Effect': 'Allow',
+                                                                'Resource': [ 'arn:aws:ec2:*:*:security-group/*',
+                                                                              'arn:aws:ec2:*:*:security-group-rule/*',
+                                                                              'arn:aws:ec2:*:*:vpc/*'],
+                                                                'Sid': 'CreateSecurityGroupResourcesWithTags'},
+                                                              { 'Action': [ 'ec2:AuthorizeSecurityGroupEgress',
+                                                                            'ec2:AuthorizeSecurityGroupIngress',
+                                                                            'ec2:DeleteSecurityGroup',
+                                                                            'ec2:RevokeSecurityGroupEgress',
+                                                                            'ec2:RevokeSecurityGroupIngress'],
+                                                                'Condition': { 'StringEquals': { 'aws:ResourceTag/AmazonECSManaged': 'true'}},
+                                                                'Effect': 'Allow',
+                                                                'Resource': [ 'arn:aws:ec2:*:*:security-group/*',
+                                                                              'arn:aws:ec2:*:*:vpc/*'],
+                                                                'Sid': 'ModifySecurityGroupOperations'},
+                                                              { 'Action': 'ec2:CreateTags',
+                                                                'Condition': { 'StringEquals': { 'ec2:CreateAction': [ 'CreateSecurityGroup',
+                                                                                                                       'AuthorizeSecurityGroupIngress',
+                                                                                                                       'AuthorizeSecurityGroupEgress']}},
+                                                                'Effect': 'Allow',
+                                                                'Resource': [ 'arn:aws:ec2:*:*:security-group/*',
+                                                                              'arn:aws:ec2:*:*:security-group-rule/*'],
+                                                                'Sid': 'TagOnCreateEC2Resources'},
+                                                              { 'Action': [ 'acm:RequestCertificate',
+                                                                            'acm:AddTagsToCertificate',
+                                                                            'acm:DeleteCertificate',
+                                                                            'acm:DescribeCertificate'],
+                                                                'Condition': { 'StringEquals': { 'aws:ResourceTag/AmazonECSManaged': 'true'}},
+                                                                'Effect': 'Allow',
+                                                                'Resource': [ 'arn:aws:acm:*:*:certificate/*'],
+                                                                'Sid': 'CertificateOperations'},
+                                                              { 'Action': [ 'application-autoscaling:RegisterScalableTarget',
+                                                                            'application-autoscaling:TagResource',
+                                                                            'application-autoscaling:DeregisterScalableTarget'],
+                                                                'Condition': { 'StringEquals': { 'aws:ResourceTag/AmazonECSManaged': 'true'}},
+                                                                'Effect': 'Allow',
+                                                                'Resource': [ 'arn:aws:application-autoscaling:*:*:scalable-target/*'],
+                                                                'Sid': 'ApplicationAutoscalingCreateOperations'},
+                                                              { 'Action': [ 'application-autoscaling:PutScalingPolicy',
+                                                                            'application-autoscaling:DeleteScalingPolicy'],
+                                                                'Condition': { 'StringEquals': { 'application-autoscaling:service-namespace': 'ecs'}},
+                                                                'Effect': 'Allow',
+                                                                'Resource': [ 'arn:aws:application-autoscaling:*:*:scalable-target/*'],
+                                                                'Sid': 'ApplicationAutoscalingPolicyOperations'},
+                                                              { 'Action': [ 'application-autoscaling:DescribeScalableTargets',
+                                                                            'application-autoscaling:DescribeScalingPolicies',
+                                                                            'application-autoscaling:DescribeScalingActivities'],
+                                                                'Effect': 'Allow',
+                                                                'Resource': [ 'arn:aws:application-autoscaling:*:*:scalable-target/*'],
+                                                                'Sid': 'ApplicationAutoscalingReadOperations'},
+                                                              { 'Action': [ 'cloudwatch:PutMetricAlarm',
+                                                                            'cloudwatch:TagResource'],
+                                                                'Condition': { 'StringEquals': { 'aws:RequestTag/AmazonECSManaged': 'true'}},
+                                                                'Effect': 'Allow',
+                                                                'Resource': [ 'arn:aws:cloudwatch:*:*:alarm:*'],
+                                                                'Sid': 'CloudWatchAlarmCreateOperations'},
+                                                              { 'Action': [ 'cloudwatch:DeleteAlarms',
+                                                                            'cloudwatch:DescribeAlarms'],
+                                                                'Condition': { 'StringEquals': { 'aws:ResourceTag/AmazonECSManaged': 'true'}},
+                                                                'Effect': 'Allow',
+                                                                'Resource': [ 'arn:aws:cloudwatch:*:*:alarm:*'],
+                                                                'Sid': 'CloudWatchAlarmOperations'},
+                                                              { 'Action': [ 'elasticloadbalancing:DescribeLoadBalancers',
+                                                                            'elasticloadbalancing:DescribeTargetGroups',
+                                                                            'elasticloadbalancing:DescribeTargetHealth',
+                                                                            'elasticloadbalancing:DescribeListeners',
+                                                                            'elasticloadbalancing:DescribeRules'],
+                                                                'Effect': 'Allow',
+                                                                'Resource': '*',
+                                                                'Sid': 'ELBReadOperations'},
+                                                              { 'Action': [ 'ec2:DescribeSecurityGroups',
+                                                                            'ec2:DescribeSubnets',
+                                                                            'ec2:DescribeRouteTables',
+                                                                            'ec2:DescribeVpcs'],
+                                                                'Effect': 'Allow',
+                                                                'Resource': '*',
+                                                                'Sid': 'VPCReadOperations'},
+                                                              { 'Action': [ 'logs:CreateLogGroup',
+                                                                            'logs:TagResource'],
+                                                                'Condition': { 'StringEquals': { 'aws:RequestTag/AmazonECSManaged': 'true'}},
+                                                                'Effect': 'Allow',
+                                                                'Resource': 'arn:aws:logs:*:*:log-group:*',
+                                                                'Sid': 'CloudWatchLogsCreateOperations'},
+                                                              { 'Action': [ 'logs:DescribeLogGroups'],
+                                                                'Effect': 'Allow',
+                                                                'Resource': '*',
+                                                                'Sid': 'CloudWatchLogsReadOperations'}],
+                                               'Version': '2012-10-17'},
+                           'PolicyName': 'AmazonECSInfrastructureRoleforExpressGatewayServices'}],
+  'inline_policies': [],
+  'is_role': True,
+  'raw_data': { 'Arn': 'arn:aws:iam::372634017437:role/service-role/ecsInfrastructureRoleForExpressServices',
+                'AssumeRolePolicyDocument': { 'Statement': [ { 'Action': 'sts:AssumeRole',
+                                                               'Condition': { 'ArnEquals': { 'aws:SourceArn': 'arn:aws:ecs:*:372634017437:*'},
+                                                                              'StringEquals': { 'aws:SourceAccount': '372634017437'}},
+                                                               'Effect': 'Allow',
+                                                               'Principal': { 'Service': 'ecs.amazonaws.com'}}],
+                                              'Version': '2012-10-17'},
+                'CreateDate': '2026-05-03T18:26:28+00:00',
+                'Description': 'This role allows Amazon ECS to manage '
+                               'resources associated with Amazon ECS Express '
+                               'services.',
+                'MaxSessionDuration': 3600,
+                'Path': '/service-role/',
+                'RoleId': 'AROAVNQVX32O54GL32GV6',
+                'RoleLastUsed': { 'LastUsedDate': datetime.datetime(2026, 5, 3, 18, 51, 56, tzinfo=tzutc()),
+                                  'Region': 'eu-north-1'},]
+                'RoleName': 'ecsInfrastructureRoleForExpressServices'}}
+Rule Evaluations (Checks: 17):
+  - [SAFE] Rule: Root Account Access Keys Active (IAM-001)
+    Description:    Root account has active access keys. Root keys are dangerous and cannot be restricted by IAM policies.
+  - [SAFE] Rule: Root Account MFA Disabled (IAM-002)
+    Description:    Root account does not have Multi-Factor Authentication (MFA) enabled.
+  - [SAFE] Rule: User Direct Administrator Access (IAM-003)
+    Description:    IAM User has AdministratorAccess policy directly attached.
+  - [SAFE] Rule: Role has AdministratorAccess (IAM-004)
+    Description:    IAM Role has AdministratorAccess policy attached.
+  - [SAFE] Rule: IAM Policy Allows Full Admin Wildcards (IAM-005)
+    Description:    IAM policy allows Action:* and Resource:* (full admin rights).
+  - [SAFE] Rule: IAM Policy Allows Privilege Escalation (IAM-006)
+    Description:    IAM policy grants permissions that allow privilege escalation (e.g. PassRole, AttachRolePolicy).
+  - [SAFE] Rule: IAM User Console Login without MFA (IAM-007)
+    Description:    IAM User has console login password active but Multi-Factor Authentication (MFA) is disabled.
+  - [SAFE] Rule: IAM Access Key Older than 90 Days (IAM-008)
+    Description:    Active access key was created or rotated more than 90 days ago.
+  - [SAFE] Rule: Unused IAM Access Key (IAM-009)
+    Description:    Active access key has not been used to make API calls in the last 90 days.
+  - [SAFE] Rule: Inactive IAM User (IAM-010)
+    Description:    IAM user has not used their password or access keys in the last 90 days.
+  - [SAFE] Rule: IAM Password Never Rotated (IAM-011)
+    Description:    IAM user password has never been rotated.
+  - [SAFE] Rule: Programmatic User Has Console Login (IAM-012)
+    Description:    User has both active Access Keys and a Console Password.
+  - [SAFE] Rule: IAM Policy Wildcard Service Permissions (IAM-013)
+    Description:    IAM policy allows service-wide wildcards (e.g. ec2:* or s3:*).
+  - [SAFE] Rule: Wildcard Principal in Role Trust (IAM-014)
+    Description:    IAM Role allows wildcard Principal (*) to assume it, making it publicly accessible.
+  - [SAFE] Rule: IAM Role Trusts External AWS Account (IAM-015)
+    Description:    IAM Role trust relationship allows access from an external AWS account ID.
+  - [SAFE] Rule: IAM User Inline Policy Attached (IAM-016)
+    Description:    IAM user has inline policies attached directly to their profile.
+  - [SAFE] Rule: Multiple Active Access Keys (IAM-017)
+    Description:    IAM User has two active access keys.
+
+[8/9] Scanning resource: [IAM Role] ecsTaskExecutionRole (AROAVNQVX32ORAZUXRTKM)...
+[AWS] Collecting configuration for IAM Role (AROAVNQVX32ORAZUXRTKM)...
+Configuration collected:
+{ 'attached_policies': [ { 'PolicyArn': 'arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy',
+                           'PolicyDocument': { 'Statement': [ { 'Action': [ 'ecr:GetAuthorizationToken',
+                                                                            'ecr:BatchCheckLayerAvailability',
+                                                                            'ecr:GetDownloadUrlForLayer',
+                                                                            'ecr:BatchGetImage',
+                                                                            'logs:CreateLogStream',
+                                                                            'logs:PutLogEvents'],
+                                                                'Effect': 'Allow',
+                                                                'Resource': '*'}],
+                                               'Version': '2012-10-17'},
+                           'PolicyName': 'AmazonECSTaskExecutionRolePolicy'}],
+  'inline_policies': [],
+  'is_role': True,
+  'raw_data': { 'Arn': 'arn:aws:iam::372634017437:role/service-role/ecsTaskExecutionRole',
+                'AssumeRolePolicyDocument': { 'Statement': [ { 'Action': 'sts:AssumeRole',
+                                                               'Condition': { 'ArnEquals': { 'aws:SourceArn': 'arn:aws:ecs:*:372634017437:*'},
+                                                                              'StringEquals': { 'aws:SourceAccount': '372634017437'}},
+                                                               'Effect': 'Allow',
+                                                               'Principal': { 'Service': 'ecs-tasks.amazonaws.com'}}],
+                                              'Version': '2012-10-17'},
+                'CreateDate': '2026-05-03T18:26:27+00:00',
+                'Description': 'Allows access to other AWS service resources '
+                               'that are required to run Amazon ECS tasks.',
+                'MaxSessionDuration': 3600,
+                'Path': '/service-role/',
+                'RoleId': 'AROAVNQVX32ORAZUXRTKM',
+                'RoleLastUsed': { 'LastUsedDate': datetime.datetime(2026, 5, 3, 18, 51, tzinfo=tzutc()),
+                                  'Region': 'eu-north-1'},
+                'RoleName': 'ecsTaskExecutionRole'}}
+Rule Evaluations (Checks: 17):
+  - [SAFE] Rule: Root Account Access Keys Active (IAM-001)
+    Description:    Root account has active access keys. Root keys are dangerous and cannot be restricted by IAM policies.
+  - [SAFE] Rule: Root Account MFA Disabled (IAM-002)
+    Description:    Root account does not have Multi-Factor Authentication (MFA) enabled.
+  - [SAFE] Rule: User Direct Administrator Access (IAM-003)
+    Description:    IAM User has AdministratorAccess policy directly attached.
+  - [SAFE] Rule: Role has AdministratorAccess (IAM-004)
+    Description:    IAM Role has AdministratorAccess policy attached.
+  - [SAFE] Rule: IAM Policy Allows Full Admin Wildcards (IAM-005)
+    Description:    IAM policy allows Action:* and Resource:* (full admin rights).
+  - [SAFE] Rule: IAM Policy Allows Privilege Escalation (IAM-006)
+    Description:    IAM policy grants permissions that allow privilege escalation (e.g. PassRole, AttachRolePolicy).
+  - [SAFE] Rule: IAM User Console Login without MFA (IAM-007)
+    Description:    IAM User has console login password active but Multi-Factor Authentication (MFA) is disabled.
+  - [SAFE] Rule: IAM Access Key Older than 90 Days (IAM-008)
+    Description:    Active access key was created or rotated more than 90 days ago.
+  - [SAFE] Rule: Unused IAM Access Key (IAM-009)
+    Description:    Active access key has not been used to make API calls in the last 90 days.
+  - [SAFE] Rule: Inactive IAM User (IAM-010)
+    Description:    IAM user has not used their password or access keys in the last 90 days.
+  - [SAFE] Rule: IAM Password Never Rotated (IAM-011)
+    Description:    IAM user password has never been rotated.
+  - [SAFE] Rule: Programmatic User Has Console Login (IAM-012)
+    Description:    User has both active Access Keys and a Console Password.
+  - [SAFE] Rule: IAM Policy Wildcard Service Permissions (IAM-013)
+    Description:    IAM policy allows service-wide wildcards (e.g. ec2:* or s3:*).
+  - [SAFE] Rule: Wildcard Principal in Role Trust (IAM-014)
+    Description:    IAM Role allows wildcard Principal (*) to assume it, making it publicly accessible.
+  - [SAFE] Rule: IAM Role Trusts External AWS Account (IAM-015)
+    Description:    IAM Role trust relationship allows access from an external AWS account ID.
+  - [SAFE] Rule: IAM User Inline Policy Attached (IAM-016)
+    Description:    IAM user has inline policies attached directly to their profile.
+  - [SAFE] Rule: Multiple Active Access Keys (IAM-017)
+    Description:    IAM User has two active access keys.
+
+[9/9] Scanning resource: [IAM Role] rds-monitoring-role (AROAVNQVX32OUUS4DU54F)...
+[AWS] Collecting configuration for IAM Role (AROAVNQVX32OUUS4DU54F)...
+Configuration collected:
+{ 'attached_policies': [ { 'PolicyArn': 'arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole',
+                           'PolicyDocument': { 'Statement': [ { 'Action': [ 'logs:CreateLogGroup',
+                                                                            'logs:PutRetentionPolicy'],
+                                                                'Effect': 'Allow',
+                                                                'Resource': [ 'arn:aws:logs:*:*:log-group:RDS*'],
+                                                                'Sid': 'EnableCreationAndManagementOfRDSCloudwatchLogGroups'},
+                                                              { 'Action': [ 'logs:CreateLogStream',
+                                                                            'logs:PutLogEvents',
+                                                                            'logs:DescribeLogStreams',
+                                                                            'logs:GetLogEvents'],
+                                                                'Effect': 'Allow',
+                                                                'Resource': [ 'arn:aws:logs:*:*:log-group:RDS*:log-stream:*'],
+                                                                'Sid': 'EnableCreationAndManagementOfRDSCloudwatchLogStreams'}],
+                                               'Version': '2012-10-17'},
+                           'PolicyName': 'AmazonRDSEnhancedMonitoringRole'}],
+  'inline_policies': [],
+  'is_role': True,
+  'raw_data': { 'Arn': 'arn:aws:iam::372634017437:role/rds-monitoring-role',
+                'AssumeRolePolicyDocument': { 'Statement': [ { 'Action': 'sts:AssumeRole',
+                                                               'Effect': 'Allow',
+                                                               'Principal': { 'Service': 'monitoring.rds.amazonaws.com'},
+                                                               'Sid': ''}],
+                                              'Version': '2012-10-17'},
+                'CreateDate': '2026-05-05T18:17:44+00:00',
+                'MaxSessionDuration': 3600,
+                'Path': '/',
+                'RoleId': 'AROAVNQVX32OUUS4DU54F',
+                'RoleLastUsed': { 'LastUsedDate': datetime.datetime(2026, 5, 5, 19, 24, 27, tzinfo=tzutc()),
+                                  'Region': 'eu-north-1'},
+                'RoleName': 'rds-monitoring-role'}}
+Rule Evaluations (Checks: 17):
+  - [SAFE] Rule: Root Account Access Keys Active (IAM-001)
+    Description:    Root account has active access keys. Root keys are dangerous and cannot be restricted by IAM policies.
+  - [SAFE] Rule: Root Account MFA Disabled (IAM-002)
+    Description:    Root account does not have Multi-Factor Authentication (MFA) enabled.
+  - [SAFE] Rule: User Direct Administrator Access (IAM-003)
+    Description:    IAM User has AdministratorAccess policy directly attached.
+  - [SAFE] Rule: Role has AdministratorAccess (IAM-004)
+    Description:    IAM Role has AdministratorAccess policy attached.
+  - [SAFE] Rule: IAM Policy Allows Full Admin Wildcards (IAM-005)
+    Description:    IAM policy allows Action:* and Resource:* (full admin rights).
+  - [SAFE] Rule: IAM Policy Allows Privilege Escalation (IAM-006)
+    Description:    IAM policy grants permissions that allow privilege escalation (e.g. PassRole, AttachRolePolicy).
+  - [SAFE] Rule: IAM User Console Login without MFA (IAM-007)
+    Description:    IAM User has console login password active but Multi-Factor Authentication (MFA) is disabled.
+  - [SAFE] Rule: IAM Access Key Older than 90 Days (IAM-008)
+    Description:    Active access key was created or rotated more than 90 days ago.
+  - [SAFE] Rule: Unused IAM Access Key (IAM-009)
+    Description:    Active access key has not been used to make API calls in the last 90 days.
+  - [SAFE] Rule: Inactive IAM User (IAM-010)
+    Description:    IAM user has not used their password or access keys in the last 90 days.
+  - [SAFE] Rule: IAM Password Never Rotated (IAM-011)
+    Description:    IAM user password has never been rotated.
+  - [SAFE] Rule: Programmatic User Has Console Login (IAM-012)
+    Description:    User has both active Access Keys and a Console Password.
+  - [SAFE] Rule: IAM Policy Wildcard Service Permissions (IAM-013)
+    Description:    IAM policy allows service-wide wildcards (e.g. ec2:* or s3:*).
+  - [SAFE] Rule: Wildcard Principal in Role Trust (IAM-014)
+    Description:    IAM Role allows wildcard Principal (*) to assume it, making it publicly accessible.
+  - [SAFE] Rule: IAM Role Trusts External AWS Account (IAM-015)
+    Description:    IAM Role trust relationship allows access from an external AWS account ID.
+  - [SAFE] Rule: IAM User Inline Policy Attached (IAM-016)
+    Description:    IAM user has inline policies attached directly to their profile.
+  - [SAFE] Rule: Multiple Active Access Keys (IAM-017)
+    Description:    IAM User has two active access keys.
+[AWS] Disconnected.
