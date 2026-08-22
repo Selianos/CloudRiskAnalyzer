@@ -1,14 +1,22 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { Flex, Box, Card, Heading, Text, Button, TextField, RadioCards, Badge, TextArea, Callout, Spinner } from '@radix-ui/themes';
 import { ArrowLeft, Info } from 'lucide-react';
-
+import { useDemoTip } from '../contexts/DemoTipContext';
+import DemoContextBar from '../components/common/DemoContextBar';
+import DemoGuide from '../components/common/DemoGuide';
 import awsLogo from '../assets/providers/aws.png';
 import ociLogo from '../assets/providers/oci.png';
 import gcpLogo from '../assets/providers/gcp.png';
 
 export default function DemoCreateScanPage() {
   const navigate = useNavigate();
+  const { setPage } = useDemoTip();
+
+  useEffect(() => {
+    setPage('form');
+  }, [setPage]);
+
   const [provider, setProvider] = useState('aws');
   const [scanType, setScanType] = useState('simple');
   const [scanName, setScanName] = useState('AWS Demo Scan');
@@ -48,6 +56,8 @@ export default function DemoCreateScanPage() {
   };
 
   return (
+    <>
+    <DemoContextBar />
     <Box p="6" style={{ height: '100%', overflowY: 'auto' }}>
       <Box style={{ maxWidth: '800px', margin: '0 auto' }}>
         <Flex align="center" gap="2" mb="4">
@@ -164,5 +174,7 @@ export default function DemoCreateScanPage() {
         </Card>
       </Box>
     </Box>
+    <DemoGuide />
+  </>
   );
 }
