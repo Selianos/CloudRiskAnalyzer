@@ -26,7 +26,15 @@ export function DemoTipProvider({ children }) {
 export function useDemoTip() {
   const context = useContext(DemoTipContext);
   if (!context) {
-    throw new Error('useDemoTip must be used within a DemoTipProvider');
+    return {
+      page: 'form',
+      setPage: () => {},
+      selectedNode: null,
+      setSelectedNode: () => {},
+      activeFinding: null,
+      setActiveFinding: () => {},
+    };
   }
   return context;
 }
+
