@@ -1,5 +1,5 @@
 #!/bin/sh
-
+ 
 # Convert email address to match pgAdmin folder naming (replacing '@' with '_')
 USER_EMAIL_DIR=$(echo "$PGADMIN_DEFAULT_EMAIL" | tr '@' '_')
 STORAGE_DIR="/var/lib/pgadmin/storage/$USER_EMAIL_DIR"
