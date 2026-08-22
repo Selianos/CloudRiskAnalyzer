@@ -199,5 +199,5 @@ Detailed technical specifications, architecture guides, and API references are a
 
 ## License
 
-This project is licensed under the terms specified in the [LICENSE](./LICENSE) file.
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
 
