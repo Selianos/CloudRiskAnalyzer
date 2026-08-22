@@ -29,7 +29,7 @@
   <img src="https://img.shields.io/badge/Compliance-NCA%20CCC--2%3A2024-emerald?style=flat-square" alt="NCA CCC Compliance" />
   <img src="https://img.shields.io/badge/Providers-AWS%20%7C%20GCP%20%7C%20OCI-orange?style=flat-square" alt="Supported Providers" />
   <img src="https://img.shields.io/badge/Queue-Redis%20Event--Driven-red?style=flat-square" alt="Redis Queue" />
-  <img src="https://img.shields.io/badge/Security-AES--256--GCM%20%2B%20Docker%20RLS-purple?style=flat-square" alt="Security" />
+  <img src="https://img.shields.io/badge/Security-Fernet%20%2F%20AES%20%2B%20Docker%20RLS-purple?style=flat-square" alt="Security" />
 </p>
 
 Managing security across multi-cloud environments (AWS, GCP, OCI) introduces critical operational challenges such as cloud misconfigurations, fragmented visibility, delayed detection, and the heavy burden of regulatory compliance.
@@ -181,6 +181,23 @@ Once started, the following services are available locally:
 | **PostgreSQL DB** | `localhost:5432` | Core Application Database |
 | **pgAdmin (Optional)** | `http://localhost:5050` | Database Administration UI |
 
+---
+
+## Documentation
+
+Detailed technical specifications, architecture guides, and API references are available in the [`docs/`](./docs) directory:
+
+- [**System Architecture & Network Topology**](./docs/system-architecture.md) — Multi-tier microservices architecture, network boundary definitions, and end-to-end scan lifecycle.
+- [**Scanner Subsystem Architecture**](./docs/scanner-architecture.md) — Redis worker daemon execution, standalone CLI mode, provider integration contracts, and results submission.
+- [**Public Web API Reference**](./docs/public-api-reference.md) — Complete endpoint reference for user authentication, cloud connection management, and compliance scan results.
+- [**Internal Backend Service Reference**](./docs/internal-backend-reference.md) — Private FastAPI service specification, worker authentication, atomic job polling, and rule catalog synchronization.
+- [**NCA CCC-2:2024 Compliance Engine**](./docs/nca-ccc-compliance-engine.md) — Decoupled compliance mapping architecture, Annex A classification levels, and dynamic control resolution.
+- [**Threat Detection & Rules Catalog**](./docs/threat-detection-catalog.md) — Complete inventory of all 55 active security rules across AWS, GCP, and OCI and 25 standardized finding categories.
+- [**Rule Development & Extensibility Guide**](./docs/rule-development-guide.md) — Developer guide for authoring, testing, and registering new security rules using `BaseRule`.
+
+---
+
 ## License
 
 This project is licensed under the terms specified in the [LICENSE](./LICENSE) file.
+

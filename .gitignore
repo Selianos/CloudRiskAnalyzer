@@ -22,3 +22,4 @@ venv.bak/
 .env
 *.log
 .supabase/
+!results-logs/**
