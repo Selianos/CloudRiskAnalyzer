@@ -8,6 +8,9 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { Info, ShieldAlert, ShieldCheck, AlertTriangle, Zap } from 'lucide-react';
+import { useDemoTip } from '../contexts/DemoTipContext';
+import DemoContextBar from '../components/common/DemoContextBar';
+import DemoGuide from '../components/common/DemoGuide';
 
 import { nodeTypes } from '../components/graph/CustomNodes';
 import NodeDetailsPanel from '../components/graph/NodeDetailsPanel';
@@ -40,7 +43,11 @@ const mockFindings = [
       severity: "CRITICAL",
       description: "EC2 instance has SSH port 22 open to the internet.",
       recommendation: "RISK: An EC2 instance with SSH open to the internet is highly vulnerable to brute-force attacks. Attackers can exploit this to gain unauthorized access to the server, install malware, or pivot into the internal network.\n\nACTION STEPS:\n1. Go to the AWS Console and navigate to 'EC2' > 'Instances'.\n2. Select the offending instance and view its Security Groups.\n3. Edit the inbound rules of the attached Security Group.\n4. Remove the rule allowing port 22 from 0.0.0.0/0.\n5. Click 'Save rules'."
-    }
+    },
+    ccc_metadata: [
+      {id: '2-4-T-1-1', text: 'The CST shall ensure that network access controls restrict inbound/outbound traffic to only necessary ports and protocols.'},
+      {id: '2-4-P-1-1', text: 'The CSP shall implement network segmentation and access controls between cloud services and external networks.'}
+    ]
   },
   {
     id: "f2",
@@ -58,7 +65,11 @@ const mockFindings = [
       severity: "CRITICAL",
       description: "RDS Database instance is publicly accessible to the internet.",
       recommendation: "RISK: A database with public access allows anyone on the internet to attempt to connect. Attackers can exploit this to leak sensitive data, distribute malware, or drop tables.\n\nACTION STEPS:\n1. Go to the AWS Console and navigate to 'RDS' > 'Databases'.\n2. Select the offending database and click 'Modify'.\n3. Under 'Connectivity', expand 'Additional configuration'.\n4. Change 'Public access' to 'Not publicly accessible'.\n5. Continue and apply the changes immediately."
-    }
+    },
+    ccc_metadata: [
+      {id: '2-2-T-1-1', text: 'The CST shall ensure that cloud service access is restricted to authorized users and systems only.'},
+      {id: '2-6-P-1-4', text: 'The CSP shall implement controls to prevent unauthorized access to customer data.'}
+    ]
   },
   {
     id: "f3",
@@ -76,7 +87,8 @@ const mockFindings = [
       severity: "INFO",
       description: "EC2 instance web server is properly configured.",
       recommendation: "No issues detected. The web server security groups only allow HTTP/HTTPS traffic."
-    }
+    },
+    ccc_metadata: []
   },
   {
     id: "f4",
@@ -94,7 +106,11 @@ const mockFindings = [
       severity: "HIGH",
       description: "IAM Role attached to server has full administrative privileges.",
       recommendation: "RISK: An IAM role with overly permissive policies (like AdministratorAccess) attached to an EC2 instance allows any application on that instance full control over your AWS account. If the instance is compromised, the attacker gains full account takeover capabilities.\n\nACTION STEPS:\n1. Go to the AWS Console and navigate to 'IAM' > 'Roles'.\n2. Select the offending role.\n3. Review attached policies and remove 'AdministratorAccess'.\n4. Create and attach a custom policy with least-privilege permissions needed for the application.\n5. Click 'Save'."
-    }
+    },
+    ccc_metadata: [
+      {id: '2-2-T-1-1', text: 'The CST shall ensure that cloud service access is restricted to authorized users and systems only.'},
+      {id: '2-2-P-1-7', text: 'The CSP shall implement role-based access control (RBAC) and enforce least-privilege principles.'}
+    ]
   },
   {
     id: "f5",
@@ -112,7 +128,11 @@ const mockFindings = [
       severity: "MEDIUM",
       description: "RDS Database storage is not encrypted at rest.",
       recommendation: "RISK: Unencrypted database storage poses a risk of data exposure if underlying storage media are compromised or improperly disposed of.\n\nACTION STEPS:\n1. Go to the AWS Console and navigate to 'RDS' > 'Databases'.\n2. Take a snapshot of the unencrypted database.\n3. Copy the snapshot and choose to encrypt the copy with a KMS key.\n4. Restore a new database instance from the encrypted snapshot.\n5. Update application connection strings to point to the new instance.\n6. Delete the old unencrypted instance."
-    }
+    },
+    ccc_metadata: [
+      {id: '2-7-T-1-1', text: 'The CST shall ensure that data stored in the cloud is encrypted using strong cryptographic algorithms.'},
+      {id: '2-7-P-1-1', text: 'The CSP shall provide and enforce encryption mechanisms for data stored on cloud infrastructure.'}
+    ]
   },
   {
     id: "f6",
@@ -130,7 +150,11 @@ const mockFindings = [
       severity: "HIGH",
       description: "S3 Bucket allows public read/write access.",
       recommendation: "RISK: A bucket with public access allows anyone on the internet to read or write objects depending on the specific public access type. Attackers can exploit this to leak sensitive data, distribute malware, or incur massive bandwidth charges.\n\nACTION STEPS:\n1. Go to the AWS Console and navigate to 'S3'.\n2. Select the offending bucket and click 'Permissions'.\n3. Under 'Block public access (bucket settings)', click 'Edit'.\n4. Select 'Block all public access' and click 'Save changes'."
-    }
+    },
+    ccc_metadata: [
+      {id: '2-2-T-1-1', text: 'The CST shall ensure that cloud service access is restricted to authorized users and systems only.'},
+      {id: '2-3-P-1-2', text: 'The CSP shall implement data classification and access restrictions to prevent unauthorized data exposure.'}
+    ]
   },
   {
     id: "f7",
@@ -148,7 +172,10 @@ const mockFindings = [
       severity: "MEDIUM",
       description: "S3 Bucket is not encrypted at rest.",
       recommendation: "RISK: Unencrypted data at rest in S3 can lead to data exposure if physical drives are compromised.\n\nACTION STEPS:\n1. Go to the AWS Console and navigate to 'S3'.\n2. Select the offending bucket and click 'Properties'.\n3. Under 'Default encryption', click 'Edit'.\n4. Enable Server-side encryption and click 'Save changes'."
-    }
+    },
+    ccc_metadata: [
+      {id: '2-7-T-1-1', text: 'The CST shall ensure that data stored in the cloud is encrypted using strong cryptographic algorithms.'}
+    ]
   }
 ];
 
@@ -406,6 +433,7 @@ function ScanSummaryBar({ summary, scanJob }) {
 
 export default function DemoAppPage() {
   const navigate = useNavigate();
+  const { setPage, setSelectedNode: setTipNode } = useDemoTip();
 
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
@@ -414,6 +442,10 @@ export default function DemoAppPage() {
   // Mock job state
   const [scanJob, setScanJob] = useState({ status: 'PENDING', created_at: new Date().toISOString() });
   const [summary, setSummary] = useState({ total: 0, critical: 0, high: 0, medium: 0, low: 0, pass: 0 });
+
+  useEffect(() => {
+    setPage('workspace');
+  }, [setPage]);
 
   useEffect(() => {
     // Simulate loading for 3 seconds
@@ -430,8 +462,14 @@ export default function DemoAppPage() {
   const onNodesChange = useCallback((changes) => setNodes((nds) => applyNodeChanges(changes, nds)), []);
   const onEdgesChange = useCallback((changes) => setEdges((eds) => applyEdgeChanges(changes, eds)), []);
   const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), []);
-  const onNodeClick = (_event, node) => setSelectedNode(node);
-  const onPaneClick = () => setSelectedNode(null);
+  const onNodeClick = (_event, node) => {
+    setSelectedNode(node);
+    setTipNode(node);
+  };
+  const onPaneClick = () => {
+    setSelectedNode(null);
+    setTipNode(null);
+  };
 
   const isPending = scanJob?.status === 'PENDING';
 
@@ -450,6 +488,7 @@ export default function DemoAppPage() {
 
   return (
     <Flex direction="column" style={{ height: '100%', backgroundColor: 'var(--gray-1)' }}>
+      <DemoContextBar />
       {/* Summary bar */}
       <ScanSummaryBar summary={summary} scanJob={scanJob} />
 
@@ -489,8 +528,9 @@ export default function DemoAppPage() {
         </Box>
 
         {/* Right sidebar – node details */}
-        <NodeDetailsPanel selectedNode={selectedNode} onClose={() => setSelectedNode(null)} />
+        <NodeDetailsPanel selectedNode={selectedNode} onClose={() => { setSelectedNode(null); setTipNode(null); }} />
       </Flex>
+      <DemoGuide />
     </Flex>
   );
 }

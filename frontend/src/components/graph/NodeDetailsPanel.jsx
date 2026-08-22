@@ -1,5 +1,6 @@
 import { Box, Flex, Heading, IconButton, Text, Badge, Card, ScrollArea, Code } from '@radix-ui/themes';
 import { ShieldAlert, ShieldCheck, Info, MapPin, Tag } from 'lucide-react';
+import { useDemoTip } from '../../contexts/DemoTipContext';
 import ncaLogo from '../../assets/sponsors/nca-small.png';
 
 const SEVERITY_COLOR = {
@@ -11,12 +12,19 @@ const SEVERITY_COLOR = {
 };
 
 function FindingCard({ finding }) {
+  const { setActiveFinding } = useDemoTip();
   const isFail = finding.status === 'FAIL';
   const severity = finding.rules?.severity || 'INFO';
   const color = SEVERITY_COLOR[severity] || 'gray';
 
   return (
     <Card
+      onMouseEnter={() => setActiveFinding({
+        rule_name: finding.rules?.name || finding.rule_id || 'UNKNOWN_RULE',
+        severity: severity,
+        description: finding.rules?.description
+      })}
+      onMouseLeave={() => setActiveFinding(null)}
       size="2"
       variant="surface"
       style={{
@@ -40,22 +48,20 @@ function FindingCard({ finding }) {
         </Text>
 
         {finding.ccc_metadata && finding.ccc_metadata.length > 0 && (
-          <Flex mt="2" p="2" style={{ backgroundColor: 'var(--gray-3)', borderRadius: '4px' }} align="stretch" gap="3">
-            <Box style={{ width: '32px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <img src={ncaLogo} alt="NCA Logo" style={{ width: '100%', maxHeight: '100%', objectFit: 'contain' }} />
-            </Box>
-            <Box style={{ flexGrow: 1 }}>
-              <Text size="1" weight="bold" color="gray" style={{ display: 'block', marginBottom: '4px' }}>
-                NCA CCC-2:2024 Controls:
-              </Text>
-              {finding.ccc_metadata.map((c, idx) => (
-                <Box key={idx} mb="1">
-                  <Text size="1" style={{ color: 'var(--gray-11)' }}>
-                    <span style={{ fontWeight: 'bold', color: 'var(--gray-12)' }}>{c.id}</span>: {c.text}
-                  </Text>
+          <Flex mt="2" direction="column" gap="1">
+            <Text size="1" weight="bold" color="gray" style={{ marginBottom: '2px' }}>
+              NCA CCC-2:2024 Controls:
+            </Text>
+            {finding.ccc_metadata.map((c, idx) => (
+              <Flex key={idx} align="center" gap="2" p="2" style={{ backgroundColor: 'var(--gray-3)', borderRadius: '6px' }}>
+                <Box style={{ width: '20px', height: '20px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <img src={ncaLogo} alt="NCA Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                 </Box>
-              ))}
-            </Box>
+                <Text size="1" style={{ color: 'var(--gray-11)', lineHeight: 1.4 }}>
+                  <span style={{ fontWeight: 'bold', color: 'var(--gray-12)' }}>{c.id}</span>: {c.text}
+                </Text>
+              </Flex>
+            ))}
           </Flex>
         )}
 

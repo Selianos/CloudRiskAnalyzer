@@ -1,6 +1,7 @@
 import { Outlet, useNavigate, useLocation } from 'react-router';
 import { Flex, Box, Text, Avatar, Button } from '@radix-ui/themes';
 import { LayoutDashboard, Home } from 'lucide-react';
+import { DemoTipProvider } from '../contexts/DemoTipContext';
 
 import {
   SidebarProvider,
@@ -27,6 +28,7 @@ export default function DemoLayout() {
   ];
 
   return (
+    <DemoTipProvider>
     <SidebarProvider>
       <Sidebar>
         <SidebarHeader className="p-4 flex flex-row items-center gap-3">
@@ -112,5 +114,6 @@ export default function DemoLayout() {
         </Box>
       </SidebarInset>
     </SidebarProvider>
+    </DemoTipProvider>
   );
 }
