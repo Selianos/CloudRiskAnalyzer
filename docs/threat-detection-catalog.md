@@ -4,7 +4,22 @@ This document is the authoritative reference for the **55 security rules** imple
 
 ---
 
-## 1. Engine Capabilities & Overview
+## 1. High-Level Platform Statistics
+
+| Dimension | Measured Value | Technical & Operational Significance |
+| :--- | :---: | :--- |
+| **Microservice Architecture** | **5** Decoupled Layers | Scalable, resilient execution via Redis task queues and isolated internal networks. |
+| **Supported Cloud Providers** | **3** Cloud Providers | Provider-agnostic security visibility across AWS, GCP, and OCI in a unified pane of glass. |
+| **Supported Cloud Services** | **14** Distinct Services | Comprehensive coverage across Compute, Storage, IAM, and Networking APIs. |
+| **Scannable Resource Types** | **16** Distinct Types | Asset discovery across virtual machines, object storage buckets, firewall rules, and IAM policies. |
+| **Security Rules Evaluated** | **55** Active Rules | Live rule evaluation engine across AWS (32), GCP (14), and OCI (9). |
+| **Canonical Finding Types** | **25** Standard Categories | Normalized taxonomy linking vendor-specific rules to regulatory compliance frameworks. |
+| **NCA CCC Standard Scope** | **175** Total Controls | Mapped against the official Saudi National Cybersecurity Authority framework (55 Top + 120 Sub). |
+| **Supported Classification Levels** | **4** Sensitivity Levels | Annex A audit granularity (Level 1: Top Secret, Level 2: Secret, Level 3: Confidential, Level 4: Public). |
+
+---
+
+## 2. Engine Capabilities & Severity Distribution
 
 ```
 Total Active Rules: 55 Rules
@@ -23,7 +38,7 @@ Severity Breakdown:
 
 ---
 
-## 2. Standardized Finding Types (25 Canonical Slugs)
+## 3. Standardized Finding Types (25 Canonical Slugs)
 
 Each technical rule maps to one of 25 vendor-neutral `finding_type` slugs. These slugs form the bridge between cloud-specific configurations and NCA CCC-2:2024 controls:
 
@@ -45,7 +60,7 @@ Each technical rule maps to one of 25 vendor-neutral `finding_type` slugs. These
 
 ---
 
-## 3. Comprehensive 55-Rule Inventory
+## 4. Comprehensive 55-Rule Inventory
 
 ### 3.1 Amazon Web Services (AWS) — 32 Rules
 
