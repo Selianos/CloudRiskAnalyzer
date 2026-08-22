@@ -68,7 +68,7 @@ services:
       GOTRUE_API_PORT: 9999
       GOTRUE_DB_DRIVER: postgres
       GOTRUE_DB_DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?search_path=auth
-      GOTRUE_SITE_URL: ${GOTRUE_SITE_URL}
+      GOTRUE_SITE_URL: http://localhost:${VITE_FRONTEND_PORT}
       GOTRUE_JWT_SECRET: ${GOTRUE_JWT_SECRET}
       GOTRUE_MAILER_AUTOCONFIRM: "true"
       GOTRUE_EXTERNAL_EMAIL_ENABLED: "true"
@@ -86,7 +86,7 @@ services:
     build: ./web-api
     container_name: web_api_container
     ports:
-      - "3000:3000"
+      - "${WEB_API_PORT}:${WEB_API_PORT}"
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -94,8 +94,8 @@ services:
       POSTGRES_HOST: db
       POSTGRES_PORT: 5432
       JWT_SECRET: ${GOTRUE_JWT_SECRET}
-      PORT: 3000
-      EXPRESS_GOTRUE_URL: ${EXPRESS_GOTRUE_URL}
+      PORT: ${WEB_API_PORT}
+      EXPRESS_GOTRUE_URL: http://auth:9999
       WORKER_API_KEY: ${WORKER_API_KEY}
       ENCRYPTION_KEY: ${ENCRYPTION_KEY}
     volumes:
@@ -176,6 +176,8 @@ services:
     restart: unless-stopped
     env_file:
       - .env
+    environment:
+      VITE_API_URL: http://localhost:${WEB_API_PORT}
     ports:
       - "${VITE_FRONTEND_PORT}:${VITE_FRONTEND_PORT}"
     volumes:
