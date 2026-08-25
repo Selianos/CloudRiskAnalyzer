@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Box, Flex, Heading, Text, Container, Button } from '@radix-ui/themes';
 import { useNavigate } from 'react-router';
 import Globe from 'react-globe.gl';
-import previewImage from '../../assets/preview.png';
+import previewImage from '../../assets/preview.webp';
 
 export default function HeroSection() {
     const navigate = useNavigate();
@@ -66,7 +66,7 @@ export default function HeroSection() {
 
         baseRoutes.forEach(route => {
             const colorRgb = '204, 191, 84'; // #ccbf54
-            
+
             // Share the same initial gap so all layers animate perfectly together
             const initialGap = Math.random();
 
@@ -112,7 +112,7 @@ export default function HeroSection() {
             style={{
                 minHeight: '100vh',
                 position: 'relative',
-                paddingBottom: '25vh',
+                paddingBottom: '0',
                 backgroundColor: '#1a1a1a', // Dark gray background
                 zIndex: 10,
                 // overflow: 'visible' by default, allowing the video to overlap the next section
@@ -155,7 +155,7 @@ export default function HeroSection() {
                     ringsData={arcsData.cities}
                     ringLat="lat"
                     ringLng="lng"
-                    ringColor={() => t => `rgba(204, 191, 84, ${1-t})`}
+                    ringColor={() => t => `rgba(204, 191, 84, ${1 - t})`}
                     ringMaxRadius={2}
                     ringPropagationSpeed={1}
                     ringRepeatPeriod={1500}
@@ -165,6 +165,7 @@ export default function HeroSection() {
             <Container
                 size="4"
                 p="6"
+                className="hero-content"
                 style={{
                     textAlign: 'left',
                     zIndex: 1,
@@ -174,8 +175,10 @@ export default function HeroSection() {
                     position: 'relative'
                 }}
             >
-                <Heading size="9" mb="4" weight="bold" style={{ color: '#ffffff' }}>
-                    Scan, Detect, Secure.
+                <Heading className="hero-heading" size="9" mb="4" weight="bold" style={{ color: '#ffffff' }}>
+                    Scan,{' '}<br className="md:hidden" />
+                    Detect,{' '}<br className="md:hidden" />
+                    Secure.
                 </Heading>
                 <Text
                     size="5"
@@ -189,23 +192,23 @@ export default function HeroSection() {
                 >
                     Scan your infrastructure · Detect Risks · Secure what matters
                 </Text>
-                <Flex gap="4" justify="start" mb="8">
-                    <Button 
-                        size="4" 
-                        style={{ backgroundColor: '#ffffff', color: '#000000', fontWeight: 'bold' }} 
+                <div className="hero-buttons">
+                    <Button
+                        size="4"
+                        style={{ backgroundColor: '#ffffff', color: '#000000', fontWeight: 'bold' }}
                         onClick={() => navigate('/signup')}
                     >
                         Scan Your Cloud
                     </Button>
-                    <Button 
-                        size="4" 
-                        variant="outline" 
+                    <Button
+                        size="4"
+                        variant="outline"
                         style={{ color: '#ffffff', borderColor: '#ffffff', backgroundColor: 'rgba(255,255,255,0.1)' }}
                         onClick={() => navigate('/demo')}
                     >
                         View Demo
                     </Button>
-                </Flex>
+                </div>
             </Container>
 
             {/* Video overlapping next section */}

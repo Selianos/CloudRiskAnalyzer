@@ -232,15 +232,42 @@
   background-color: var(--gray-3);
 }
 
+/* ── Hero buttons: equal-width grid on desktop ── */
+.hero-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  max-width: 480px;
+  margin-bottom: 2rem;
+}
+
+.hero-buttons > button {
+  width: 100%;
+}
+
 @media (max-width: 768px) {
   .hero-preview {
-    position: relative;
-    bottom: auto;
-    left: auto;
-    transform: none;
+    /* Keep absolute so it overlaps the hero/features boundary, just like desktop */
     width: 90%;
-    margin: 32px auto 0;
+    bottom: -25vw; /* ≈ half of (90vw × 9/16) — centers card on the section seam */
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  }
+
+  /* Smaller heading on mobile */
+  .hero-heading {
+    font-size: 2.25rem !important;
+    line-height: 1.2 !important;
+  }
+
+  /* Left align heading, subheading and buttons on mobile */
+  .hero-content {
+    text-align: left !important;
+  }
+
+  /* Collapse to single full-width column on mobile */
+  .hero-buttons {
+    grid-template-columns: 1fr;
+    max-width: 100%;
   }
 }
 
@@ -254,7 +281,32 @@ body, #root {
 .features-desktop { display: block; }
 .features-mobile  { display: none; }
 
+/* Desktop: padding-top = half the preview image height (80vw wide, 16:9) */
+.features-section {
+  padding-top: calc(80vw * 9 / 16 / 2);
+}
+
 @media (max-width: 768px) {
   .features-desktop { display: none; }
   .features-mobile  { display: block; }
+
+  /* Mobile preview is 90vw wide — half its height + 80px clears the image cleanly */
+  .features-section {
+    padding-top: calc(90vw * 9 / 16 / 2 + 80px);
+    padding-bottom: 48px;
+  }
+
+  /* Shrink card padding and text for small screens */
+  .feature-card {
+    padding: 20px !important;
+  }
+
+  .feature-card-heading {
+    font-size: 1rem !important;
+  }
+
+  .feature-card-desc {
+    font-size: 0.8rem !important;
+    margin-top: 8px !important;
+  }
 }
