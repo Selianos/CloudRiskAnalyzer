@@ -36,6 +36,7 @@ const features = [
 function FeatureCard({ feat }) {
   return (
     <Box
+      className="feature-card"
       style={{
         width: '100%',
         background: '#ffffff',
@@ -49,25 +50,24 @@ function FeatureCard({ feat }) {
       }}
     >
       {feat.bgImage && (
-        <Box
+        <img
+          src={feat.bgImage}
+          alt=""
           style={{
             position: 'absolute',
-            top: 0, left: 0,
-            width: '100%', height: '100%',
-            backgroundImage: `url(${feat.bgImage})`,
-            backgroundSize: 'auto calc(100% - 60px)',
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'calc(100% - 30px) center',
-            WebkitMaskImage: 'linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 80%)',
-            maskImage: 'linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 80%)',
+            top: '30px',
+            right: '30px',
+            height: 'calc(100% - 60px)',
+            width: 'auto',
             zIndex: 0,
-            opacity: 0.8,
+            WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 100%)',
+            maskImage: 'linear-gradient(to right, transparent 0%, black 100%)',
           }}
         />
       )}
-      <Box style={{ position: 'relative', zIndex: 1, textAlign: 'left', maxWidth: '350px' }}>
-        <Heading size="6" style={{ color: 'var(--gray-12)' }}>{feat.title}</Heading>
-        <Text mt="4" style={{ color: 'var(--gray-11)', lineHeight: 1.6, display: 'block' }}>
+      <Box style={{ position: 'relative', zIndex: 1, textAlign: 'left', maxWidth: '70%' }}>
+        <Heading className="feature-card-heading" size="6" style={{ color: 'var(--gray-12)' }}>{feat.title}</Heading>
+        <Text className="feature-card-desc" mt="4" style={{ color: 'var(--gray-11)', lineHeight: 1.6, display: 'block' }}>
           {feat.desc}
           {feat.link && (
             <Link href={feat.link.url} target="_blank" rel="noreferrer" style={{ fontWeight: 'bold' }}>
@@ -82,7 +82,7 @@ function FeatureCard({ feat }) {
 
 export default function FeaturesSection() {
   return (
-    <Box style={{ backgroundColor: '#ffffff', paddingTop: 'calc(80vw * 9 / 16 / 2)', paddingBottom: '100px' }}>
+    <Box className="features-section" style={{ backgroundColor: '#ffffff', paddingBottom: '100px' }}>
       <Box style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
 
         {/* === DESKTOP: sticky scroll layout === */}
@@ -124,7 +124,7 @@ export default function FeaturesSection() {
           </Text>
           <Box style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {features.map(feat => (
-              <Box key={feat.id} style={{ height: '220px' }}>
+              <Box key={feat.id} style={{ height: '160px' }}>
                 <FeatureCard feat={feat} />
               </Box>
             ))}

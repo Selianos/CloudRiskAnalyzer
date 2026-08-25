@@ -37,8 +37,9 @@ export default function AboutSection() {
                                 }} />
 
                                 <Flex align="flex-start" gap="6">
-                                    <Text style={{
-                                        fontSize: '80px',
+                                    <Text 
+                                        className="text-[48px] md:text-[80px]"
+                                        style={{
                                         fontWeight: '900',
                                         lineHeight: 1,
                                         color: '#000',
