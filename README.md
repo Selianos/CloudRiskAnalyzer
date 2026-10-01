@@ -3,18 +3,6 @@
 
 ---
 
-## Sponsors & Academic Partners
-<div align="center">
-  <img src="frontend/src/assets/sponsors/nca.png" height="50" alt="NCA" style="margin: 0 15px;"/>
-  <img src="frontend/src/assets/sponsors/site.png" height="50" alt="SITE" style="margin: 0 15px;"/>
-  <img src="frontend/src/assets/sponsors/kaust.png" height="50" alt="KAUST" style="margin: 0 15px;"/>
-  <img src="frontend/src/assets/sponsors/kaust-academy.png" height="50" alt="KAUST Academy" style="margin: 0 15px;"/>
-  <img src="frontend/src/assets/sponsors/kku.png" height="50" alt="King Khalid University" style="margin: 0 15px;"/>
-  <img src="frontend/src/assets/sponsors/uofg.png" height="50" alt="University of Glasgow" style="margin: 0 15px;"/>
-</div>
-
-<br />
-
 ## Preview
 <div align="center">
   <img src="frontend/src/assets/preview.png" width="100%" alt="Sahaba Dashboard Preview" />
@@ -200,4 +188,3 @@ Detailed technical specifications, architecture guides, and API references are a
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
-
