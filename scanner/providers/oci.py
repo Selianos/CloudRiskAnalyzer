@@ -194,6 +194,10 @@ class OCIProvider(BaseProvider):
         resources.extend(self._discover_buckets(compartments))
         resources.extend(self._discover_iam_users())
         resources.extend(self._discover_iam_policies(compartments))
+        # TODO(T2.3) attack path engine, INTERFACES.md gap 4: collect each
+        # user's group memberships (identity list_user_group_memberships) and
+        # the dynamic groups with their matching rules (list_dynamic_groups),
+        # so OCI policies can be linked to users and instances.
 
         print(f"[OCI] Discovered {len(resources)} resources across all compartments.")
         return resources

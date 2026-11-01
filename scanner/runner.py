@@ -44,6 +44,9 @@ class ScanRunner:
             return config
         sanitized = copy.deepcopy(config)
         sensitive_keys = ['password', 'secret', 'api_key', 'token', 'user_data', 'user-data']
+        # TODO(T2.5) attack path engine, INTERFACES.md gap 5: exempt the
+        # true/false settings credential_report_row.password_enabled (AWS) and
+        # capabilities.can_use_console_password (OCI) from redaction.
         
         def recurse(data):
             if isinstance(data, dict):

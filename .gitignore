@@ -23,3 +23,16 @@ venv.bak/
 *.log
 .supabase/
 !results-logs/**
+
+# Course documents (private, never tracked)
+.agent/
+AI_Milestone2.docx
+
+# Attack path engine: files generated from cloud scans
+scanner/inference_engine/facts/*.pl
+!scanner/inference_engine/facts/sensitive_overrides.pl
+scanner/inference_engine/verdicts/
+
+# Attack path engine: build artifacts
+scanner/inference_engine/benchmarks/generated/
+*.qlf

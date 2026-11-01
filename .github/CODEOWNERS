@@ -1,0 +1,31 @@
+# Code owners for the Prolog attack path engine.
+# The last matching pattern wins. Replace each @TODO-... with the member's
+# GitHub username. Enforced only when the branch protection rule on main has
+# "Require review from Code Owners" turned on.
+
+# Project manager: everything not listed below, and final review
+*                                                   @Selianos
+
+# Knowledge engineer (T3.1 - T3.6)
+/scanner/inference_engine/kb/                       @TODO-knowledge-engineer
+/scanner/inference_engine/facts/                    @TODO-knowledge-engineer
+
+# Inference programmer (T4.1 - T4.5)
+/scanner/inference_engine/engine/                   @TODO-inference-programmer
+/scanner/inference_engine/load.pl                   @TODO-inference-programmer
+/scanner/inference_engine/main.pl                   @TODO-inference-programmer
+
+# Integration programmer (T2.1 - T2.7)
+/scanner/inference_engine/integration/              @TODO-integration-programmer
+/scanner/worker.py                                  @TODO-integration-programmer
+/scanner/runner.py                                  @TODO-integration-programmer
+/scanner/Dockerfile                                 @TODO-integration-programmer
+/scanner/providers/                                 @TODO-integration-programmer
+
+# Domain expert and end user (T5.1 - T5.5)
+/scanner/inference_engine/tests/                    @TODO-domain-expert
+/scanner/inference_engine/benchmarks/               @TODO-domain-expert
+
+# Shared files: owner plus the members who use them
+/scanner/inference_engine/kb/schema.pl              @TODO-knowledge-engineer @TODO-integration-programmer
+/scanner/inference_engine/stub.pl                   @Selianos
