@@ -1,0 +1,10 @@
+resources,sensitive,strategy,avg_ms,paths,inferences
+10,1,dfs+tabling,4.2,2,129975
+10,1,dfs plain,0.0,2,1200
+10,1,bfs,0.0,2,1795
+100,4,dfs+tabling,6.0,57,54312
+100,4,dfs plain,4.0,57,38760
+100,4,bfs,28.6,57,539971
+1000,40,dfs+tabling,359.2,182,3583883
+1000,40,dfs plain,137.4,182,1717996
+1000,40,bfs,4958.8,182,143159736
