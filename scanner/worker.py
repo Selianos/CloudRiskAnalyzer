@@ -8,6 +8,11 @@ import redis
 from api_client import InternalBackendClient
 from runner import ScanRunner
 
+try:                                   # Prolog attack path engine (optional)
+    from prolog_engine.exporter.engine_bridge import run_attack_path_engine
+except ImportError:
+    run_attack_path_engine = None
+
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
 # Global shutdown flag
@@ -90,6 +95,14 @@ def main():
                 # 4. Submit results (this will also mark status as COMPLETED)
                 client.submit_results(job_id, results)
                 logging.info(f"Job {job_id} completed successfully")
+
+                # 4b. Second opinion: export facts and run the Prolog engine.
+                #     A failure here never fails the scan itself.
+                if run_attack_path_engine:
+                    try:
+                        run_attack_path_engine(job_id, job["provider"], results)
+                    except Exception as engine_error:
+                        logging.warning(f"Prolog engine failed for Job {job_id}: {engine_error}")
 
             except Exception as scan_error:
                 logging.error(f"Scan execution failed for Job {job_id}: {scan_error}")

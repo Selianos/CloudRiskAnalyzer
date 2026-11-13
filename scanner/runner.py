@@ -44,10 +44,14 @@ class ScanRunner:
             return config
         sanitized = copy.deepcopy(config)
         sensitive_keys = ['password', 'secret', 'api_key', 'token', 'user_data', 'user-data']
+        # booleans needed by the Prolog engine (rule R2); they hold no secret
+        exempt_keys = {'password_enabled', 'can_use_console_password'}
         
         def recurse(data):
             if isinstance(data, dict):
                 for k, v in data.items():
+                    if k.lower() in exempt_keys:
+                        continue
                     if any(s in k.lower() for s in sensitive_keys):
                         data[k] = "[REDACTED]"
                     else:

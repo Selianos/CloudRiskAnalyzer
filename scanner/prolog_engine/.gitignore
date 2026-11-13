@@ -1,0 +1,7 @@
+# Generated per scan from REAL cloud accounts (resource IDs, ARNs, policies).
+# Never commit them.
+facts/*
+verdicts/*
+!facts/.gitkeep
+!verdicts/.gitkeep
+__pycache__/

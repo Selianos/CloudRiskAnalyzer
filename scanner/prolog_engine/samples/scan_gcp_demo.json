@@ -1,0 +1,131 @@
+{
+ "resources": [
+  {
+   "id": "res-1",
+   "provider_resource_id": "7781234500001",
+   "resource_type": "Compute Engine",
+   "name": "ci-runner",
+   "region": "us-east-1",
+   "configuration": {
+    "type": "Compute Engine",
+    "name": "ci-runner",
+    "has_external_ip": true,
+    "network_interfaces": [
+     {
+      "network": "default",
+      "internal_ip": "10.128.0.2",
+      "external_ips": [
+       "34.70.1.9"
+      ]
+     }
+    ],
+    "service_accounts": [
+     {
+      "email": "runner-sa@sahaba-demo.iam.gserviceaccount.com",
+      "scopes": [
+       "https://www.googleapis.com/auth/cloud-platform"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "res-2",
+   "provider_resource_id": "4410000000001",
+   "resource_type": "Firewall Rules",
+   "name": "allow-ssh",
+   "region": "us-east-1",
+   "configuration": {
+    "type": "Firewall Rules",
+    "name": "allow-ssh",
+    "network": "default",
+    "direction": "INGRESS",
+    "disabled": false,
+    "source_ranges": [
+     "0.0.0.0/0"
+    ],
+    "target_tags": [],
+    "is_open_to_internet": true,
+    "allowed": [
+     {
+      "protocol": "tcp",
+      "ports": [
+       "22"
+      ]
+     }
+    ],
+    "risky_open_ports": [
+     "22"
+    ]
+   }
+  },
+  {
+   "id": "res-3",
+   "provider_resource_id": "patient-records",
+   "resource_type": "Cloud Storage",
+   "name": "patient-records",
+   "region": "us-east-1",
+   "configuration": {
+    "type": "Cloud Storage",
+    "name": "patient-records",
+    "is_public": false,
+    "labels": {
+     "data-classification": "confidential"
+    }
+   }
+  },
+  {
+   "id": "res-4",
+   "provider_resource_id": "1090000000000001",
+   "resource_type": "IAM",
+   "name": "runner-sa@sahaba-demo.iam.gserviceaccount.com",
+   "region": "us-east-1",
+   "configuration": {
+    "type": "IAM",
+    "subtype": "service_account",
+    "name": "runner-sa@sahaba-demo.iam.gserviceaccount.com"
+   }
+  },
+  {
+   "id": "res-5",
+   "provider_resource_id": "projects/sahaba-demo",
+   "resource_type": "IAM",
+   "name": "sahaba-demo",
+   "region": "us-east-1",
+   "configuration": {
+    "type": "IAM",
+    "subtype": "project_iam_policy",
+    "bindings": [
+     {
+      "role": "roles/storage.objectViewer",
+      "members": [
+       "serviceAccount:runner-sa@sahaba-demo.iam.gserviceaccount.com"
+      ]
+     }
+    ]
+   }
+  }
+ ],
+ "findings": [
+  {
+   "resource_id": "res-2",
+   "rule_id": "GCP-FW-001",
+   "status": "FAIL",
+   "details": {
+    "reason": "Firewall rule allows SSH from the internet.",
+    "severity": "HIGH",
+    "recommendation": "-"
+   }
+  },
+  {
+   "resource_id": "res-1",
+   "rule_id": "GCP-VM-003",
+   "status": "FAIL",
+   "details": {
+    "reason": "Instance has an external IP.",
+    "severity": "HIGH",
+    "recommendation": "-"
+   }
+  }
+ ]
+}

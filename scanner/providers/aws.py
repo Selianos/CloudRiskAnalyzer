@@ -264,7 +264,20 @@ class AWSProvider(BaseProvider):
                         instance["LaunchTime"] = instance["LaunchTime"].isoformat()
                     
                     config["raw_data"] = instance
-                    
+
+                    # Resolve instance profile -> role names (used by rule R3)
+                    config["iam_roles"] = []
+                    profile_arn = instance.get("IamInstanceProfile", {}).get("Arn")
+                    if profile_arn:
+                        try:
+                            iam_client = self._session.client("iam")
+                            profile = iam_client.get_instance_profile(
+                                InstanceProfileName=profile_arn.split("/")[-1])
+                            config["iam_roles"] = [r["RoleName"] for r in
+                                                   profile["InstanceProfile"].get("Roles", [])]
+                        except ClientError as e:
+                            print(f"[AWS] Failed to resolve instance profile {profile_arn}: {e}")
+
                     # Also resolve attached security groups for deep scanning
                     sg_ids = [sg["GroupId"] for sg in instance.get("SecurityGroups", [])]
                     if sg_ids:
@@ -293,6 +306,13 @@ class AWSProvider(BaseProvider):
                     config["public_access_block"] = pab.get("PublicAccessBlockConfiguration", {})
                 except ClientError as e:
                     config["public_access_block"] = {"error": str(e)}
+
+                # Fetch bucket tags (data classification, used by sensitive/1)
+                try:
+                    tagging = s3_client.get_bucket_tagging(Bucket=resource_id)
+                    config["tags"] = {t["Key"]: t["Value"] for t in tagging.get("TagSet", [])}
+                except ClientError:
+                    config["tags"] = {}
 
                 # Fetch Encryption
                 try:
